@@ -1,0 +1,247 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18             CUOTAS.SPR                08:19:10 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450hty7h")
+	DEFINE WINDOW _5450hty7h ;
+		FROM INT((SROW()-9)/2),INT((SCOL()-32)/2) ;
+		TO INT((SROW()-9)/2)+8,INT((SCOL()-32)/2)+31 ;
+		TITLE " Modificar Cuota " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё         CUOTAS/MS-DOS Distribuci╒n de pantalla          Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450hty7h")
+	ACTIVATE WINDOW _5450hty7h SAME
+ELSE
+	ACTIVATE WINDOW _5450hty7h NOSHOW
+ENDIF
+@ 3,3 SAY "Importe.:" ;
+	SIZE 1,9, 0
+@ 2,3 SAY "Fecha...:" ;
+	SIZE 1,9, 0
+@ 1,3 SAY "Cuota N╖:" ;
+	SIZE 1,9, 0
+@ 4,0 TO 4,29
+@ 1,13 GET m.nrocuota ;
+	SIZE 1,3 ;
+	DEFAULT 0 ;
+	PICTURE "999" ;
+	WHEN .F.
+@ 2,13 GET m.fecha ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "99/99/9999" ;
+	VALID _vldFecha()
+@ 3,13 GET m.importe ;
+	SIZE 1,14 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999.99" ;
+	VALID _5450hty7k()
+@ 5,2 GET pnChoice ;
+	PICTURE "@*HT \!\<Aceptar;\?\<Cancelar" ;
+	SIZE 1,12,2 ;
+	DEFAULT 1 ;
+	VALID _5450hty7l()
+
+IF NOT WVISIBLE("_5450hty7h")
+	ACTIVATE WINDOW _5450hty7h
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     MS-DOSREAD contiene cl═usulas de SCREEN cuotas      Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450hty7h
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё  CUOTAS/MS-DOS Procedimientos y funciones de soporte    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+FUNCTION _vldFecha
+IF INLIST(LASTKEY(), 5, 19))
+   RETURN .T.
+ENDIF
+
+PRIVATE pnDia, pnMes, pnAnyo
+
+IF m.fecha = "00/00/0000" .OR. m.fecha = "  /  /    "
+   WAIT WINDOW "╜ FECHA INVALIDA !"
+   RETURN .F.
+ELSE
+   STORE VAL(SUBSTR(m.fecha,1,2)) TO pnDia
+   STORE VAL(SUBSTR(m.fecha,4,2)) TO pnMes
+
+   IF VAL(SUBSTR(m.fecha,7,4)) < 1000
+      pnAnyo = YEAR(DATE())
+   ELSE
+      pnAnyo = VAL(SUBSTR(m.fecha,7,4))
+   ENDIF
+
+   m.fecha = IIF(pnDia > 0 .AND. pnDia < 10, "0"+STR(pnDia,1), STR(pnDia,2)) +  "/"+ IIF(pnMes > 0 .AND. pnMes < 10, "0"+STR(pnMes,1), STR(pnMes,2)) + "/"+ STR(pnAnyo,4)
+
+   IF pnDia  < 1    .OR. pnDia  > 31 .OR.;
+      pnMes  < 1    .OR. pnMes  > 12 .OR.;
+      pnAnyo < 1900 .OR. pnAnyo > 2500
+      WAIT WINDOW "╜ FECHA INVALIDA !"
+      RETURN .F.
+   ELSE
+      DO CASE
+         CASE INLIST(pnMes, 1, 3, 5, 7, 8, 10, 12)
+            IF pnDia <= 31
+               RETURN .T.
+            ELSE
+               WAIT WINDOW "╜ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+         CASE pnMes = 2
+            IF MOD(pnAnyo,4) # 0
+               IF pnDia <= 28
+                  RETURN .T.
+               ELSE
+                  WAIT WINDOW "╜ FECHA INVALIDA !"
+                  RETURN .F.
+               ENDIF
+            ELSE
+               IF MOD(pnAnyo,100) = 0 .AND. MOD(pnAnyo,400) # 0
+                  IF pnDia <= 28
+                     RETURN .T.
+                  ENDIF
+               ELSE
+                  IF pnDia <= 29
+                     RETURN .T.
+                  ELSE
+                     WAIT WINDOW "╜ FECHA INVALIDA !"
+                     RETURN .F.
+                  ENDIF
+               ENDIF
+            ENDIF
+         CASE INLIST(pnMes, 4, 6, 9, 11)
+            IF pnDia <= 30
+               RETURN .T.
+            ELSE
+               WAIT WINDOW "╜ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+            RETURN .T.
+      ENDCASE
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTY7K           m.importe VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CUOTAS,     Record Number:    8    Ё
+*       Ё Variable:            m.importe                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450hty7k     &&  m.importe VALID
+#REGION 1
+IF LASTKEY() = 27
+   RETURN
+ENDIF
+
+IF m.importe <= 0
+   WAIT WINDOW "╜ EL IMPORTE DE LA CUOTA DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTY7L           pnChoice VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CUOTAS,     Record Number:    9    Ё
+*       Ё Variable:            pnChoice                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450hty7l     &&  pnChoice VALID
+#REGION 1
+IF pnChoice = 1
+   CLEAR READ
+ENDIF
+
+IF pnChoice = 2
+   CLEAR READ
+ENDIF

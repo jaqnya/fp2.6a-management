@@ -1,0 +1,164 @@
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ 01/23/18            BUSCAR05.SPR               08:19:01 ³
+*       ³                                                         ³
+*       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*       ³                                                         ³
+*       ³ Nombre del autor                                        ³
+*       ³                                                         ³
+*       ³ Copyright (c) 2018 Nombre de la empresa                 ³
+*       ³ Direcci¢n                                               ³
+*       ³ Ciudad,     C.P.                                        ³
+*       ³ Pa¡s                                              ³
+*       ³                                                         ³
+*       ³ Description:                                            ³
+*       ³ Este programa lo ha generado autom ticamente GENSCRN.    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³             MS-DOS Definiciones de ventana              ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+IF NOT WEXIST("_5450htr7i")
+	DEFINE WINDOW _5450htr7i ;
+		FROM INT((SROW()-3)/2),INT((SCOL()-54)/2) ;
+		TO INT((SROW()-3)/2)+2,INT((SCOL()-54)/2)+53 ;
+		TITLE " BUSQUEDA POR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³   BUSCAR05/MS-DOS C¢digo de configuraci¢n - SECCION 2   ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³        BUSCAR05/MS-DOS Distribuci¢n de pantalla         ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF WVISIBLE("_5450htr7i")
+	ACTIVATE WINDOW _5450htr7i SAME
+ELSE
+	ACTIVATE WINDOW _5450htr7i NOSHOW
+ENDIF
+@ 0,10 GET m.nombre ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!T" ;
+	VALID _5450htr7l()
+@ 0,2 SAY "NOMBRE:" ;
+	SIZE 1,7, 0
+
+IF NOT WVISIBLE("_5450htr7i")
+	ACTIVATE WINDOW _5450htr7i
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    MS-DOSREAD contiene cl usulas de SCREEN buscar05     ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htr7i
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTR7L           m.nombre VALID                     ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         BUSCAR05,     Record Number:    2  ³
+*       ³ Variable:            m.nombre                           ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      1                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htr7l     &&  m.nombre VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF OCCURS("*", m.nombre) = LEN(m.nombre)
+   WAIT WINDOW "­ DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !"
+   RETURN .F.
+ENDIF
+
+IF EMPTY(m.nombre)
+   WAIT WINDOW "­ EL NOMBRE DEL ARTICULO NO PUEDE QUEDAR EN BLANCO !"
+   RETURN .F.
+ELSE
+   PRIVATE pnSelect, pcOrder, pnRecNo
+   pnSelect = SELECT()
+   pcOrder  = ORDER()
+   pnRecNo  = IIF(EOF(), 0, RECNO())
+
+*!*   SELECT maesprod
+*!**  SET ORDER TO TAG indice2 OF maesprod.cdx
+
+   IF OCCURS("*", m.nombre) > 0
+      DO searchmp.prg WITH m.nombre, "maesprod.nombre + maesprod.aplicacion"
+   ELSE
+      IF .NOT. SEEK(m.nombre)
+         WAIT WINDOW "­ EL DATO BUSCADO NO HA SIDO ENCONTRADO !"
+
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+        _CUROBJ = OBJNUM(m.nombre)
+      ELSE
+         CLEAR READ
+      ENDIF
+   ENDIF
+ENDIF

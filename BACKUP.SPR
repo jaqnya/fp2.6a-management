@@ -1,0 +1,180 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18             BACKUP.SPR                08:18:58 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htoed")
+	DEFINE WINDOW _5450htoed ;
+		FROM INT((SROW()-8)/2),INT((SCOL()-35)/2) ;
+		TO INT((SROW()-8)/2)+7,INT((SCOL()-35)/2)+34 ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё         BACKUP/MS-DOS Distribuci╒n de pantalla          Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htoed")
+	ACTIVATE WINDOW _5450htoed SAME
+ELSE
+	ACTIVATE WINDOW _5450htoed NOSHOW
+ENDIF
+@ 3,0 TO 3,32
+@ 4,2 GET cmgChoice ;
+	PICTURE "@*HT \!\<Iniciar;\?\<Cancelar" ;
+	SIZE 1,12,5 ;
+	DEFAULT 1 ;
+	VALID _5450htoeg()
+@ 1,7 SAY "COPIA DE SEGURIDAD" ;
+	SIZE 1,18, 0 ;
+	COLOR BG+/N   
+
+IF NOT WVISIBLE("_5450htoed")
+	ACTIVATE WINDOW _5450htoed
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     MS-DOSREAD contiene cl═usulas de SCREEN backup      Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htoed
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTOEG           cmgChoice VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BACKUP,     Record Number:    3    Ё
+*       Ё Variable:            cmgChoice                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htoeg     &&  cmgChoice VALID
+#REGION 1
+IF cmgChoice = 1
+   RELEASE WINDOW
+
+   CLEAR
+
+   SET CENTURY OFF
+   SET CONSOLE ON
+   SET DATE    ITALIAN
+
+   ? "BORRANDO ARCHIVOS TEMPORALES..."
+   ?
+   ?
+
+   RUN del tm*.*
+
+   CLEAR
+
+   ? "COMPACTANDO LOS DATOS EN EL DISCO DURO..."
+   ?
+
+   IF USED("control")
+      SELECT control
+      SET ORDER TO 0
+   ELSE
+      SELECT 0
+      USE (LOCFILE("control.dbf", "DBF", "╗ D╒nde est═ CONTROL.DBF ?")) ;
+         AGAIN ALIAS control SHARED ;
+         ORDER 0
+   ENDIF
+
+   STORE "RUN pkzip " + ALLTRIM(LOWER(control.directory)) + "\respaldo\" + DTOC(DATE()) + ".zip -ex *.dbf *.fpt" TO HDD_Backup
+
+   CLOSE DATABASES
+
+   &HDD_Backup
+
+   ? "COPIA DE SEGURIDAD EN EL DISCO DURO REALIZADA !"
+   ? "PULSE UNA TECLA PARA CONTINUAR..."
+   pnKey = INKEY(0, "H")
+
+   CLEAR
+
+   ? "INGRESE UN DISQUETTE EN A: Y PULSE UNA TECLA PARA CONTINUAR..."
+   ?
+   pnKey = INKEY(0, "H")
+
+   CLEAR
+
+   ? "COMPACTANDO LOS DATOS..."
+   ?
+
+   *RUN pkzip a:datos.zip -& *.dbf *.fpt
+
+   ? "COPIA DE SEGURIDAD REALIZADA !, PULSE UNA TECLA PARA CONTINUAR..."
+   pnKey = INKEY(0, "H")
+
+   SET CENTURY ON
+   SET CONSOLE OFF
+   SET DATE    BRITISH
+ENDIF
+
+IF cmgChoice = 2
+   CLEAR READ
+ENDIF

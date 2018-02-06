@@ -1,0 +1,1098 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18              L_05.SPR                 08:18:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htpp7")
+	DEFINE WINDOW _5450htpp7 ;
+		FROM INT((SROW()-17)/2),INT((SCOL()-65)/2) ;
+		TO INT((SROW()-17)/2)+16,INT((SCOL()-65)/2)+64 ;
+		TITLE " Listado de Art║culos " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     L_05/MS-DOS C╒digo de configuraci╒n - SECCION 2     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+m.rubro    = -1
+m.subrubro = -1
+m.marca    = -1
+m.vigente  = "T"
+m.ordenado = "N"
+m.ord_rubr = "N"
+m.destino  = "P"
+
+*-- Determina el nombre del local actual.
+pcSys16    = SYS(16, 0)
+pcProgram  = SUBSTR(pcSys16, RAT("\", pcSys16) + 1)
+pcPriorDir = SUBSTR(pcSys16, RAT("\", pcSys16, 2) + 1, RAT("\", pcSys16) - RAT("\", pcSys16, 2) - 1)
+
+IF pcPriorDir = "INTEGRAD.000"
+   *-- Casa Central.
+   pcLocal = ALLTRIM(control.empresa) + " - CASA CENTRAL"
+ELSE
+   IF pcPriorDir = "INTEGRAD.CON"
+      *-- Consolidado.
+      pcLocal = ALLTRIM(control.empresa) + " - CONSOLIDADO"
+   ELSE
+      IF LEFT(pcPriorDir, AT(".", pcPriorDir, 1) - 1) = "INTEGRAD"
+         *-- Sucursal
+         pcLocal = ALLTRIM(control.empresa) + " - SUC. " + RIGHT(pcPriorDir, LEN(pcPriorDir) - AT(".", pcPriorDir) - 1)
+      ENDIF
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё          L_05/MS-DOS Distribuci╒n de pantalla           Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htpp7")
+	ACTIVATE WINDOW _5450htpp7 SAME
+ELSE
+	ACTIVATE WINDOW _5450htpp7 NOSHOW
+ENDIF
+@ 12,0 TO 12,62
+@ 3,2 SAY "SUB-RUBRO:" ;
+	SIZE 1,10, 0
+@ 5,2 SAY "MARCA....:" ;
+	SIZE 1,10, 0
+@ 1,2 SAY "RUBRO....:" ;
+	SIZE 1,10, 0
+@ 7,2 SAY "LISTAR ARTICULOS VIGENTES [S/N/T]:" ;
+	SIZE 1,34, 0
+@ 8,2 SAY "ORDENADO POR (C)ODIGO o (N)OMBRE.:" ;
+	SIZE 1,34, 0
+@ 10,2 SAY "DESTINO (P)ANTALLA o (I)MPRESORA.:" ;
+	SIZE 1,34, 0
+@ 11,2 SAY " -1" ;
+	SIZE 1,3, 0 ;
+	COLOR R/W     
+@ 11,5 SAY " en Rubro, Sub-Rubro o Marca incluye a todos los items " ;
+	SIZE 1,55, 0 ;
+	COLOR N/W     
+@ 9,2 SAY "ORDENADO POR RUBRO [S/N].........:" ;
+	SIZE 1,34, 0
+@ 1,13 GET m.rubro ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	VALID _5450htppd()
+@ 3,13 GET m.subrubro ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	VALID _5450htpph()
+@ 5,13 GET m.marca ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	VALID _5450htppl()
+@ 7,37 GET m.vigente ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpr7()
+@ 8,37 GET m.ordenado ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpr8()
+@ 9,37 GET m.ord_rubr ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpr9()
+@ 10,37 GET m.destino ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpra()
+@ 13,17 GET cmgChoice ;
+	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
+	SIZE 1,12,5 ;
+	DEFAULT 1 ;
+	VALID _5450htprb()
+
+IF NOT WVISIBLE("_5450htpp7")
+	ACTIVATE WINDOW _5450htpp7
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      MS-DOSREAD contiene cl═usulas de SCREEN l_05       Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	SHOW _5450htprc() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htpp7
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   L_05/MS-DOS Procedimientos y funciones de soporte     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PROCEDURE _Report_L_05
+PRIVATE pnCounter, temp01, temp02, pcCondicion
+
+*-- Genera las condiciones que deben cumplir los registro.
+pcCondicion = ""
+
+IF m.rubro <> -1
+   pcCondicion = pcCondicion + "rubro = " + ALLTRIM(STR(m.rubro, 4))
+ENDIF
+
+IF m.subrubro <> -1
+   IF EMPTY(pcCondicion)
+      pcCondicion = "subrubro = " + ALLTRIM(STR(m.subrubro, 4))
+   ELSE
+      pcCondicion = pcCondicion + " .AND. subrubro = " + ALLTRIM(STR(m.subrubro, 4))
+   ENDIF
+ENDIF
+
+IF m.marca <> -1
+   IF EMPTY(pcCondicion)
+      pcCondicion = "marca = " + ALLTRIM(STR(m.marca, 4))
+   ELSE
+      pcCondicion = pcCondicion + " .AND. marca = " + ALLTRIM(STR(m.marca, 4))
+   ENDIF
+ENDIF
+
+IF m.vigente = "S"
+   IF EMPTY(pcCondicion)
+      pcCondicion = "vigente"
+   ELSE
+      pcCondicion = pcCondicion + " .AND. vigente"
+   ENDIF
+ELSE
+   IF m.vigente = "N"
+      IF EMPTY(pcCondicion)
+         pcCondicion = ".NOT. vigente"
+      ELSE
+         pcCondicion = pcCondicion + " .AND. .NOT. vigente"
+      ENDIF
+   ENDIF
+ENDIF
+
+*-- MS-DOS Definiciones de ventanas.
+IF .NOT. WEXIST("preview")
+   DEFINE WINDOW preview ;
+      FROM 01,00 ;
+      TO 23,79 ;
+      TITLE "Vista Preliminar - ESC p/Salir" ;
+      SYSTEM ;
+      CLOSE ;
+      NOFLOAT ;
+      GROW ;
+      MDI ;
+      NOMINIMIZE ;
+      SHADOW ;
+      ZOOM ;
+      COLOR SCHEME 15
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+WAIT WINDOW "CREANDO TABLA TEMPORAL..." NOWAIT
+
+*-- MS-DOS Base de datos, ║ndices, relaciones.
+SELECT 0
+temp01 = "tm" + RIGHT(SYS(3), 6) + ".dbf"
+temp02 = "tm" + RIGHT(SYS(3), 6) + ".txt"
+
+CREATE TABLE &temp01 (codigo     C(15) ,;
+                      codigo2    C(15) ,;
+                      codorig    C(15) ,;
+                      nombre     C(40) ,;
+                      aplicacion M ,;
+                      lista3     L(01) ,;
+                      lista4     L(01) ,;
+                      lista5     L(01) ,;
+                      familia    N(04) ,;
+                      rubro      N(04) ,;
+                      nombre_a   C(30) ,;
+                      subrubro   N(04) ,;
+                      nombre_b   C(30) ,;
+                      marca      N(04) ,;
+                      nombre_c   C(30) ,;
+                      unidad     N(03) ,;
+                      proveedor  N(05) ,;
+                      procedenci N(04) ,;
+                      ubicacion  C(10) ,;
+                      vigente    L(01) ,;
+                      lprecio    L(01) ,;
+                      impuesto   L(01) ,;
+                      pimpuesto  N(06,2) ,;
+                      pcostog    N(13,4) ,;
+                      pcostog2   N(13,4) ,;
+                      pcostod    N(13,4) ,;
+                      pcostod2   N(13,4) ,;
+                      pventag1   N(13,4) ,;
+                      pventag2   N(13,4) ,;
+                      pventag3   N(13,4) ,;
+                      pventag4   N(13,4) ,;
+                      pventag5   N(13,4) ,;
+                      pventad1   N(13,4) ,;
+                      pventad2   N(13,4) ,;
+                      pventad3   N(13,4) ,;
+                      pventad4   N(13,4) ,;
+                      pventad5   N(13,4) ,;
+                      stock_min  N(11,2) ,;
+                      stock_max  N(11,2) ,;
+                      polinvsmin L(01) ,;
+                      polinvsmax L(01) ,;
+                      caracter1  C(60) ,;
+                      caracter2  C(60) ,;
+                      caracter3  C(60) ,;
+                      otros1     C(60) ,;
+                      otros2     C(60) ,;
+                      fecucompra D(08) ,;
+                      fecucompr2 D(08) ,;
+                      stock_actu N(11,2) ,;
+                      stock_ot   N(11,2))
+
+USE &temp01 ALIAS tmpmaesprod EXCLUSIVE
+
+INDEX ON codigo      TAG indice1
+INDEX ON nombre      TAG indice2
+INDEX ON rubro       TAG indice3
+INDEX ON subrubro    TAG indice4
+INDEX ON marca       TAG indice5
+INDEX ON codigo2     TAG indice6
+INDEX ON codorig     TAG indice7
+INDEX ON val(codigo) TAG indice8
+INDEX ON familia     TAG indice9
+INDEX ON nombre      TAG indice10 for vigente
+INDEX ON codigo      TAG indice11 for vigente
+INDEX ON codigo2     TAG indice12 for vigente
+INDEX ON codorig     TAG indice13 for vigente
+INDEX ON nombre_a + nombre_b + codigo TAG indice14
+INDEX ON nombre_a + nombre_b + nombre TAG indice15
+
+SELECT maesprod
+SET ORDER TO indice1 OF maesprod.cdx
+GO TOP
+
+*-- Estable relaciones entre las tablas.
+SET RELATION TO maesprod.familia    INTO familias ADDITIVE
+SET RELATION TO maesprod.rubro      INTO rubros1  ADDITIVE
+SET RELATION TO maesprod.subrubro   INTO rubros2  ADDITIVE
+SET RELATION TO maesprod.marca      INTO marcas1  ADDITIVE
+SET RELATION TO maesprod.unidad     INTO unidad   ADDITIVE
+SET RELATION TO maesprod.procedenci INTO proceden ADDITIVE
+SET RELATION TO maesprod.proveedor  INTO proveedo ADDITIVE
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESANDO LA TABLA DE ARTICULOS: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   SELECT maesprod
+      SCATTER MEMVAR MEMO
+   SELECT tmpmaesprod
+      APPEND BLANK
+      GATHER MEMVAR MEMO
+
+      REPLACE nombre_a WITH rubros1.nombre
+      REPLACE nombre_b WITH rubros2.nombre
+      REPLACE nombre_c WITH marcas1.nombre
+
+   SELECT maesprod
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+WAIT CLEAR
+
+*-- Ordena la tabla de art║culos temporal.
+IF m.ordenado = "C"
+   IF m.ord_rubr = "N"
+      SELECT tmpmaesprod
+      SET ORDER TO TAG indice1
+   ELSE
+      IF m.ord_rubr = "S"
+         SELECT tmpmaesprod
+         SET ORDER TO TAG indice14
+      ENDIF
+   ENDIF
+ELSE
+   IF m.ordenado = "N"
+      IF m.ord_rubr = "N"
+         SELECT tmpmaesprod
+         SET ORDER TO TAG indice2
+      ELSE
+         IF m.ord_rubr = "S"
+            SELECT tmpmaesprod
+            SET ORDER TO TAG indice15
+         ENDIF
+      ENDIF
+   ELSE
+      SELECT tmpmaesprod
+      SET ORDER TO 0
+   ENDIF
+ENDIF
+
+IF m.destino = "P"     && Vista Preliminar.
+   IF EMPTY(pcCondicion)
+      IF m.ord_rubr = "N"
+         REPORT FORM l_05.frx TO &temp02 NOCONSOLE
+      ELSE
+         REPORT FORM l_05a.frx TO &temp02 NOCONSOLE
+      ENDIF
+   ELSE
+      IF m.ord_rubr = "N"
+         REPORT FORM l_05.frx TO &temp02 FOR EVAL(pcCondicion) NOCONSOLE
+      ELSE
+         REPORT FORM l_05a.frx TO &temp02 FOR EVAL(pcCondicion) NOCONSOLE
+      ENDIF
+   ENDIF
+
+   ACTIVATE WINDOW preview
+   MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+   RELEASE WINDOW preview
+   DELETE FILE &temp02
+ENDIF
+
+IF m.destino = "I"     && Imprimir.
+   IF .NOT. PRINTSTATUS()
+      ?? CHR(7)
+      WAIT WINDOW "╜ ASEGURESE DE QUE LA IMPRESORA ESTA CONECTADA Y ENCENDIDA !"
+   ELSE
+      WAIT WINDOW "IMPRIMIENDO..." NOWAIT
+
+      PRIVATE pcPageAdvance
+
+      IF _PADVANCE = "FORMFEED"
+         _PADVANCE = "LINEFEEDS"
+         pcPageAdvance = "FORMFEED"
+      ELSE
+         pcPageAdvance = "LINEFEEDS"
+      ENDIF
+
+      IF EMPTY(pcCondicion)
+         IF m.ord_rubr = "N"
+            REPORT FORM l_05.frx TO PRINTER NOCONSOLE
+         ELSE
+            REPORT FORM l_05a.frx TO PRINTER NOCONSOLE
+         ENDIF
+      ELSE
+         IF m.ord_rubr = "N"
+            REPORT FORM l_05.frx FOR EVAL(pcCondicion) TO PRINTER NOCONSOLE
+         ELSE
+            REPORT FORM l_05a.frx FOR EVAL(pcCondicion) TO PRINTER NOCONSOLE
+         ENDIF
+      ENDIF
+
+      IF pcPageAdvance = "FORMFEED"
+         _PADVANCE = "FORMFEED"
+      ENDIF
+
+      WAIT CLEAR
+   ENDIF
+ENDIF
+
+*-- MS-DOS C╒digo de Limpieza.
+IF USED("tmpmaespro")
+   SELECT tmpmaespro
+   USE
+ENDIF
+
+DELETE FILE &temp01
+DELETE FILE SUBSTR(temp01, 1, ATC(".", temp01)) + "CDX"
+
+*-- Quiebra las relaciones entre las tablas.
+SELECT maesprod
+SET ORDER TO TAG indice1 OF maesprod.cdx
+
+SET RELATION OFF INTO familias
+SET RELATION OFF INTO rubros1
+SET RELATION OFF INTO rubros2
+SET RELATION OFF INTO marcas1
+SET RELATION OFF INTO unidad
+SET RELATION OFF INTO proceden
+SET RELATION OFF INTO proveedo
+
+IF WEXIST("preview")
+   RELEASE WINDOW preview
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+SHOW GETS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPPD           m.rubro VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   12      Ё
+*       Ё Variable:            m.rubro                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htppd     &&  m.rubro VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ELSE
+   IF LASTKEY() = 27
+      RETURN
+   ENDIF
+ENDIF
+
+IF m.rubro = -1
+   @ 01,19 SAY PADR("TODOS", 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   RETURN
+ENDIF
+
+IF m.rubro <= 0
+   @ 01,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO rub1_pop.spr WITH "m.rubro", 0, .F.
+ENDIF
+
+IF m.rubro = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT rubros1
+SET ORDER TO TAG indice1 OF rubros1.cdx
+
+IF SEEK(m.rubro)
+   @ 01,19 SAY PADR(ALLTRIM(rubros1.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. rubros1.vigente
+      WAIT WINDOW "╜ CODIGO DE RUBRO NO VIGENTE !"
+      @ 01,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 01,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "╜ CODIGO DE RUBRO INEXISTENTE !"
+   DO rub1_pop.spr WITH "m.rubro", 0, .F.
+   SHOW GETS
+
+   SELECT rubros1
+   SET ORDER TO TAG indice1 OF rubros1.cdx
+
+   IF SEEK(m.rubro)
+      @ 01,19 SAY PADR(ALLTRIM(rubros1.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPPH           m.subrubro VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   13      Ё
+*       Ё Variable:            m.subrubro                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpph     &&  m.subrubro VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.subrubro = -1
+   @ 03,19 SAY PADR("TODOS", 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   RETURN
+ENDIF
+
+IF m.subrubro <= 0
+   @ 03,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO rub2_pop.spr WITH "m.subrubro", 0, .F.
+ENDIF
+
+IF m.subrubro = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT rubros2
+SET ORDER TO TAG indice1 OF rubros2.cdx
+
+IF SEEK(m.subrubro)
+   @ 03,19 SAY PADR(ALLTRIM(rubros2.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. rubros2.vigente
+      WAIT WINDOW "╜ CODIGO DE SUB-RUBRO NO VIGENTE !"
+      @ 03,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 03,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "╜ CODIGO DE SUB-RUBRO INEXISTENTE !"
+   DO rub2_pop.spr WITH "m.subrubro", 0, .F.
+   SHOW GETS
+
+   SELECT rubros2
+   SET ORDER TO TAG indice1 OF rubros2.cdx
+
+   IF SEEK(m.subrubro)
+      @ 03,19 SAY PADR(ALLTRIM(rubros2.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 03,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPPL           m.marca VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   14      Ё
+*       Ё Variable:            m.marca                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htppl     &&  m.marca VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.marca = -1
+   @ 05,19 SAY PADR("TODOS", 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   RETURN
+ENDIF
+
+IF m.marca <= 0
+   @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO mar1_pop.spr WITH "m.marca", 0, .F.
+ENDIF
+
+IF m.marca = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT marcas1
+SET ORDER TO TAG indice1 OF marcas1.cdx
+
+IF SEEK(m.marca)
+   @ 05,19 SAY PADR(ALLTRIM(marcas1.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. marcas1.vigente
+      WAIT WINDOW "╜ CODIGO DE MARCA NO VIGENTE !"
+      @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "╜ CODIGO DE MARCA INEXISTENTE !"
+   DO mar1_pop.spr WITH "m.marca", 0, .F.
+   SHOW GETS
+
+   SELECT marcas1
+   SET ORDER TO TAG indice1 OF marcas1.cdx
+
+   IF SEEK(m.marca)
+      @ 05,19 SAY PADR(ALLTRIM(marcas1.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPR7           m.vigente VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   15      Ё
+*       Ё Variable:            m.vigente                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpr7     &&  m.vigente VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(m.vigente, "S", "N", "T")
+   WAIT WINDOW "LISTAR ARTICULOS VIGENTES, DEBE SER: (S)I, (N)O o (T)ODOS !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPR8           m.ordenado VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   16      Ё
+*       Ё Variable:            m.ordenado                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpr8     &&  m.ordenado VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(m.ordenado, "C", "N")
+   WAIT WINDOW "ORDENADO POR, DEBE SER (C)ODIGO o (N)OMBRE !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPR9           m.ord_rubr VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   17      Ё
+*       Ё Variable:            m.ord_rubr                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpr9     &&  m.ord_rubr VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(m.ord_rubr, "S", "N")
+   WAIT WINDOW "ORDENADO POR RUBRO, DEBE SER (S)I o (N)O !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPRA           m.destino VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   18      Ё
+*       Ё Variable:            m.destino                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      7                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpra     &&  m.destino VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(m.destino, "P", "I")
+   WAIT WINDOW "DESTINO DEBE SER: (P)ANTALLA o (I)MPRESORA !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPRB           cmgChoice VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05,     Record Number:   19      Ё
+*       Ё Variable:            cmgChoice                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      8                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htprb     &&  cmgChoice VALID
+#REGION 1
+IF cmgChoice = 1
+   DO _Report_L_05
+   _CUROBJ = OBJNUM(m.rubro)
+ENDIF
+
+IF cmgChoice = 2
+   CLEAR READ
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPRC           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_05                               Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      9                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htprc     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: L_05
+*
+#REGION 1
+m.rubro    = -1
+m.subrubro = -1
+m.marca    = -1
+m.vigente  = "T"
+m.ordenado = "N"
+m.ord_rubr = "N"
+m.destino  = "P"
+
+IF m.rubro > 0
+   SELECT rubros1
+   SET ORDER TO TAG indice1 OF rubros1.cdx
+
+   IF SEEK(m.rubro)
+      @ 01,19 SAY PADR(ALLTRIM(rubros1.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   IF m.rubro = -1
+      @ 01,19 SAY PADR("TODOS", 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ENDIF
+
+IF m.subrubro > 0
+   SELECT rubros2
+   SET ORDER TO TAG indice1 OF rubros2.cdx
+
+   IF SEEK(m.subrubro)
+      @ 03,19 SAY PADR(ALLTRIM(rubros2.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 03,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   IF m.subrubro = -1
+      @ 03,19 SAY PADR("TODOS", 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 03,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ENDIF
+
+IF m.marca > 0
+   SELECT marcas1
+   SET ORDER TO TAG indice1 OF marcas1.cdx
+
+   IF SEEK(m.marca)
+      @ 05,19 SAY PADR(ALLTRIM(marcas1.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   IF m.marca = -1
+      @ 05,19 SAY PADR("TODOS", 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

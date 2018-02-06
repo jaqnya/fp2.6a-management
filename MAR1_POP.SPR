@@ -1,0 +1,379 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            MAR1_POP.SPR               08:19:09 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+PARAMETERS csaveto, nnewval, listable
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   MAR1_POP/MS-DOS C╒digo de configuraci╒n - SECCION 1   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+IF PARAMETERS() < 3
+   WAIT WINDOW "╜ NO SE HAN PASADO SUFICIENTES PARAMETROS !"
+   RETURN .F.
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htwzb")
+	DEFINE WINDOW _5450htwzb ;
+		FROM INT((SROW()-19)/2),INT((SCOL()-38)/2) ;
+		TO INT((SROW()-19)/2)+18,INT((SCOL()-38)/2)+37 ;
+		TITLE " MARCAS PARA ARTICULOS " ;
+		FOOTER " Presione: A-Z para Buscar " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   MAR1_POP/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+PRIVATE pnSelect, pcOrder, pnRecNo, pnCount, lstMarcas, paMarcas
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(),0,RECNO())
+
+SELECT marcas1
+COUNT TO pnCount FOR vigente
+
+IF EMPTY(pnCount)
+   DIMENSION paMarcas1(1, 2)
+   paMarcas1 = ""
+ELSE
+   DIMENSION paMarcas1(pnCount, 2)
+   COPY TO ARRAY paMarcas1 FIELDS codigo, nombre FOR vigente
+   =ASORT(paMarcas1, AELEMENT(paMarcas1, 1, 2))
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        MAR1_POP/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htwzb")
+	ACTIVATE WINDOW _5450htwzb SAME
+ELSE
+	ACTIVATE WINDOW _5450htwzb NOSHOW
+ENDIF
+@ 0,0 GET lstMarcas1 ;
+ 	PICTURE "@&T" ;
+	FROM paMarcas1 ;
+	RANGE 2 ;
+	SIZE 15,36 ;
+	DEFAULT 1 ;
+	VALID _5450htwzg() ;
+	COLOR SCHEME 14
+@ 15,1 GET cmdNew ;
+	PICTURE "@*VN \<Agregar" ;
+	SIZE 1,11,1 ;
+	DEFAULT 1 ;
+	VALID _5450htwzh()
+@ 15,13 GET cmdDelete ;
+	PICTURE "@*VN \<Borrar" ;
+	SIZE 1,10,1 ;
+	DEFAULT 1 ;
+	VALID _5450htwzi()
+@ 15,24 GET cmdEdit ;
+	PICTURE "@*VN \<Modificar" ;
+	SIZE 1,11,1 ;
+	DEFAULT 1 ;
+	VALID _5450htwzj()
+@ 16,1 GET cmdGetHelp ;
+	PICTURE "@*VN a\<Yuda" ;
+	SIZE 1,11,1 ;
+	DEFAULT 1 ;
+	VALID _5450htwzk()
+@ 16,24 GET cmdCancel ;
+	PICTURE "@*VN \?\<Salir" ;
+	SIZE 1,11,1 ;
+	DEFAULT 1 ;
+	VALID _5450htwzl()
+
+IF NOT WVISIBLE("_5450htwzb")
+	ACTIVATE WINDOW _5450htwzb
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN mar1_pop     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	SHOW _5450htwzm() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htwzb
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           MAR1_POP/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWZG           lstMarcas1 VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         MAR1_POP,     Record Number:    2  Ё
+*       Ё Variable:            lstMarcas1                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwzg     &&  lstMarcas1 VALID
+#REGION 1
+IF LASTKEY() = 27
+   &cSaveTo = nNewVal
+ELSE
+   IF EMPTY(paMarcas1(lstMarcas1, 1))
+      &cSaveTo = 0
+   ELSE
+      &cSaveTo = paMarcas1(lstMarcas1, 1)
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWZH           cmdNew VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         MAR1_POP,     Record Number:    3  Ё
+*       Ё Variable:            cmdNew                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwzh     &&  cmdNew VALID
+#REGION 1
+DO marcas1.prg WITH "Add"
+_CUROBJ = OBJNUM(lstMarcas1)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWZI           cmdDelete VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         MAR1_POP,     Record Number:    4  Ё
+*       Ё Variable:            cmdDelete                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwzi     &&  cmdDelete VALID
+#REGION 1
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT marcas1
+SET ORDER TO TAG indice1 OF marcas1.cdx
+
+IF SEEK(paMarcas1(lstMarcas1, 1))
+   DO marcas1.prg WITH "Delete"
+   _CUROBJ = OBJNUM(lstMarcas1)
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWZJ           cmdEdit VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         MAR1_POP,     Record Number:    5  Ё
+*       Ё Variable:            cmdEdit                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwzj     &&  cmdEdit VALID
+#REGION 1
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT marcas1
+SET ORDER TO TAG indice1 OF marcas1.cdx
+
+IF SEEK(paMarcas1(lstMarcas1, 1))
+   DO marcas1.prg WITH "Edit"
+   _CUROBJ = OBJNUM(lstMarcas1)
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWZK           cmdGetHelp VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         MAR1_POP,     Record Number:    6  Ё
+*       Ё Variable:            cmdGetHelp                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+*HELP Ч Help Item
+FUNCTION _5450htwzk     &&  cmdGetHelp VALID
+#REGION 1
+_CUROBJ = OBJNUM(lstMarcas1)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWZL           cmdCancel VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         MAR1_POP,     Record Number:    7  Ё
+*       Ё Variable:            cmdCancel                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwzl     &&  cmdCancel VALID
+#REGION 1
+CLEAR READ
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWZM           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         MAR1_POP                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      7                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwzm     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: MAR1_POP
+*
+#REGION 1
+IF pnCount = 0
+   SHOW GET cmdDelete DISABLE
+   SHOW GET cmdEdit   DISABLE
+ELSE
+   SHOW GET cmdDelete ENABLE
+   SHOW GET cmdEdit   ENABLE
+ENDIF
+
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

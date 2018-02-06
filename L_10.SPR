@@ -1,0 +1,500 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18              L_10.SPR                 08:18:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htptf")
+	DEFINE WINDOW _5450htptf ;
+		FROM INT((SROW()-15)/2),INT((SCOL()-77)/2) ;
+		TO INT((SROW()-15)/2)+14,INT((SCOL()-77)/2)+76 ;
+		TITLE " ESTADISTICO DE VENTAS Y COMPRAS POR MARCA Y ARTICULO " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     L_10/MS-DOS C╒digo de configuraci╒n - SECCION 2     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+mopcion     = "M"
+mopcion2    = "D"
+mmarca      = 0
+marti1      = ""
+mano        = YEAR(DATE())
+
+*-- Determina el nombre del local actual.
+pcSys16    = SYS(16, 0)
+pcProgram  = SUBSTR(pcSys16, RAT("\", pcSys16) + 1)
+pcPriorDir = SUBSTR(pcSys16, RAT("\", pcSys16, 2) + 1, RAT("\", pcSys16) - RAT("\", pcSys16, 2) - 1)
+
+IF pcPriorDir = "INTEGRAD.000"
+   *-- Casa Central.
+   pcLocal = ALLTRIM(control.empresa) + " - CASA CENTRAL"
+ELSE
+   IF pcPriorDir = "INTEGRAD.CON"
+      *-- Consolidado.
+      pcLocal = ALLTRIM(control.empresa) + " - CONSOLIDADO"
+   ELSE
+      IF LEFT(pcPriorDir, AT(".", pcPriorDir, 1) - 1) = "INTEGRAD"
+         *-- Sucursal
+         pcLocal = ALLTRIM(control.empresa) + " - SUC. " + RIGHT(pcPriorDir, LEN(pcPriorDir) - AT(".", pcPriorDir) - 1)
+      ENDIF
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё          L_10/MS-DOS Distribuci╒n de pantalla           Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htptf")
+	ACTIVATE WINDOW _5450htptf SAME
+ELSE
+	ACTIVATE WINDOW _5450htptf NOSHOW
+ENDIF
+@ 10,0 TO 10,74
+@ 1,3 SAY "OPCION....:" ;
+	SIZE 1,11, 0
+@ 3,3 SAY "SUB-OPCION:" ;
+	SIZE 1,11, 0
+@ 5,3 SAY "MARCA.....:" ;
+	SIZE 1,11, 0
+@ 7,3 SAY "ARTICULO..:" ;
+	SIZE 1,11, 0
+@ 9,3 SAY "A╔O.......:" ;
+	SIZE 1,11, 0
+@ 1,20 SAY "(M)arca, (U)n solo art║culo." ;
+	SIZE 1,28, 0
+@ 3,20 SAY "(D)etallado, (E)nglobado, (A)grupado" ;
+	SIZE 1,36, 0
+@ 1,15 GET mopcion ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htptk()
+@ 3,15 GET mopcion2 ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN mopcion = "M" ;
+	VALID _5450htptm()
+@ 5,15 GET mmarca ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "@K 9999" ;
+	WHEN mopcion = "M" ;
+	VALID _5450htptn()
+@ 7,15 GET marti1 ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@K" ;
+	WHEN mopcion = "U" ;
+	VALID _5450htptq()
+@ 9,15 GET mano ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "@K 9999"
+@ 11,20 GET cmgChoice ;
+	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
+	SIZE 1,12,10 ;
+	DEFAULT 1 ;
+	VALID _5450htptu()
+
+IF NOT WVISIBLE("_5450htptf")
+	ACTIVATE WINDOW _5450htptf
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      MS-DOSREAD contiene cl═usulas de SCREEN l_10       Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htptf
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPTK           mopcion VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_10,     Record Number:   10      Ё
+*       Ё Variable:            mopcion                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htptk     &&  mopcion VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ELSE
+   IF LASTKEY() = 27
+      RETURN
+   ENDIF
+ENDIF
+
+IF .NOT. INLIST(mopcion, "M", "U")
+   WAIT WINDOW "LA OPCION DEBE SER: (M)ARCA o (U)N SOLO ARTICULO !"
+   RETURN .F.
+ELSE
+   IF mopcion = "M"
+      STORE SPACE(15) TO marti1
+
+      @ 07,32 SAY REPLICATE(CHR(32), 40) ;
+         SIZE 1,40 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      STORE 0 TO mmarca
+
+      @ 05,21 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   SHOW GET mmarca
+   SHOW GET marti1
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPTM           mopcion2 VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_10,     Record Number:   11      Ё
+*       Ё Variable:            mopcion2                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htptm     &&  mopcion2 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(mopcion2, "D", "E", "A")
+   WAIT WINDOW "LA SUB-OPCION DEBE SER: (D)ETALLADO, (E)NGLOBADO, (A)GRUPADO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPTN           mmarca VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_10,     Record Number:   12      Ё
+*       Ё Variable:            mmarca                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htptn     &&  mmarca VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF mmarca <= 0
+   @ 05,21 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO mar1_pop.spr WITH "mmarca", 0, .F.
+ENDIF
+
+IF mmarca = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT marcas1
+SET ORDER TO TAG indice1 OF marcas1.cdx
+
+IF SEEK(mmarca)
+   @ 05,21 SAY PADR(ALLTRIM(marcas1.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. marcas1.vigente
+      WAIT WINDOW "╜ CODIGO DE MARCA NO VIGENTE !"
+      @ 05,21 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 05,21 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "╜ CODIGO DE MARCA INEXISTENTE !"
+   DO mar1_pop.spr WITH "mmarca", 0, .F.
+   SHOW GETS
+
+   SELECT marcas1
+   SET ORDER TO TAG indice1 OF marcas1.cdx
+
+   IF SEEK(mmarca)
+      @ 05,21 SAY PADR(ALLTRIM(marcas1.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,21 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPTQ           marti1 VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_10,     Record Number:   13      Ё
+*       Ё Variable:            marti1                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htptq     &&  marti1 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF EMPTY(marti1)
+   @ 07,32 SAY REPLICATE(CHR(32), 40) ;
+      SIZE 1,40 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   PUSH KEY CLEAR
+
+*!*   *-- Procedimiento de inspecci╒n de art║culos.
+*!*	   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+*!*	   DO brwMaesp.prg
+*!*	   ON KEY LABEL "ENTER"
+
+   m.articulo = ""
+   DO brwmaesp WITH "m.articulo"
+
+   POP KEY
+
+   IF LASTKEY() <> 27
+      marti1 = m.articulo
+   ELSE
+      RETURN .F.
+   ENDIF
+ENDIF
+
+PRIVATE pcSetExact
+
+IF SET("EXACT") = "OFF"
+   SET EXACT ON
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+SELECT maesprod
+SET ORDER TO TAG indice1 OF maesprod.cdx
+
+IF SEEK(marti1)
+   @ 07,32 SAY PADR(ALLTRIM(maesprod.nombre), 40, CHR(32)) ;
+      SIZE 1,40 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ELSE
+   @ 07,32 SAY REPLICATE(CHR(32), 40) ;
+      SIZE 1,40 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "╜ CODIGO DE ARTICULO INEXISTENTE !"
+
+   IF pcSetExact = "OFF"
+      SET EXACT OFF
+   ENDIF
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   RETURN .F.
+ENDIF
+
+IF pcSetExact = "OFF"
+   SET EXACT OFF
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPTU           cmgChoice VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_10,     Record Number:   15      Ё
+*       Ё Variable:            cmgChoice                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htptu     &&  cmgChoice VALID
+#REGION 1
+IF cmgChoice = 1
+   IF mopcion = "M"
+      DO CASE
+         CASE mopcion2 = "D"
+            =Report01()
+         CASE mopcion2 = "E"
+            =Report02()
+         CASE mopcion2 = "A"
+            =Report03()
+      ENDCASE
+   ENDIF
+
+   IF mopcion = "U"
+      =Report04()
+   ENDIF
+
+   _CUROBJ = OBJNUM(mopcion)
+ENDIF
+
+IF cmgChoice = 2
+   CLEAR READ
+ENDIF

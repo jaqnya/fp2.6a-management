@@ -1,0 +1,515 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            PROPERTY.SPR               08:19:09 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htwt2")
+	DEFINE WINDOW _5450htwt2 ;
+		FROM INT((SROW()-23)/2),INT((SCOL()-76)/2) ;
+		TO INT((SROW()-23)/2)+22,INT((SCOL()-76)/2)+75 ;
+		TITLE " Propiedades de la Empresa " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   PROPERTY/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+SELECT control
+SCATTER MEMVAR MEMO
+plEditing = .F.
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        PROPERTY/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htwt2")
+	ACTIVATE WINDOW _5450htwt2 SAME
+ELSE
+	ACTIVATE WINDOW _5450htwt2 NOSHOW
+ENDIF
+@ 12,1 TO 20,43
+@ 18,6 SAY "Descripci╒n:" ;
+	SIZE 1,12, 0
+@ 17,6 SAY "S║mbolo....:" ;
+	SIZE 1,12, 0
+@ 9,4 SAY "E-mail.....:" ;
+	SIZE 1,12, 0
+@ 8,4 SAY "Fax........:" ;
+	SIZE 1,12, 0
+@ 7,4 SAY "Tel┌fono...:" ;
+	SIZE 1,12, 0
+@ 5,4 SAY "Ciudad.....:" ;
+	SIZE 1,12, 0
+@ 4,4 SAY "Domicilio..:" ;
+	SIZE 1,12, 0
+@ 3,4 SAY "Directorio.:" ;
+	SIZE 1,12, 0
+@ 2,4 SAY "R.U.C. ....:" ;
+	SIZE 1,12, 0
+@ 1,4 SAY "Empresa....:" ;
+	SIZE 1,12, 0
+@ 0,1 TO 11,72
+@ 6,4 SAY "Barrio.....:" ;
+	SIZE 1,12, 0
+@ 12,2 SAY " Par═metros Generales " ;
+	SIZE 1,22, 0 ;
+	COLOR W+/N    
+@ 16,3 TO 19,41
+@ 10,4 SAY "Sitio Web..:" ;
+	SIZE 1,12, 0
+@ 0,2 SAY " Identificaci╒n " ;
+	SIZE 1,16, 0 ;
+	COLOR W+/N    
+@ 1,44 SAY "Local:" ;
+	SIZE 1,6, 0
+@ 16,4 SAY " Moneda Nacional " ;
+	SIZE 1,17, 0 ;
+	COLOR W+/N    
+@ 12,45 TO 17,72
+@ 12,46 SAY " Contadores " ;
+	SIZE 1,12, 0 ;
+	COLOR W+/N    
+@ 15,48 SAY "Proveedores:" ;
+	SIZE 1,12, 0
+@ 14,48 SAY "Clientes...:" ;
+	SIZE 1,12, 0
+@ 13,48 SAY "Art║culos..:" ;
+	SIZE 1,12, 0
+@ 16,48 SAY "Series p/OT:" ;
+	SIZE 1,12, 0
+@ 1,17 GET m.empresa ;
+	SIZE 1,26 ;
+	DEFAULT " " ;
+	WHEN plEditing
+@ 1,51 GET m.id_local ;
+	SIZE 1,2 ;
+	DEFAULT 0 ;
+	PICTURE "99" ;
+	WHEN plEditing ;
+	VALID _5450htwuq()
+@ 2,17 GET m.ruc ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plEditing
+@ 3,17 GET m.directory ;
+	SIZE 1,53 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plEditing ;
+	VALID _5450htwut()
+@ 4,17 GET m.direccion ;
+	SIZE 1,53 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plEditing
+@ 5,17 GET m.ciudad ;
+	SIZE 1,30 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plEditing
+@ 6,17 GET m.barrio ;
+	SIZE 1,30 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plEditing
+@ 7,17 GET m.telefono ;
+	SIZE 1,30 ;
+	DEFAULT " " ;
+	WHEN plEditing
+@ 8,17 GET m.fax ;
+	SIZE 1,30 ;
+	DEFAULT " " ;
+	WHEN plEditing
+@ 9,17 GET m.e_mail ;
+	SIZE 1,53 ;
+	DEFAULT " " ;
+	WHEN plEditing
+@ 10,17 GET m.web_site ;
+	SIZE 1,53 ;
+	DEFAULT " " ;
+	WHEN plEditing
+@ 14,19 GET m.pimpuesto ;
+	SIZE 1,6 ;
+	DEFAULT 0 ;
+	PICTURE "999.99" ;
+	WHEN plEditing ;
+	VALID _5450htwuv()
+@ 17,19 GET m.simbolo ;
+	SIZE 1,4 ;
+	DEFAULT " " ;
+	WHEN plEditing
+@ 18,19 GET m.moneda ;
+	SIZE 1,20 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plEditing
+@ 13,61 GET m.maecounter ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "@!K 9999999999" ;
+	WHEN plEditing
+@ 14,61 GET m.clicounter ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "@!K 9999999999" ;
+	WHEN plEditing
+@ 15,61 GET m.procounter ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "@!K 9999999999" ;
+	WHEN plEditing
+@ 16,61 GET m.serieot ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "@!K" ;
+	WHEN plEditing
+@ 19,46 GET pnChoice ;
+	PICTURE "@*HN \!\<Grabar;\?\<Cancelar" ;
+	SIZE 1,12,3 ;
+	DEFAULT 1 ;
+	VALID _5450htwux()
+@ 14,4 SAY "% de I.V.A...:" ;
+	SIZE 1,14, 0
+
+IF NOT WVISIBLE("_5450htwt2")
+	ACTIVATE WINDOW _5450htwt2
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN property     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	ACTIVATE _5450htwuy() ;
+	SHOW _5450htwuz() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htwt2
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWUQ           m.id_local VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         PROPERTY,     Record Number:   28  Ё
+*       Ё Variable:            m.id_local                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwuq     &&  m.id_local VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.id_local <= 0
+   @ 01,55 SAY REPLICATE(CHR(32), 15) ;
+      SIZE 1,15 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO loca_pop.spr WITH "m.id_local", 0, .F.
+ENDIF
+
+IF m.id_local = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT locales
+SET ORDER TO TAG indice1 OF locales.cdx
+
+IF SEEK(m.id_local)
+   @ 01,55 SAY PADR(ALLTRIM(locales.nombre), 15, CHR(32)) ;
+      SIZE 1,15 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. locales.vigente
+      WAIT WINDOW "╜ CODIGO DE LOCAL NO VIGENTE !"
+      @ 01,55 SAY REPLICATE(CHR(32), 15) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 01,55 SAY REPLICATE(CHR(32), 15) ;
+      SIZE 1,15 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "╜ CODIGO DE LOCAL INEXISTENTE !"
+   DO loca_pop.spr WITH "m.id_local", 0, .F.
+   SHOW GETS
+
+   SELECT locales
+   SET ORDER TO TAG indice1 OF locales.cdx
+
+   IF SEEK(m.id_local)
+      @ 01,55 SAY PADR(ALLTRIM(locales.nombre), 15, CHR(32)) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,55 SAY REPLICATE(CHR(32), 15) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWUT           m.directory VALID                  Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         PROPERTY,     Record Number:   30  Ё
+*       Ё Variable:            m.directory                        Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwut     &&  m.directory VALID
+#REGION 1
+IF m.id_local = 1
+   m.directory =  SUBSTR(m.directory, 1, RAT("\", m.directory, 1)) + "INTEGRAD.000"
+ELSE
+   IF m.id_local = 99
+      m.directory =  SUBSTR(m.directory, 1, RAT("\", m.directory, 1)) + "INTEGRAD.CON"
+   ELSE
+      m.directory =  SUBSTR(m.directory, 1, RAT("\", m.directory, 1)) + "INTEGRAD." + IIF(m.id_local < 10, "00" + LTRIM(STR(m.id_local - 1, 2)), "0" + LTRIM(STR(m.id_local - 1, 2)))
+   ENDIF
+ENDIF
+
+m.directory = PADR(ALLTRIM(m.directory), 53, CHR(32))
+SHOW GET m.directory
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWUV           m.pimpuesto VALID                  Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         PROPERTY,     Record Number:   38  Ё
+*       Ё Variable:            m.pimpuesto                        Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwuv     &&  m.pimpuesto VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.pimpuesto < 0
+   WAIT WINDOW "╜ EL PORCENTAJE DEL IMPUESTO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWUX           pnChoice VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         PROPERTY,     Record Number:   45  Ё
+*       Ё Variable:            pnChoice                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwux     &&  pnChoice VALID
+#REGION 1
+IF plEditing
+   DO CASE
+      CASE pnChoice = 1
+         GATHER MEMVAR MEMO
+         CLEAR READ
+      CASE pnChoice = 2
+         CLEAR READ
+   ENDCASE
+ELSE
+   DO CASE
+      CASE pnChoice = 1
+         plEditing = .T.
+         SHOW GET pnChoice, 1 PROMPT "\!\<Grabar"
+         SHOW GET pnChoice, 2 PROMPT "\<Cancelar"
+         _CUROBJ = OBJNUM(m.empresa)
+      CASE pnChoice = 2
+         CLEAR READ
+   ENDCASE
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWUY           Nivel de lectura ACTIVATE          Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         PROPERTY                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwuy     && Read Level Activate
+*
+* C╒digo ACTIVATE de la pantalla: PROPERTY
+*
+#REGION 1
+SHOW GET pnChoice, 1 PROMPT "\!\<Editar"
+SHOW GET pnChoice, 2 PROMPT "\<Salir"
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWUZ           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         PROPERTY                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwuz     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: PROPERTY
+*
+#REGION 1
+IF m.id_local <> 0
+   SELECT locales
+   SET ORDER TO indice1 OF locales.cdx
+
+   IF SEEK(m.id_local)
+      @ 01,55 SAY PADR(ALLTRIM(locales.nombre), 15, CHR(32)) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,55 SAY REPLICATE(CHR(32), 15) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   SELECT control
+ELSE
+   @ 01,55 SAY REPLICATE(CHR(32), 15) ;
+      SIZE 1,15 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

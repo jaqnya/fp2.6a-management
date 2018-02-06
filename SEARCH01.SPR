@@ -1,0 +1,329 @@
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ 01/23/18            SEARCH01.SPR               08:19:02 ³
+*       ³                                                         ³
+*       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*       ³                                                         ³
+*       ³ Nombre del autor                                        ³
+*       ³                                                         ³
+*       ³ Copyright (c) 2018 Nombre de la empresa                 ³
+*       ³ Direcci¢n                                               ³
+*       ³ Ciudad,     C.P.                                        ³
+*       ³ Pa¡s                                              ³
+*       ³                                                         ³
+*       ³ Description:                                            ³
+*       ³ Este programa lo ha generado autom ticamente GENSCRN.    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³             MS-DOS Definiciones de ventana              ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+IF NOT WEXIST("_5450hts3y")
+	DEFINE WINDOW _5450hts3y ;
+		FROM INT((SROW()-4)/2),INT((SCOL()-41)/2) ;
+		TO INT((SROW()-4)/2)+3,INT((SCOL()-41)/2)+40 ;
+		TITLE " BUSQUEDA POR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³   SEARCH01/MS-DOS C¢digo de configuraci¢n - SECCION 2   ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+PRIVATE m.tipodocu, m.nrodocu
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³        SEARCH01/MS-DOS Distribuci¢n de pantalla         ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF WVISIBLE("_5450hts3y")
+	ACTIVATE WINDOW _5450hts3y SAME
+ELSE
+	ACTIVATE WINDOW _5450hts3y NOSHOW
+ENDIF
+@ 0,2 SAY "Documento:" ;
+	SIZE 1,10, 0
+@ 1,2 SAY "N£mero...:" ;
+	SIZE 1,10, 0
+@ 0,13 GET m.tipodocu ;
+	SIZE 1,1 ;
+	DEFAULT 0 ;
+	PICTURE "9" ;
+	VALID _5450hts41()
+@ 1,13 GET m.nrodocu ;
+	SIZE 1,7 ;
+	DEFAULT 0 ;
+	PICTURE "9999999" ;
+	WHEN NOT EMPTY(m.tipodocu) ;
+	VALID _5450hts46()
+
+IF NOT WVISIBLE("_5450hts3y")
+	ACTIVATE WINDOW _5450hts3y
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    MS-DOSREAD contiene cl usulas de SCREEN search01     ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450hts3y
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTS41           m.tipodocu VALID                   ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         SEARCH01,     Record Number:    4  ³
+*       ³ Variable:            m.tipodocu                         ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      1                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450hts41     &&  m.tipodocu VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF LOWER(ALIAS()) = "cabevent"
+   IF m.tipodocu > 4
+      @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ EL TIPO DE DOCUMENTO DEBE SER: 1, 2, 3 à 4 !"
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF LOWER(ALIAS()) = "cabenotc"
+   IF m.tipodocu > 2
+      @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ EL TIPO DE DOCUMENTO DEBE SER: 1 à 2 !"
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF LOWER(ALIAS()) = "cabecob"
+   IF m.tipodocu > 2
+      @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ EL TIPO DE DOCUMENTO DEBE SER: 1 à 2 !"
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF LOWER(ALIAS()) = "cabevent"
+   IF m.tipodocu <= 0
+      @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      DO vttipodo.spr WITH "m.tipodocu", 0, .F.
+   ENDIF
+ENDIF
+
+IF LOWER(ALIAS()) = "cabenotc"
+   IF m.tipodocu <= 0
+      @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      DO ncctipod.spr WITH "m.tipodocu", 0, .F.
+   ENDIF
+ENDIF
+
+IF LOWER(ALIAS()) = "cabecob"
+   IF m.tipodocu <= 0
+      @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      DO cbtipodo.spr WITH "m.tipodocu", 0, .F.
+   ENDIF
+ENDIF
+
+IF m.tipodocu = 0
+   RETURN .F.
+ENDIF
+
+IF LOWER(ALIAS()) = "cabevent"
+   DO CASE
+      CASE m.tipodocu = 1
+         @ 00,16 SAY "VENTA CONTADO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      CASE m.tipodocu = 2
+         @ 00,16 SAY "VENTA CREDITO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      CASE m.tipodocu = 3
+         @ 00,16 SAY "VENTA I.V.A. INCLUIDO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      CASE m.tipodocu = 4
+         @ 00,16 SAY "VENTA TRIBUTO UNICO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      OTHERWISE
+         @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+   ENDCASE
+ENDIF
+
+IF LOWER(ALIAS()) = "cabenotc"
+   DO CASE
+      CASE m.tipodocu = 1
+         @ 00,16 SAY "NOTA DE DEBITO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      CASE m.tipodocu = 2
+         @ 00,16 SAY "NOTA DE CREDITO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      CASE m.tipodocu = 3
+         @ 00,16 SAY "C.I. NOTA DE DEBITO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      CASE m.tipodocu = 4
+         @ 00,16 SAY "C.I. NOTA DE CREDITO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      OTHERWISE
+         @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+   ENDCASE
+ENDIF
+
+IF LOWER(ALIAS()) = "cabecob"
+   DO CASE
+      CASE m.tipodocu = 1
+         @ 00,16 SAY "RECIBO DE COBRO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      CASE m.tipodocu = 2
+         @ 00,16 SAY "C.I. DE COBRO" ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      OTHERWISE
+         @ 00,16 SAY REPLICATE(CHR(32), 21) ;
+            SIZE 1,21 ;
+            PICTURE "@!" ;
+            COLOR W/N
+   ENDCASE
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTS46           m.nrodocu VALID                    ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         SEARCH01,     Record Number:    5  ³
+*       ³ Variable:            m.nrodocu                          ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      2                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450hts46     &&  m.nrodocu VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.nrodocu <= 0
+   WAIT WINDOW "­ EL N§ DEL DOCUMENTO DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ELSE
+
+   PRIVATE pcSelect, pcOrder, pnRecNo
+   pcSelect = SELECT()
+   pcOrder  = ORDER()
+   pnRecNo  = IIF(EOF(), 0, RECNO())
+
+   IF NOT SEEK(STR(m.tipodocu, 1) + STR(m.nrodocu, 7))
+      WAIT WINDOW "­ EL DATO BUSCADO NO HA SIDO ENCONTRADO !"
+
+      SELECT (pcSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      _CUROBJ = OBJNUM(m.nrodocu)
+   ELSE
+      CLEAR READ
+   ENDIF
+ENDIF

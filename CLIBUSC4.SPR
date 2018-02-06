@@ -1,0 +1,150 @@
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ 01/23/18            CLIBUSC4.SPR               08:19:02 ³
+*       ³                                                         ³
+*       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*       ³                                                         ³
+*       ³ Nombre del autor                                        ³
+*       ³                                                         ³
+*       ³ Copyright (c) 2018 Nombre de la empresa                 ³
+*       ³ Direcci¢n                                               ³
+*       ³ Ciudad,     C.P.                                        ³
+*       ³ Pa¡s                                              ³
+*       ³                                                         ³
+*       ³ Description:                                            ³
+*       ³ Este programa lo ha generado autom ticamente GENSCRN.    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³             MS-DOS Definiciones de ventana              ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+IF NOT WEXIST("_5450htrkq")
+	DEFINE WINDOW _5450htrkq ;
+		FROM INT((SROW()-3)/2),INT((SCOL()-66)/2) ;
+		TO INT((SROW()-3)/2)+2,INT((SCOL()-66)/2)+65 ;
+		TITLE " BUSQUEDA POR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³        CLIBUSC4/MS-DOS Distribuci¢n de pantalla         ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF WVISIBLE("_5450htrkq")
+	ACTIVATE WINDOW _5450htrkq SAME
+ELSE
+	ACTIVATE WINDOW _5450htrkq NOSHOW
+ENDIF
+@ 0,22 GET m.nombre_c ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!T" ;
+	VALID _5450htrkt()
+@ 0,2 SAY "NOMBRE DEL CONYUGE:" ;
+	SIZE 1,19, 0
+
+IF NOT WVISIBLE("_5450htrkq")
+	ACTIVATE WINDOW _5450htrkq
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    MS-DOSREAD contiene cl usulas de SCREEN clibusc4     ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htrkq
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTRKT           m.nombre_c VALID                   ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         CLIBUSC4,     Record Number:    2  ³
+*       ³ Variable:            m.nombre_c                         ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      1                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htrkt     &&  m.nombre_c VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT, K_F1, K_BSPACE)
+   RETURN .F.
+ENDIF
+
+IF OCCURS("*", m.nombre_c) = LEN(m.nombre_c)
+   WAIT WINDOW "­ DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !"
+   RETURN .F.
+ENDIF
+
+IF EMPTY(m.nombre_c)
+   WAIT WINDOW "­ EL NOMBRE DEL CONYUGE NO PUEDE QUEDAR EN BLANCO !"
+   RETURN .F.
+ELSE
+   PRIVATE pcSelect, pcOrder, pnRecNo
+   pcSelect = SELECT()
+   pcOrder  = ORDER()
+   pnRecNo  = IIF(EOF(), 0, RECNO())
+   SELECT clientes
+   SET ORDER TO TAG indice4 OF clientes.cdx
+   IF OCCURS("*", m.nombre_c) > 0
+      DO SQLquery.prg WITH m.nombre_c, "clientes.nombre_c"
+   ELSE
+      IF NOT SEEK(m.nombre_c)
+         WAIT WINDOW "­ EL DATO BUSCADO NO HA SIDO ENCONTRADO !"
+         SELECT (pcSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo # 0
+            GOTO RECORD pnRecNo
+         ENDIF
+         _CUROBJ = OBJNUM(m.nombre_c)
+      ELSE
+         CLEAR READ
+      ENDIF
+   ENDIF
+ENDIF

@@ -1,0 +1,176 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 10/06/10             OTORDEN.SPR               10:48:07 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2010 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_31p0n5hun")
+	DEFINE WINDOW _31p0n5hun ;
+		FROM INT((SROW()-15)/2),INT((SCOL()-29)/2) ;
+		TO INT((SROW()-15)/2)+14,INT((SCOL()-29)/2)+28 ;
+		TITLE " ORDENAR POR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   OTORDEN/MS-DOS C╒digo de configuraci╒n - SECCION 2    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+PRIVATE paOrder, pnChoice
+
+DIMENSION paOrder(11)
+
+paOrder(1)  = " 1. SERIE + OT N╖"
+paOrder(2)  = " 2. FECHA DE RECEPCION"
+paOrder(3)  = " 3. FECHA DE ENTREGA"
+paOrder(4)  = " 4. CODIGO DEL CLIENTE"
+paOrder(5)  = " 5. NOMBRE DEL CLIENTE"
+paOrder(6)  = " 6. CEDULA DE IDENTIDAD"
+paOrder(7)  = " 7. MARCA + MODELO"
+paOrder(8)  = " 8. ESTADO DE LA OT"
+paOrder(9)  = " 9. CHAPA"
+paOrder(10) = "10. MOTOR"
+paOrder(11) = "11. CHASIS"
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё         OTORDEN/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_31p0n5hun")
+	ACTIVATE WINDOW _31p0n5hun SAME
+ELSE
+	ACTIVATE WINDOW _31p0n5hun NOSHOW
+ENDIF
+@ 0,0 GET pnChoice ;
+ 	PICTURE "@&T" ;
+	FROM paOrder ;
+	SIZE 13,27 ;
+	DEFAULT 1 ;
+	VALID _31p0n5hup() ;
+	COLOR SCHEME 14
+
+IF NOT WVISIBLE("_31p0n5hun")
+	ACTIVATE WINDOW _31p0n5hun
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     MS-DOSREAD contiene cl═usulas de SCREEN otorden     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _31p0n5hun
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё            OTORDEN/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+RELEASE paOrder, pnChoice
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _31P0N5HUP           pnChoice VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OTORDEN,     Record Number:    2   Ё
+*       Ё Variable:            pnChoice                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _31p0n5hup     &&  pnChoice VALID
+#REGION 1
+DO CASE
+   CASE pnChoice = 1
+      SET ORDER TO TAG indice1
+   CASE pnChoice = 2
+      SET ORDER TO TAG indice2
+   CASE pnChoice = 3
+      SET ORDER TO TAG indice3
+   CASE pnChoice = 4
+      SET ORDER TO TAG indice4
+   CASE pnChoice = 5
+      SET ORDER TO TAG indice5
+   CASE pnChoice = 6
+      SET ORDER TO TAG indice6
+   CASE pnChoice = 7
+      SET ORDER TO TAG indice7
+   CASE pnChoice = 8
+      SET ORDER TO TAG indice8
+   CASE pnChoice = 9
+      SET ORDER TO TAG indice9
+   CASE pnChoice = 10
+      SET ORDER TO TAG indice10
+   CASE pnChoice = 11
+      SET ORDER TO TAG indice11
+ENDCASE

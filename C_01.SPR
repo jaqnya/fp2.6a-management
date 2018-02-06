@@ -1,0 +1,512 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18              C_01.SPR                 08:18:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htp7n")
+	DEFINE WINDOW _5450htp7n ;
+		FROM 2, 16 ;
+		TO 8,66 ;
+		TITLE " DOCUMENTOS RELACIONADOS A UNA VENTA " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     C_01/MS-DOS C╒digo de configuraci╒n - SECCION 2     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PRIVATE m.tipodocu, m.nrodocu, m.saldo
+
+STORE 0 TO m.tipodocu, m.nrodocu, m.saldo
+
+SELECT cabevent
+SET ORDER TO 1
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё          C_01/MS-DOS Distribuci╒n de pantalla           Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htp7n")
+	ACTIVATE WINDOW _5450htp7n SAME
+ELSE
+	ACTIVATE WINDOW _5450htp7n NOSHOW
+ENDIF
+@ 1,36 SAY "N╖:" ;
+	SIZE 1,3, 0
+@ 1,2 SAY "Doc..:" ;
+	SIZE 1,6, 0
+@ 3,2 SAY "Saldo:" ;
+	SIZE 1,6, 0
+@ 1,9 GET m.tipodocu ;
+	SIZE 1,1 ;
+	DEFAULT 0 ;
+	PICTURE "9" ;
+	VALID _5450htp7p()
+@ 1,40 GET m.nrodocu ;
+	SIZE 1,7 ;
+	DEFAULT 0 ;
+	PICTURE "9999999" ;
+	VALID _5450htp7q()
+@ 3,9 SAY m.saldo ;
+	SIZE 1,11 ;
+	COLOR B/W     
+
+IF NOT WVISIBLE("_5450htp7n")
+	ACTIVATE WINDOW _5450htp7n
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      MS-DOSREAD contiene cl═usulas de SCREEN c_01       Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	SHOW _5450htp7r() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htp7n
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             C_01/MS-DOS C╒digo de limpieza              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   C_01/MS-DOS Procedimientos y funciones de soporte     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PROCEDURE _Consulta_C_01
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+*-- MS-DOS Base de datos, ║ndices, relaciones.
+SELECT 0
+temp01 = "tm" + RIGHT(SYS(3), 6) + ".dbf"
+
+CREATE TABLE &temp01 (tipodocu   N(01) ,;
+                      nrodocu    N(07) ,;
+                      tipo       C(16) ,;
+                      importe    N(12,2) ,;
+                      fechadocu  D(08))
+
+USE &temp01 ALIAS tmpconsult EXCLUSIVE
+INDEX ON DTOS(fechadocu)  TAG indice1
+
+SELECT cabecob
+SET ORDER TO 1
+
+SELECT detacob
+SET ORDER TO 1
+SET RELATION TO STR(detacob.tiporeci, 1) + STR(detacob.nroreci, 7) INTO cabecob
+
+SELECT cabevent
+SET ORDER TO 1
+SET RELATION TO cabevent.cliente INTO clientes ADDITIVE
+SET RELATION TO cabevent.moneda  INTO monedas  ADDITIVE
+
+IF SEEK(STR(m.tipodocu, 1) + STR(m.nrodocu, 7))
+   INSERT INTO tmpconsult (tipodocu, nrodocu, tipo, importe, fechadocu) ;
+      VALUES (cabevent.tipodocu, cabevent.nrodocu, IIF(cabevent.tipodocu =  1, "VENTA CONTADO", IIF(cabevent.tipodocu = 2, "VENTA CREDITO", ;
+      IIF(cabevent.tipodocu = 3, "I.V.A. INCLUIDO", ;
+      IIF(cabevent.tipodocu = 4, "TRIBUTO UNICO" ,;
+      IIF(cabevent.tipodocu = 5, "CI. VTA. CONTADO" ,;
+      IIF(cabevent.tipodocu = 6, "CI. VTA. CREDITO", "")))))), cabevent.monto_fact, cabevent.fechadocu)
+
+   IF cabevent.moneda = 1
+      @ 03,24 SAY PADR(ALLTRIM(monedas.nombre), 25, CHR(32)) ;
+         SIZE 1,25 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 03,24 SAY PADR(ALLTRIM(monedas.nombre), 25, CHR(32)) ;
+         SIZE 1,25 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ENDIF
+
+   m.saldo = cabevent.monto_fact
+ENDIF
+
+SELECT detacob
+SET ORDER TO 1
+SET ORDER TO TAG indice2 OF detacob.cdx
+
+IF SEEK(STR(m.tipodocu, 1) + STR(m.nrodocu, 7))
+   SCAN WHILE STR(detacob.tipodocu, 1) + STR(detacob.nrodocu, 7) = STR(m.tipodocu, 1) + STR(m.nrodocu, 7)
+      INSERT INTO tmpconsult (tipodocu, nrodocu, tipo, importe, fechadocu) ;
+         VALUES (cabecob.tiporeci, cabecob.nroreci, IIF(cabecob.tiporeci =  1, "RECIBO DE COBRO", IIF(cabecob.tiporeci = 2, "C.I. DE COBRO", "")), detacob.monto, cabecob.fechareci)
+      m.saldo = m.saldo - detacob.monto
+   ENDSCAN
+ENDIF
+
+SELECT cabenotc
+SET ORDER TO 1
+SET ORDER TO TAG indice3 OF cabenotc.cdx
+
+IF SEEK(STR(m.tipodocu, 1) + STR(m.nrodocu, 7))
+   SCAN WHILE STR(cabenotc.tipodocu, 1) + STR(cabenotc.nrodocu, 7) = STR(m.tipodocu, 1) + STR(m.nrodocu, 7)
+      INSERT INTO tmpconsult (tipodocu, nrodocu, tipo, importe, fechadocu) ;
+         VALUES (cabenotc.tiponota, cabenotc.nronota, IIF(cabenotc.tiponota =  1, "NOTA DE DEBITO", IIF(cabenotc.tiponota =  2, "NOTA DE CREDITO", IIF(cabenotc.tiponota =  3, "CI. NOTA DEBITO", ;
+         IIF(cabenotc.tiponota =  4, "CI. NOTA CREDITO", "")))), cabenotc.monto_nota, cabenotc.fechanota)
+      IF cabenotc.aplicontra = 2
+         m.saldo = m.saldo - cabenotc.monto_nota
+      ELSE
+         IF cabenotc.aplicontra = 1 .AND. cabevent.tipodocu = 1
+            m.saldo = m.saldo - cabenotc.monto_nota
+         ENDIF
+      ENDIF
+   ENDSCAN
+ENDIF
+
+m.saldo = TRANSFORM(m.saldo, IIF(cabevent.moneda <> 1, "9999,999.99", "999,999,999"))
+SHOW GETS
+
+*-- MS-DOS Definiciones de ventanas.
+IF .NOT. WEXIST("tmpconsult")
+   DEFINE WINDOW tmpconsult ;
+      FROM 10,15 ;
+      TO 22,67 ;
+      TITLE SUBSTR(ALLTRIM(clientes.nombre), 1, 35) + " (" + ALLTRIM(STR(clientes.codigo, 5)) + ")" ;
+      SYSTEM ;
+      CLOSE ;
+      NOFLOAT ;
+      GROW ;
+      MDI ;
+      NOMINIMIZE ;
+      SHADOW ;
+      ZOOM ;
+      COLOR SCHEME 15
+ENDIF
+
+SELECT tmpconsult
+GO TOP
+
+BROWSE WINDOW tmpconsult FIELDS ;
+   tipo      :R:16:H = "Tipo" ,;
+   tipodocu  :R:01:H = "" ,;
+   nrodocu   :R:07:H = "N╖" ,;
+   fechadocu :R:10:H = "Fecha" ,;
+   calc_f1 = TRANSFORM(importe, IIF(cabevent.moneda <> 1, "9999,999.99", "999,999,999")) :R:11:H = "Importe" ;
+   NOAPPEND NODELETE NOMODIFY
+
+STORE 0 TO m.tipodocu, m.nrodocu, m.saldo
+
+@ 01,12 SAY REPLICATE(CHR(32), 21) ;
+   SIZE 1,21 ;
+   PICTURE "@!" ;
+   COLOR W/N
+
+@ 03,24 SAY REPLICATE(CHR(32), 25) ;
+   SIZE 1,25 ;
+   PICTURE "@!" ;
+   COLOR W/N
+
+SHOW GETS
+
+*-- MS-DOS Cierre de Bases de Datos.
+IF USED("tmpconsult")
+   SELECT tmpconsult
+   USE
+ENDIF
+
+SELECT detacob
+SET RELATION OFF INTO cabecob
+
+SELECT cabevent
+SET RELATION OFF INTO clientes
+SET RELATION OFF INTO monedas
+
+IF WEXIST("tmpconsult")
+   RELEASE WINDOW tmpconsult
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTP7P           m.tipodocu VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         C_01,     Record Number:    5      Ё
+*       Ё Variable:            m.tipodocu                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htp7p     &&  m.tipodocu VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF glLegal
+   IF m.tipodocu > 4
+      @ 01,12 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "╜ EL TIPO DE DOCUMENTO DEBE SER DEL 1 AL 4 !"
+      RETURN .F.
+   ENDIF
+ELSE
+   IF m.tipodocu > 6
+      @ 01,12 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "╜ EL TIPO DE DOCUMENTO DEBE SER DEL 1 AL 6 !"
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF m.tipodocu <= 0
+   @ 01,12 SAY REPLICATE(CHR(32), 21) ;
+      SIZE 1,21 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO tipodoc2.spr WITH "m.tipodocu", 0, .F.
+ENDIF
+
+IF m.tipodocu = 0
+   RETURN .F.
+ENDIF
+
+DO CASE
+   CASE m.tipodocu = 1
+      @ 01,12 SAY "VENTA CONTADO" ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 2
+      @ 01,12 SAY "VENTA CREDITO" ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 3
+      @ 01,12 SAY "VENTA I.V.A. INCLUIDO" ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 4
+      @ 01,12 SAY "VENTA TRIBUTO UNICO" ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 5
+      @ 01,12 SAY "C.I. VENTA CONTADO" ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 6
+      @ 01,12 SAY "C.I. VENTA CREDITO" ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 01,12 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTP7Q           m.nrodocu VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         C_01,     Record Number:    6      Ё
+*       Ё Variable:            m.nrodocu                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htp7q     &&  m.nrodocu VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.nrodocu <= 0
+   WAIT WINDOW "╜ EL N╖ DEL DOCUMENTO DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo, plReturnedValue
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT cabevent
+SET ORDER TO TAG indice1 OF cabevent.cdx
+
+IF .NOT. SEEK(STR(m.tipodocu, 1) + STR(m.nrodocu, 7))
+   WAIT WINDOW "EL DOCUMENTO INGRESADO NO FIGURA EN LA TABLA DE VENTAS !"
+
+   STORE 0 TO m.tipodocu, m.nrodocu, m.saldo
+
+   @ 01,12 SAY REPLICATE(CHR(32), 21) ;
+      SIZE 1,21 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   @ 03,24 SAY REPLICATE(CHR(32), 25) ;
+      SIZE 1,25 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   SHOW GETS
+
+   plReturnedValue = .F.
+ELSE
+   IF cabevent.anulado
+      WAIT WINDOW "ESTA FACTURA HA SIDO ANULADA EL " + DTOC(cabevent.fechaanu) + " !"
+
+      STORE 0 TO m.tipodocu, m.nrodocu, m.saldo
+
+      @ 01,12 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      @ 03,24 SAY REPLICATE(CHR(32), 25) ;
+         SIZE 1,25 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SHOW GETS
+
+      plReturnedValue = .F.
+   ELSE
+      plReturnedValue = .T.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+IF .NOT. plReturnedValue
+   _CUROBJ = OBJNUM(m.tipodocu)
+   RETURN
+ENDIF
+
+
+DO _Consulta_C_01
+
+_CUROBJ = OBJNUM(m.tipodocu)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTP7R           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         C_01                               Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htp7r     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: C_01
+*
+#REGION 1
+IF SYS(2016) = "_5450HTP7N" OR SYS(2016) = "*"
+	ACTIVATE WINDOW _5450htp7n SAME
+	@ 3,9 SAY m.saldo ;
+		SIZE 1,11, 0 ;
+		COLOR B/W     
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

@@ -1,0 +1,247 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            BUSCAR11.SPR               08:19:03 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   BUSCAR11/MS-DOS C╒digo de configuraci╒n - SECCION 1   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PRIVATE cScheme13, cScheme14
+
+cScheme13 = SCHEME(13)
+cScheme14 = SCHEME(14)
+
+SET COLOR OF SCHEME 13 TO &color_08
+SET COLOR OF SCHEME 14 TO &color_09
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htsnu")
+	DEFINE WINDOW _5450htsnu ;
+		FROM INT((SROW()-5)/2),INT((SCOL()-30)/2) ;
+		TO INT((SROW()-5)/2)+4,INT((SCOL()-30)/2)+29 ;
+		TITLE " BUSQUEDA POR " ;
+		FLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   BUSCAR11/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+PRIVATE m.serie, m.nroot
+
+m.serie = SUBSTR(control.serieot, 1, 1)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        BUSCAR11/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htsnu")
+	ACTIVATE WINDOW _5450htsnu SAME
+ELSE
+	ACTIVATE WINDOW _5450htsnu NOSHOW
+ENDIF
+@ 1,2 SAY "SERIE:" ;
+	SIZE 1,6, 0
+@ 1,12 SAY "OT N╖:" ;
+	SIZE 1,6, 0
+@ 1,9 GET m.serie ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htsny()
+@ 1,19 GET m.nroot ;
+	SIZE 1,7 ;
+	DEFAULT 0 ;
+	PICTURE "9999999" ;
+	WHEN .NOT. (EMPTY(m.serie)) ;
+	VALID _5450htsnz()
+
+IF NOT WVISIBLE("_5450htsnu")
+	ACTIVATE WINDOW _5450htsnu
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN buscar11     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htsnu
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           BUSCAR11/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+SET COLOR OF SCHEME 13 TO &cScheme13
+SET COLOR OF SCHEME 14 TO &cScheme14
+
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTSNY           m.serie VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BUSCAR11,     Record Number:    4  Ё
+*       Ё Variable:            m.serie                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htsny     &&  m.serie VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF ATC(m.serie, control.serieot) = 0 .OR. EMPTY(m.serie)
+   PRIVATE pcString
+   pcString = ""
+   FOR pnCounter = 1 TO LEN(ALLTRIM(control.serieot))
+      IF ISALPHA(SUBSTR(ALLTRIM(control.serieot), pnCounter, 1))
+         pcString = pcString + "< " + SUBSTR(ALLTRIM(control.serieot), pnCounter, 1) + " >" + IIF(pnCounter <> LEN(ALLTRIM(control.serieot)), ", ", "")
+      ENDIF
+   ENDFOR
+
+   WAIT WINDOW "╜ LA SERIE DEBE SER: " + pcString + " !"
+
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTSNZ           m.nroot VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BUSCAR11,     Record Number:    5  Ё
+*       Ё Variable:            m.nroot                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htsnz     &&  m.nroot VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.nroot <= 0
+   WAIT WINDOW "╜ EL N╖ DE LA ORDEN DE TRABAJO DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ELSE
+   PRIVATE pnSelect, pcOrder, pnRecNo
+   pnSelect = SELECT()
+   pcOrder  = ORDER()
+   pnRecNo  = IIF(EOF(), 0, RECNO())
+
+   IF LOWER(ALIAS()) = "ot"
+      IF .NOT. SEEK(m.serie + STR(m.nroot, 7))
+         WAIT WINDOW "╜ EL DATO BUSCADO NO HA SIDO ENCONTRADO !"
+
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+         _CUROBJ = OBJNUM(m.serie)
+      ELSE
+         CLEAR READ
+      ENDIF
+   ENDIF
+
+   IF LOWER(ALIAS()) = "cabemot"
+      IF .NOT. SEEK(STR(2, 1) + m.serie + STR(m.nroot, 7))
+         WAIT WINDOW "╜ EL DATO BUSCADO NO HA SIDO ENCONTRADO !"
+
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+         _CUROBJ = OBJNUM(m.serie)
+      ELSE
+         CLEAR READ
+      ENDIF
+   ENDIF
+ENDIF

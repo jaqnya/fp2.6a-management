@@ -1,0 +1,473 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18              O_03.SPR                 08:18:58 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htowy")
+	DEFINE WINDOW _5450htowy ;
+		FROM INT((SROW()-10)/2),INT((SCOL()-54)/2) ;
+		TO INT((SROW()-10)/2)+9,INT((SCOL()-54)/2)+53 ;
+		TITLE " Cambio de C╒digo de Art║culos " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     O_03/MS-DOS C╒digo de configuraci╒n - SECCION 2     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё          O_03/MS-DOS Distribuci╒n de pantalla           Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htowy")
+	ACTIVATE WINDOW _5450htowy SAME
+ELSE
+	ACTIVATE WINDOW _5450htowy NOSHOW
+ENDIF
+@ 5,0 TO 5,51
+@ 1,19 GET m.articulo ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	VALID _5450htox0()
+@ 2,19 GET m.nombre ;
+	SIZE 1,30 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN .F.
+@ 4,3 SAY "Reemplazar por:" ;
+	SIZE 1,15, 0
+@ 1,3 SAY "C╒digo Actual.:" ;
+	SIZE 1,15, 0
+@ 2,3 SAY "Nombre........:" ;
+	SIZE 1,15, 0
+@ 4,19 GET m.articulo2 ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	VALID _5450htox1()
+@ 6,11 GET cmgChoice ;
+	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
+	SIZE 1,12,5 ;
+	DEFAULT 1 ;
+	VALID _5450htox2()
+
+IF NOT WVISIBLE("_5450htowy")
+	ACTIVATE WINDOW _5450htowy
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      MS-DOSREAD contiene cl═usulas de SCREEN o_03       Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htowy
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   O_03/MS-DOS Procedimientos y funciones de soporte     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PROCEDURE _ReplaceCode
+
+PRIVATE pnSelect, pcOrder, pnRecNo, pnCounter
+pnSelect  = SELECT()
+pcOrder   = ORDER()
+pnRecNo   = IIF(EOF(), 0, RECNO())
+
+*-- Tabla de Compras.
+SELECT detacomp
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 1/9 - COMPRAS: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detacomp.articulo = m.articulo
+      REPLACE detacomp.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Ventas.
+SELECT detavent
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 2/9 - VENTAS: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detavent.articulo = m.articulo
+      REPLACE detavent.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Notas de D┌b./Cr┌d. de Proveedores.
+SELECT detanotp
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 3/9 - NOTAS DE DEB./CRED. DE PROVEEDORES: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detanotp.articulo = m.articulo
+      REPLACE detanotp.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Notas de D┌b./Cr┌d. de Clientes.
+SELECT detanotc
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 4/9 - NOTAS DE DEB./CRED. DE CLIENTES: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detanotc.articulo = m.articulo
+      REPLACE detanotc.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Mov. de Dep╒sitos y Ajustes.
+SELECT detamovi
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 5/9 - MOV. DE DEPOSITOS Y AJUSTES: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detamovi.articulo = m.articulo
+      REPLACE detamovi.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Movimientos de OT.
+SELECT detamot
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 6/9 - MOVIMIENTOS DE OT: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detamot.articulo = m.articulo
+      REPLACE detamot.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Remisiones.
+SELECT detaremi
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 7/9 - REMISIONES: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detaremi.articulo = m.articulo
+      REPLACE detaremi.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Presupuestos
+SELECT detapres
+GO TOP
+
+pnCounter = 1
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 8/9 - PRESUPUESTOS: " + ALLTRIM(TRANSFORM(pnCounter, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+
+   IF detapres.articulo = m.articulo
+      REPLACE detapres.articulo WITH m.articulo2
+   ENDIF
+
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+*-- Tabla de Art║culos.
+WAIT WINDOW "PROCESO 9/9 - ARTICULOS..." NOWAIT
+
+SELECT maesprod
+SET ORDER TO TAG indice1 OF maesprod.cdx
+
+IF SEEK(m.articulo)
+   REPLACE maesprod.codigo WITH m.articulo2
+ENDIF
+
+?? CHR(7)
+?? CHR(7)
+?? CHR(7)
+
+WAIT WINDOW "╜ PROCESO DE REEMPLAZO CONCLUIDO !" TIMEOUT 2.75
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*-- Inicializa variables de memoria.
+m.articulo  = SPACE(15)
+m.articulo2 = SPACE(15)
+m.nombre    = REPLICATE(CHR(32), 30)
+
+SHOW GETS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTOX0           m.articulo VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         O_03,     Record Number:    3      Ё
+*       Ё Variable:            m.articulo                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htox0     &&  m.articulo VALID
+#REGION 1
+IF LASTKEY() = 27
+   RETURN
+ELSE
+   IF INLIST(LASTKEY(), 5, 19, 28, 127)
+      RETURN .F.
+   ENDIF
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF EMPTY(m.articulo)
+   PUSH KEY CLEAR
+
+*!*   *-- Procedimiento de inspecci╒n de art║culos.
+*!*	   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+*!*	   DO brwMaesp.prg
+*!*	   ON KEY LABEL "ENTER"
+
+   m.id_product = ""
+   DO brwmaesp WITH "m.id_product"
+
+   POP KEY
+
+   IF LASTKEY() <> 27
+      m.articulo = m.id_product
+
+      SELECT maesprod
+      SET ORDER TO 1
+      SEEK m.id_product
+
+      m.nombre = SUBSTR(maesprod.nombre, 1, 30)
+      SHOW GET m.nombre
+   ELSE
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      m.nombre = REPLICATE(CHR(32), 30)
+      SHOW GET m.nombre
+
+      SHOW GET cmgChoice, 1 DISABLE
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT maesprod
+SET ORDER TO TAG indice1 OF maesprod.cdx
+
+IF SEEK(m.articulo)
+   m.nombre = SUBSTR(maesprod.nombre, 1, 30)
+   SHOW GET m.nombre
+ELSE
+   m.nombre = REPLICATE(CHR(32), 30)
+   SHOW GET m.nombre
+
+   WAIT WINDOW "╜ CODIGO DE ARTICULO INEXISTENTE !"
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   SHOW GET cmgChoice, 1 DISABLE
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTOX1           m.articulo2 VALID                  Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         O_03,     Record Number:    8      Ё
+*       Ё Variable:            m.articulo2                        Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htox1     &&  m.articulo2 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   SHOW GET cmgChoice, 1 DISABLE
+   RETURN
+ENDIF
+
+IF EMPTY(m.articulo2)
+   WAIT WINDOW "╜ EL CODIGO DEL ARTICULO NO PUEDE QUEDAR EN BLANCO !"
+   SHOW GET cmgChoice, 1 DISABLE
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT maesprod
+SET ORDER TO TAG indice1 OF maesprod.cdx
+
+IF SEEK(m.articulo2)
+   WAIT WINDOW "╜ EL CODIGO DE ARTICULO QUE HA INGRESADO NO DEBE EXISTIR !"
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   SHOW GET cmgChoice, 1 DISABLE
+   RETURN .F.
+ENDIF
+
+SHOW GET cmgChoice, 1 ENABLE
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTOX2           cmgChoice VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         O_03,     Record Number:    9      Ё
+*       Ё Variable:            cmgChoice                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htox2     &&  cmgChoice VALID
+#REGION 1
+IF cmgChoice = 1
+   DO _ReplaceCode
+   _CUROBJ = OBJNUM(m.articulo)
+   SHOW GET cmgChoice, 1 DISABLE
+ENDIF
+
+IF cmgChoice = 2
+   CLEAR READ
+ENDIF

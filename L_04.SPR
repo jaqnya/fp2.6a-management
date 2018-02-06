@@ -1,0 +1,897 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18              L_04.SPR                 08:18:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htpbc")
+	DEFINE WINDOW _5450htpbc ;
+		FROM INT((SROW()-19)/2),INT((SCOL()-64)/2) ;
+		TO INT((SROW()-19)/2)+18,INT((SCOL()-64)/2)+63 ;
+		TITLE " Ventas Pendientes de Cobro " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     L_04/MS-DOS C╒digo de configuraci╒n - SECCION 2     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+m.cliente  = -1
+m.criteria = 2
+m.fecha01  = DATE()
+m.fecha02  = DATE()
+m.formato  = "R"
+m.destino  = "P"
+m.ruta     = 0
+
+SELECT clientes
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё          L_04/MS-DOS Distribuci╒n de pantalla           Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htpbc")
+	ACTIVATE WINDOW _5450htpbc SAME
+ELSE
+	ACTIVATE WINDOW _5450htpbc NOSHOW
+ENDIF
+@ 14,0 TO 14,61
+@ 3,26 SAY "1 - POR RANGO DE FECHAS." ;
+	SIZE 1,24, 0
+@ 4,26 SAY "2 - TODAS LAS FACTURAS ADEUDADAS." ;
+	SIZE 1,33, 0
+@ 3,2 SAY "CRITERIO:" ;
+	SIZE 1,9, 0
+@ 5,2 SAY "DESDE EL:" ;
+	SIZE 1,9, 0
+@ 6,2 SAY "HASTA EL:" ;
+	SIZE 1,9, 0
+@ 8,2 SAY "FORMATO.:" ;
+	SIZE 1,9, 0
+@ 10,2 SAY "DESTINO.:" ;
+	SIZE 1,9, 0
+@ 1,2 SAY "CLIENTE.:" ;
+	SIZE 1,9, 0
+@ 12,2 SAY "RUTA....:" ;
+	SIZE 1,9, 0
+@ 1,12 GET m.cliente ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	PICTURE "99999" ;
+	VALID _5450htpbg()
+@ 3,12 GET m.criteria ;
+	SIZE 1,1 ;
+	DEFAULT 0 ;
+	PICTURE "9" ;
+	VALID _5450htpbk()
+@ 5,12 GET m.fecha01 ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	WHEN _5450htpbl() ;
+	VALID _5450htpbm()
+@ 6,12 GET m.fecha02 ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	WHEN _5450htpbn() ;
+	VALID _5450htpbo()
+@ 8,12 GET m.formato ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpbp()
+@ 10,12 GET m.destino ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpbq()
+@ 12,12 GET m.ruta ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	PICTURE "99999" ;
+	WHEN m.cliente = -1	 ;
+	VALID _5450htpbr()
+@ 15,16 GET cmgChoice ;
+	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
+	SIZE 1,12,5 ;
+	DEFAULT 1 ;
+	VALID _5450htpbs()
+
+IF NOT WVISIBLE("_5450htpbc")
+	ACTIVATE WINDOW _5450htpbc
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      MS-DOSREAD contiene cl═usulas de SCREEN l_04       Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	SHOW _5450htpbt() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htpbc
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   L_04/MS-DOS Procedimientos y funciones de soporte     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+FUNCTION _Report_L_04
+
+PRIVATE pnCounter
+pnCounter = 1
+
+*-- MS-DOS Definiciones de ventanas.
+IF .NOT. WEXIST("preview")
+   DEFINE WINDOW preview ;
+      FROM 01,00 ;
+      TO 23,79 ;
+      TITLE "Vista Preliminar - ESC p/Salir" ;
+      SYSTEM ;
+      CLOSE ;
+      NOFLOAT ;
+      GROW ;
+      MDI ;
+      NOMINIMIZE ;
+      SHADOW ;
+      ZOOM ;
+      COLOR SCHEME 15
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+*-- MS-DOS Base de datos, ║ndices, relaciones.
+SELECT 0
+temp01 = "tm" + RIGHT(SYS(3), 6) + ".dbf"
+temp02 = "tm" + RIGHT(SYS(3), 6) + ".txt"
+
+CREATE TABLE &temp01 (tipodocu   N(01) ,;
+                      nrodocu    N(07) ,;
+                      fechadocu  D(08) ,;
+                      cliente    N(05) ,;
+                      nombre_a   C(56) ,;
+                      ruc        C(15) ,;
+                      direc1     C(60) ,;
+                      telefono   C(30) ,;
+                      contacto   C(30) ,;
+                      moneda     N(04) ,;
+                      nombre_b   C(30) ,;
+                      simbolo    C(04) ,;
+                      tipo       N(01) ,;
+                      nrocuota   N(03) ,;
+                      qty_cuotas N(03) ,;
+                      fecha      D(08) ,;
+                      importe    N(12,2) ,;
+                      abonado    N(12,2) ,;
+                      monto_ndeb N(12,2) ,;
+                      monto_ncre N(12,2) ,;
+                      consignaci L(01) ,;
+                      id_local   N(02),;
+                      ruta       N(01))
+
+USE &temp01 ALIAS tmcuotas_v EXCLUSIVE
+INDEX ON STR(moneda, 4) + nombre_a + DTOS(fecha) + STR(tipodocu, 1) + STR(nrodocu, 7) TAG indice1
+
+SELECT cabevent
+SET ORDER TO TAG indice1 OF cabevent.cdx
+
+SET RELATION TO cabevent.cliente INTO clientes
+SET RELATION TO cabevent.moneda  INTO monedas ADDITIVE
+
+SELECT cuotas_v
+SET ORDER TO TAG indice1 OF cuotas_v.cdx
+
+SET RELATION TO STR(cuotas_v.tipodocu, 1) + STR(cuotas_v.nrodocu, 7) INTO cabevent
+
+GO TOP
+
+SCAN ALL
+   WAIT WINDOW "PROCESANDO LA TABLA DE CUOTAS DE VENTAS: " + ALLTRIM(TRANSFORM(pnCounter, "999,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "999,999,999")) NOWAIT
+   IF ((importe + monto_ndeb) - (abonado + monto_ncre)) <> 0
+      INSERT INTO tmcuotas_v (tipodocu, nrodocu, fechadocu, cliente, nombre_a, ruc, direc1, telefono, contacto, ;
+         moneda, nombre_b, simbolo, tipo, nrocuota, qty_cuotas, fecha, importe, abonado, ;
+         monto_ndeb, monto_ncre, consignaci, id_local, ruta) ;
+         VALUES (cuotas_v.tipodocu, cuotas_v.nrodocu, cabevent.fechadocu, cabevent.cliente, ;
+            clientes.nombre, clientes.ruc, clientes.direc1, clientes.telefono, clientes.contacto, cabevent.moneda, monedas.nombre, monedas.simbolo, ;
+            cuotas_v.tipo, cuotas_v.nrocuota, cabevent.qty_cuotas, cuotas_v.fecha, ;
+            cuotas_v.importe, cuotas_v.abonado, cuotas_v.monto_ndeb, ;
+            cuotas_v.monto_ncre, cabevent.consignaci, cuotas_v.id_local, clientes.ruta)
+   ENDIF
+   pnCounter = pnCounter + 1
+ENDSCAN
+
+WAIT CLEAR
+
+*-------------------------------------------------*
+SELECT tmcuotas_v
+IF m.cliente = -1 THEN
+   IF m.ruta <> 0 THEN
+      DELETE FOR ruta <> m.ruta
+   ENDIF
+ENDIF
+*-------------------------------------------------*
+
+SELECT tmcuotas_v
+
+DO CASE
+   CASE m.cliente = -1 .AND. m.criteria = 2
+      IF m.destino = "P"
+         IF m.formato = "R"
+            REPORT FORM l_04c.frx TO &temp02 NOCONSOLE
+            ACTIVATE WINDOW preview
+            MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+            RELEASE WINDOW preview
+         ELSE
+            IF m.formato = "C"
+               REPORT FORM l_04a.frx TO &temp02 NOCONSOLE
+               ACTIVATE WINDOW preview
+               MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+               RELEASE WINDOW preview
+            ENDIF
+         ENDIF
+      ELSE
+         IF m.destino = "I"
+            IF .NOT. PRINTSTATUS()
+               ?? CHR(7)
+               WAIT WINDOW "╜ ASEGURESE DE QUE LA IMPRESORA ESTA CONECTADA Y ENCENDIDA !"
+            ELSE
+               WAIT WINDOW "IMPRIMIENDO..." NOWAIT
+               IF m.formato = "R"
+                  REPORT FORM l_04c.frx TO PRINTER NOCONSOLE
+               ELSE
+                  IF m.formato = "C"
+                     REPORT FORM l_04a.frx TO PRINTER NOCONSOLE
+                  ENDIF
+               ENDIF
+               WAIT CLEAR
+            ENDIF
+         ENDIF
+      ENDIF
+   CASE .NOT. INLIST(m.cliente, 0, -1) .AND. m.criteria = 2
+      IF m.destino = "P"
+         IF m.formato = "R"
+            REPORT FORM l_04c.frx TO &temp02 FOR cliente = m.cliente NOCONSOLE
+            ACTIVATE WINDOW preview
+            MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+            RELEASE WINDOW preview
+         ELSE
+            IF m.formato = "C"
+               REPORT FORM l_04a.frx TO &temp02 FOR cliente = m.cliente NOCONSOLE
+               ACTIVATE WINDOW preview
+               MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+               RELEASE WINDOW preview
+            ENDIF
+         ENDIF
+      ELSE
+         IF m.destino = "I"
+            IF .NOT. PRINTSTATUS()
+               ?? CHR(7)
+               WAIT WINDOW "╜ ASEGURESE DE QUE LA IMPRESORA ESTA CONECTADA Y ENCENDIDA !"
+            ELSE
+               WAIT WINDOW "IMPRIMIENDO..." NOWAIT
+               IF m.formato = "R"
+                  REPORT FORM l_04c.frx FOR cliente = m.cliente TO PRINTER NOCONSOLE
+               ELSE
+                  IF m.formato = "C"
+                     REPORT FORM l_04a.frx FOR cliente = m.cliente TO PRINTER NOCONSOLE
+                  ENDIF
+               ENDIF
+               WAIT CLEAR
+            ENDIF
+         ENDIF
+      ENDIF
+   CASE m.cliente = -1 .AND. m.criteria = 1
+      IF m.destino = "P"
+         IF m.formato = "R"
+            REPORT FORM l_04c.frx TO &temp02 FOR BETWEEN(fecha, m.fecha01, m.fecha02) NOCONSOLE
+            ACTIVATE WINDOW preview
+            MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+            RELEASE WINDOW preview
+         ELSE
+            IF m.formato = "C"
+               REPORT FORM l_04a.frx TO &temp02 FOR BETWEEN(fecha, m.fecha01, m.fecha02) NOCONSOLE
+               ACTIVATE WINDOW preview
+               MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+               RELEASE WINDOW preview
+            ENDIF
+         ENDIF
+      ELSE
+         IF m.destino = "I"
+            IF .NOT. PRINTSTATUS()
+               ?? CHR(7)
+               WAIT WINDOW "╜ ASEGURESE DE QUE LA IMPRESORA ESTA CONECTADA Y ENCENDIDA !"
+            ELSE
+               WAIT WINDOW "IMPRIMIENDO..." NOWAIT
+               IF m.formato = "R"
+                  REPORT FORM l_04c.frx FOR BETWEEN(fecha, m.fecha01, m.fecha02) TO PRINTER NOCONSOLE
+               ELSE
+                  IF m.formato = "C"
+                     REPORT FORM l_04a.frx FOR BETWEEN(fecha, m.fecha01, m.fecha02) TO PRINTER NOCONSOLE
+                  ENDIF
+               ENDIF
+               WAIT CLEAR
+            ENDIF
+         ENDIF
+      ENDIF
+   CASE .NOT. INLIST(m.cliente, 0, -1) .AND. m.criteria = 1
+      IF m.destino = "P"
+         IF m.formato = "R"
+            REPORT FORM l_04c.frx TO &temp02 FOR cliente = m.cliente .AND. BETWEEN(fecha, m.fecha01, m.fecha02) NOCONSOLE
+            ACTIVATE WINDOW preview
+            MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+            RELEASE WINDOW preview
+         ELSE
+            IF m.formato = "C"
+               REPORT FORM l_04a.frx TO &temp02 FOR cliente = m.cliente .AND. BETWEEN(fecha, m.fecha01, m.fecha02) NOCONSOLE
+               ACTIVATE WINDOW preview
+               MODIFY COMMAND &temp02 WINDOW preview NOMODIFY
+               RELEASE WINDOW preview
+            ENDIF
+         ENDIF
+      ELSE
+         IF m.destino = "I"
+            IF .NOT. PRINTSTATUS()
+               ?? CHR(7)
+               WAIT WINDOW "╜ ASEGURESE DE QUE LA IMPRESORA ESTA CONECTADA Y ENCENDIDA !"
+            ELSE
+               WAIT WINDOW "IMPRIMIENDO..." NOWAIT
+               IF m.formato = "R"
+                  REPORT FORM l_04c.frx FOR cliente = m.cliente .AND. BETWEEN(fecha, m.fecha01, m.fecha02) TO PRINTER NOCONSOLE
+               ELSE
+                  IF m.formato = "C"
+                     REPORT FORM l_04a.frx FOR cliente = m.cliente .AND. BETWEEN(fecha, m.fecha01, m.fecha02) TO PRINTER NOCONSOLE
+                  ENDIF
+               ENDIF
+               WAIT CLEAR
+            ENDIF
+         ENDIF
+      ENDIF
+ENDCASE
+
+*-- MS-DOS C╒digo de Limpieza
+
+*-- Elimina la tabla temporal.
+IF USED("tmcuotas_v")
+   SELECT tmcuotas_v
+   USE
+ENDIF
+
+DELETE FILE &temp01
+DELETE FILE SUBSTR(temp01, 1, ATC(".", temp01)) + "CDX"
+
+*-- Elimina relaciones entre tablas.
+SELECT cabevent
+SET RELATION OFF INTO clientes
+SET RELATION OFF INTO monedas
+
+SELECT cuotas_v
+SET RELATION OFF INTO cabevent
+
+IF WEXIST("preview")
+   RELEASE WINDOW preview
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBG           m.cliente VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   12      Ё
+*       Ё Variable:            m.cliente                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbg     &&  m.cliente VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ELSE
+   IF LASTKEY() = 27
+      RETURN
+   ENDIF
+ENDIF
+
+IF m.cliente = -1
+   @ 01,19 SAY PADR("TODOS", 42, CHR(32)) ;
+      SIZE 1,42 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   RETURN
+ENDIF
+
+IF m.cliente <= 0
+   PUSH KEY CLEAR
+
+   PRIVATE pnSelect
+   pnSelect = SELECT()
+
+   *-- Procedimiento de inspecci╒n de clientes.
+   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+   DO brwClien.prg
+   ON KEY LABEL "ENTER"
+
+   POP KEY
+
+   SELECT (pnSelect)
+
+   IF LASTKEY() <> K_ESCAPE
+      m.cliente = clientes.codigo
+      SHOW GETS
+   ELSE
+      RETURN .F.
+   ENDIF
+
+ENDIF
+
+IF m.cliente = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT clientes
+SET ORDER TO TAG indice1 OF clientes.cdx
+
+IF SEEK(m.cliente)
+   @ 01,19 SAY PADR(ALLTRIM(clientes.nombre), 42, CHR(32)) ;
+      SIZE 1,42 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ELSE
+   @ 01,19 SAY REPLICATE(CHR(32), 42) ;
+      SIZE 1,42 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "╜ CODIGO DE CLIENTE INEXISTENTE !"
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+   RETURN .F.
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBK           m.criteria VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   13      Ё
+*       Ё Variable:            m.criteria                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbk     &&  m.criteria VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.criteria <= 0 .OR. m.criteria > 2
+   WAIT WINDOW "╜ EL CRITERIO DE SELECCION DEBE SER: 1 ╒ 2 !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBL           m.fecha01 WHEN                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   14      Ё
+*       Ё Variable:            m.fecha01                          Ё
+*       Ё Called By:           WHEN Clause                        Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbl     &&  m.fecha01 WHEN
+#REGION 1
+IF m.criteria = 1
+   SET CONFIRM ON
+   SET NOTIFY  ON
+ELSE
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBM           m.fecha01 VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   14      Ё
+*       Ё Variable:            m.fecha01                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbm     &&  m.fecha01 VALID
+#REGION 1
+SET CONFIRM OFF
+SET NOTIFY  OFF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBN           m.fecha02 WHEN                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   15      Ё
+*       Ё Variable:            m.fecha02                          Ё
+*       Ё Called By:           WHEN Clause                        Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbn     &&  m.fecha02 WHEN
+#REGION 1
+IF m.criteria = 1
+   SET CONFIRM ON
+   SET NOTIFY  ON
+ELSE
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBO           m.fecha02 VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   15      Ё
+*       Ё Variable:            m.fecha02                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbo     &&  m.fecha02 VALID
+#REGION 1
+SET CONFIRM OFF
+SET NOTIFY  OFF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBP           m.formato VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   16      Ё
+*       Ё Variable:            m.formato                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      7                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbp     &&  m.formato VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(m.formato, "C", "R")
+   @ 08,16 SAY REPLICATE(CHR(32), 15) ;
+      SIZE 1,15 ;
+      PICTURE "@" ;
+      COLOR W/N
+   WAIT WINDOW "╜ FORMATO DEBE SER: (C)OMPLETO o (R)ESUMIDO !"
+   RETURN .F.
+ENDIF
+
+DO CASE
+   CASE m.formato = "C"
+      @ 08,16 SAY "COMPLETO" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.formato = "R"
+      @ 08,16 SAY "RESUMIDO" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 08,16 SAY REPLICATE(CHR(32), 15) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBQ           m.destino VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   17      Ё
+*       Ё Variable:            m.destino                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      8                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbq     &&  m.destino VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(m.destino, "P", "I")
+   @ 10,16 SAY REPLICATE(CHR(32), 15) ;
+      SIZE 1,15 ;
+      PICTURE "@" ;
+      COLOR W/N
+   WAIT WINDOW "╜ DESTINO DEBE SER: (P)ANTALLA o (I)MPRESORA !"
+   RETURN .F.
+ENDIF
+
+DO CASE
+   CASE m.destino = "P"
+      @ 10,16 SAY "PANTALLA" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.destino = "I"
+      @ 10,16 SAY "IMPRESORA" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 10,16 SAY REPLICATE(CHR(32), 15) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBR           m.ruta VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   18      Ё
+*       Ё Variable:            m.ruta                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      9                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbr     &&  m.ruta VALID
+#REGION 1
+IF m.ruta = 0 THEN
+   IF .NOT. WEXIST("brwruta")
+      DEFINE WINDOW brwruta ;
+         FROM 01,00 ;
+         TO   23,60 ;
+         TITLE "< RUTAS >" ;
+         SYSTEM ;
+         CLOSE ;
+         FLOAT ;
+         GROW ;
+         MDI ;
+         NOMINIMIZE ;
+         SHADOW ;
+         ZOOM ;
+         COLOR SCHEME 15
+   ENDIF
+
+   MOVE WINDOW brwruta CENTER
+
+   IF !USED("ruta") THEN
+      USE ruta IN 0 SHARED
+   ENDIF
+
+   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+
+   SELECT ruta
+   BROWSE WINDOW brwruta FIELDS ;
+      id_ruta :R:06:H = "C╒digo",;
+      nombre  :R:50:H = "Nombre";
+      NOAPPEND NODELETE NOMODIFY
+
+   ON KEY LABEL "ENTER"
+
+   IF LASTKEY() = 27 THEN
+      RETURN 0
+   ENDIF
+
+   m.ruta = id_ruta
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBS           cmgChoice VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04,     Record Number:   19      Ё
+*       Ё Variable:            cmgChoice                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      10                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbs     &&  cmgChoice VALID
+#REGION 1
+IF cmgChoice = 1
+   DO _Report_L_04
+   _CUROBJ = OBJNUM(m.cliente)
+ENDIF
+
+IF cmgChoice = 2
+   CLEAR READ
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPBT           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_04                               Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      11                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpbt     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: L_04
+*
+#REGION 1
+DO CASE
+   CASE m.formato = "C"
+      @ 08,16 SAY "COMPLETO" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.formato = "R"
+      @ 08,16 SAY "RESUMIDO" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 08,16 SAY REPLICATE(CHR(32), 15) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+
+DO CASE
+   CASE m.destino = "P"
+      @ 10,16 SAY "PANTALLA" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.destino = "I"
+      @ 10,16 SAY "IMPRESORA" ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 10,16 SAY REPLICATE(CHR(32), 15) ;
+         SIZE 1,15 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

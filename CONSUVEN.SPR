@@ -1,0 +1,293 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            CONSUVEN.SPR               08:18:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htpa2")
+	DEFINE WINDOW _5450htpa2 ;
+		FROM INT((SROW()-9)/2),INT((SCOL()-66)/2) ;
+		TO INT((SROW()-9)/2)+8,INT((SCOL()-66)/2)+65 ;
+		TITLE " Consulta de M═quinas Vendidas " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   CONSUVEN/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+STORE "" TO m.nombre, m.documento, m.obs1
+STORE {} TO m.fecha1, m.fecha2
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        CONSUVEN/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htpa2")
+	ACTIVATE WINDOW _5450htpa2 SAME
+ELSE
+	ACTIVATE WINDOW _5450htpa2 NOSHOW
+ENDIF
+@ 0,12 GET m.nombre ;
+	SIZE 1,51 ;
+	DEFAULT " " ;
+	PICTURE "@!T"
+@ 1,12 GET m.documento ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@!T"
+@ 2,12 GET m.obs1 ;
+	SIZE 1,51 ;
+	DEFAULT " " ;
+	PICTURE "@!T"
+@ 2,1 SAY "M═quina..:" ;
+	SIZE 1,10, 0
+@ 1,1 SAY "Documento:" ;
+	SIZE 1,10, 0
+@ 0,1 SAY "Cliente..:" ;
+	SIZE 1,10, 0
+@ 3,1 SAY "Desde....:" ;
+	SIZE 1,10, 0
+@ 3,12 GET m.fecha1 ;
+	SIZE 1,10 ;
+	DEFAULT " "
+@ 3,24 SAY "Hasta:" ;
+	SIZE 1,6, 0
+@ 3,31 GET m.fecha2 ;
+	SIZE 1,10 ;
+	DEFAULT " "
+@ 4,0 TO 4,63
+@ 5,17 GET m.ejecutar ;
+	PICTURE "@*HN \! Ejecutar " ;
+	SIZE 1,12,1 ;
+	DEFAULT 1 ;
+	WHEN _5450htpa5() ;
+	VALID _5450htpa6()
+@ 5,38 GET m.salir ;
+	PICTURE "@*HN \?\<Salir" ;
+	SIZE 1,9,1 ;
+	DEFAULT 1 ;
+	VALID _5450htpa9()
+
+IF NOT WVISIBLE("_5450htpa2")
+	ACTIVATE WINDOW _5450htpa2
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN consuven     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR  , W+/BG
+
+RELEASE WINDOW _5450htpa2
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPA5           m.ejecutar WHEN                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CONSUVEN,     Record Number:   13  Ё
+*       Ё Variable:            m.ejecutar                         Ё
+*       Ё Called By:           WHEN Clause                        Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpa5     &&  m.ejecutar WHEN
+#REGION 1
+IF EMPTY(m.nombre) AND EMPTY(m.documento) AND EMPTY(m.obs1) AND EMPTY(m.fecha1) AND EMPTY(m.fecha2) THEN
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPA6           m.ejecutar VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CONSUVEN,     Record Number:   13  Ё
+*       Ё Variable:            m.ejecutar                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpa6     &&  m.ejecutar VALID
+#REGION 1
+lBuscar = .F.
+
+cSQL = "SELECT c.tipodocu, c.nrodocu, c.fechadocu, c2.nombre, c2.documento, c2.obs1, c2.obs2, c2.obs3 FROM cabeven2 c2, cabevent c WHERE c2.tipodocu = c.tipodocu AND c2.nrodocu = c.nrodocu"
+
+* -- Nombre -- *
+
+IF OCCURS("*", m.nombre) <> LEN(m.nombre) THEN
+   cString = STRTRAN(m.nombre + "%", "*", "%")
+
+   DO WHILE AT("%%", cString) > 0
+      cString = STRTRAN(cString, "%%", "%")
+   ENDDO
+
+   cSQL = cSQL + " AND c2.nombre LIKE '" + cString + "'"
+   lBuscar = .T.
+ENDIF
+
+* -- Documento -- *
+
+IF OCCURS("*", m.documento) <> LEN(m.documento) THEN
+   cString = STRTRAN(m.documento + "%", "*", "%")
+
+   DO WHILE AT("%%", cString) > 0
+      cString = STRTRAN(cString, "%%", "%")
+   ENDDO
+
+   cSQL = cSQL + " AND c2.documento LIKE '" + cString + "'"
+   lBuscar = .T.
+ENDIF
+
+* -- M═quina -- *
+
+IF OCCURS("*", m.obs1) <> LEN(m.obs1) THEN
+   cString = STRTRAN(m.obs1 + "%", "*", "%")
+
+   DO WHILE AT("%%", cString) > 0
+      cString = STRTRAN(cString, "%%", "%")
+   ENDDO
+
+   cSQL = cSQL + " AND c2.obs1 + c2.obs2 + c2.obs3 LIKE '" + cString + "'"
+   lBuscar = .T.
+ENDIF
+
+
+* -- Fecha -- *
+
+IF .NOT. (EMPTY(m.fecha1) AND EMPTY(m.fecha2)) THEN
+   cSQL = cSQL + " AND BETWEEN(c.fechadocu, {" + DTOC(m.fecha1) + "}, {" + DTOC(m.fecha2) + "})"
+   lBuscar = .T.
+ENDIF
+
+
+cSQL = cSQL + " ORDER BY 4 INTO TABLE consulta"
+
+IF lBuscar THEN
+   WAIT WINDOW "PROCESANDO..." NOWAIT
+   &cSQL
+   WAIT CLEAR
+
+   DEFINE WINDOW consulta ;
+      FROM 01,00 ;
+      TO   23,79 ;
+      TITLE "< RESULTADO DE LA BUSQUEDA >" ;
+      SYSTEM ;
+      CLOSE ;
+      FLOAT ;
+      GROW ;
+      MDI ;
+      NOMINIMIZE ;
+      SHADOW ;
+      ZOOM ;
+      COLOR SCHEME 15
+
+   SELECT consulta
+
+   BROWSE WINDOW consulta FIELDS ;
+      b1 = IIF(INLIST(tipodocu, 1, 3, 4, 5, 7), "CON", "CRE") :R:03:H = "" ,;
+      b2 = nrodocu :R:07:H = "N╖ Doc." ,;
+      b3 = fechadocu :R:10:H = " Fecha " ,;
+      b4 = LEFT(nombre, 37) :R:37:H = "Cliente" ,;
+      b5 = LEFT(obs1, 50) :R:50:H = "M═quina" ,;
+      b6 = LEFT(documento, 15) :R:15:H = "CI o RUC" ;
+   NOAPPEND NODELETE NOMODIFY
+
+   RELEASE WINDOW consulta
+
+   USE
+   DELETE FILE consulta
+ELSE
+   WAIT WINDOW "NO HA INGRESADO SUFICIENTES PARAMETROS PARA LA BUSQUEDA !"
+ENDIF
+
+_CUROBJ = OBJNUM(m.nombre)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPA9           m.salir VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CONSUVEN,     Record Number:   14  Ё
+*       Ё Variable:            m.salir                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpa9     &&  m.salir VALID
+#REGION 1
+CLEAR READ

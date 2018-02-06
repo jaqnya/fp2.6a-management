@@ -1,0 +1,372 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            EDITPRIC.SPR               08:19:10 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htycs")
+	DEFINE WINDOW _5450htycs ;
+		FROM INT((SROW()-19)/2),INT((SCOL()-54)/2) ;
+		TO INT((SROW()-19)/2)+18,INT((SCOL()-54)/2)+53 ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   EDITPRIC/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+PUSH KEY CLEAR
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+*pnSelect = SELECT()
+*pcOrder  = ORDER()
+*pnRecNo  = IIF(EOF(), 0, RECNO())
+
+*SELECT (pnSelect)
+*SET ORDER TO TAG (pcOrder)
+*IF pnRecNo <> 0
+*   GOTO RECORD pnRecNo
+*ENDIF
+
+*:*********************************************************************
+*: ESQUEMA PARA PANTALLA COLOR
+*: ммммммммммммммммммммммммммм
+*: Definici╒n de ventana: COLOR "W+/B,,GR+/B,GR+/B,,,,,,+"
+*: Cuadro de lista:       COLOR "B/W,N/W,B/W,,,BG+/B"
+*:*********************************************************************
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        EDITPRIC/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htycs")
+	ACTIVATE WINDOW _5450htycs SAME
+ELSE
+	ACTIVATE WINDOW _5450htycs NOSHOW
+ENDIF
+@ 2,1 SAY "Descripci╒n.:" ;
+	SIZE 1,13, 0
+@ 1,1 SAY "Art║culo....:" ;
+	SIZE 1,13, 0
+@ 12,6 SAY IIF(pventag3 <> 0, "3", "3") ;
+	SIZE 1,1
+@ 10,33 SAY IIF(old_pvg1 <> 0, ROUND(old_pvg1, 0), "") ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999"
+@ 8,22 SAY "Nuevo" ;
+	SIZE 1,5, 0
+@ 8,39 SAY "Anterior" ;
+	SIZE 1,8, 0
+@ 10,6 SAY IIF(pventag1 <> 0, "1", "1") ;
+	SIZE 1,1
+@ 11,6 SAY IIF(pventag2 <> 0, "2", "2") ;
+	SIZE 1,1
+@ 13,6 SAY IIF(pventag4 <> 0, "4", "4") ;
+	SIZE 1,1
+@ 14,6 SAY IIF(pventag1 <> 0, "5", "5") ;
+	SIZE 1,1
+@ 11,33 SAY IIF(old_pvg2 <> 0, ROUND(old_pvg2, 0), "") ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999"
+@ 12,33 SAY IIF(old_pvg3 <> 0, ROUND(old_pvg3, 0), "") ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999"
+@ 13,33 SAY IIF(old_pvg4 <> 0, ROUND(old_pvg4, 0), "") ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999"
+@ 14,33 SAY IIF(old_pvg5 <> 0, ROUND(old_pvg5, 0), "") ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999"
+@ 10,16 GET pventag1 ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	VALID _5450htycx()
+@ 11,16 GET pventag2 ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	VALID _5450htycy()
+@ 12,16 GET pventag3 ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	VALID _5450htycz()
+@ 13,16 GET pventag4 ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	VALID _5450htyd1()
+@ 14,16 GET pventag5 ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	VALID _5450htyd2()
+@ 8,4 SAY "Lista" ;
+	SIZE 1,5, 0
+@ 9,2 TO 9,48
+@ 1,15 SAY articulo ;
+	SIZE 1,15 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 2,15 SAY maesprod.nombre ;
+	SIZE 1,36 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 5,1 SAY "Precio de Costo US$:" ;
+	SIZE 1,20, 0
+@ 4,1 SAY "Precio de Costo Gs.:" ;
+	SIZE 1,20, 0
+@ 4,22 SAY pcostog ;
+	SIZE 1,14 ;
+	PICTURE "99,999,999.999" ;
+	COLOR N/W     
+@ 5,22 SAY pcostod ;
+	SIZE 1,14 ;
+	PICTURE "99,999,999.999" ;
+	COLOR N/W     
+@ 7,1 TO 15,49
+@ 7,2 SAY " Precio de Venta Gs. " ;
+	SIZE 1,21, 0 ;
+	COLOR W+/N    
+@ 16,1 SAY "Estos precios no incluyen impuestos." ;
+	SIZE 1,36, 0
+
+IF NOT WVISIBLE("_5450htycs")
+	ACTIVATE WINDOW _5450htycs
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN editpric     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htycs
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           EDITPRIC/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTYCX           pventag1 VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         EDITPRIC,     Record Number:   16  Ё
+*       Ё Variable:            pventag1                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htycx     &&  pventag1 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF pventag1 < 0
+   WAIT WINDOW "EL PRECIO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+IF pventag1 > 0 .AND. control.tipocambio > 0
+   REPLACE pventad1 WITH ROUND(pventag1 / control.tipocambio, 3)
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTYCY           pventag2 VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         EDITPRIC,     Record Number:   17  Ё
+*       Ё Variable:            pventag2                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htycy     &&  pventag2 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF pventag2 < 0
+   WAIT WINDOW "EL PRECIO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+IF pventag2 > 0 .AND. control.tipocambio > 0
+   REPLACE pventad2 WITH ROUND(pventag2 / control.tipocambio, 3)
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTYCZ           pventag3 VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         EDITPRIC,     Record Number:   18  Ё
+*       Ё Variable:            pventag3                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htycz     &&  pventag3 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF pventag3 < 0
+   WAIT WINDOW "EL PRECIO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+IF pventag3 > 0 .AND. control.tipocambio > 0
+   REPLACE pventad3 WITH ROUND(pventag3 / control.tipocambio, 3)
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTYD1           pventag4 VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         EDITPRIC,     Record Number:   19  Ё
+*       Ё Variable:            pventag4                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htyd1     &&  pventag4 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF pventag4 < 0
+   WAIT WINDOW "EL PRECIO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+IF pventag4 > 0 .AND. control.tipocambio > 0
+   REPLACE pventad4 WITH ROUND(pventag4 / control.tipocambio, 3)
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTYD2           pventag5 VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         EDITPRIC,     Record Number:   20  Ё
+*       Ё Variable:            pventag5                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htyd2     &&  pventag5 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF pventag5 < 0
+   WAIT WINDOW "EL PRECIO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+IF pventag5 > 0 .AND. control.tipocambio > 0
+   REPLACE pventad5 WITH ROUND(pventag5 / control.tipocambio, 3)
+ENDIF

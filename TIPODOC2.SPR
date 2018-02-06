@@ -1,0 +1,202 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            TIPODOC2.SPR               08:19:07 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+PARAMETERS csaveto, nnewval, listable
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   TIPODOC2/MS-DOS C╒digo de configuraci╒n - SECCION 1   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+IF PARAMETERS() < 3
+   WAIT WINDOW "╜ NO SE HAN PASADO SUFICIENTES PARAMETROS !"
+   RETURN .F.
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htvej")
+	DEFINE WINDOW _5450htvej ;
+		FROM INT((SROW()-8)/2),INT((SCOL()-31)/2) ;
+		TO INT((SROW()-8)/2)+7,INT((SCOL()-31)/2)+30 ;
+		TITLE " TIPO DOCUMENTO " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   TIPODOC2/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+PRIVATE paTipoDocu, pnChoice
+
+IF LOWER(ALIAS()) = "cabevent" .AND. glLegal
+   DIMENSION paTipoDocu(4)
+
+   paTipoDocu(1) = "1. VENTA CONTADO"
+   paTipoDocu(2) = "2. VENTA CREDITO"
+   paTipoDocu(3) = "3. VENTA I.V.A. INCLUIDO"
+   paTipoDocu(4) = "4. VENTA TRIBUTO UNICO"
+ELSE
+   IF LOWER(ALIAS()) = "cabevent" .AND. .NOT. glLegal
+      DIMENSION paTipoDocu(8)
+
+      paTipoDocu(1) = "1. VENTA CONTADO"
+      paTipoDocu(2) = "2. VENTA CREDITO"
+      paTipoDocu(3) = "3. VENTA I.V.A. INCLUIDO"
+      paTipoDocu(4) = "4. VENTA TRIBUTO UNICO"
+      paTipoDocu(5) = "5. C.I. VENTA CONTADO"
+      paTipoDocu(6) = "6. C.I. VENTA CREDITO"
+      paTipoDocu(7) = "7. CONTADO I.V.A. INCLUIDO"
+      paTipoDocu(8) = "8. CREDITO I.V.A. INCLUIDO"
+   ENDIF
+ENDIF
+
+IF INLIST(LOWER(ALIAS()), "cabecomp", "cabenotp", "tmpdetapag") .AND. glLegal
+   DIMENSION paTipoDocu(4)
+
+   paTipoDocu(1) = "1. COMPRA CONTADO"
+   paTipoDocu(2) = "2. COMPRA CREDITO"
+   paTipoDocu(3) = "3. COMPRA I.V.A. INCLUIDO"
+   paTipoDocu(4) = "4. COMPRA TRIBUTO UNICO"
+ELSE
+   IF INLIST(LOWER(ALIAS()), "cabecomp", "cabenotp", "tmpdetapag") .AND. .NOT. glLegal
+      DIMENSION paTipoDocu(8)
+
+      paTipoDocu(1) = "1. COMPRA CONTADO"
+      paTipoDocu(2) = "2. COMPRA CREDITO"
+      paTipoDocu(3) = "3. COMPRA I.V.A. INCLUIDO"
+      paTipoDocu(4) = "4. COMPRA TRIBUTO UNICO"
+      paTipoDocu(5) = "5. C.I. COMPRA CONTADO"
+      paTipoDocu(6) = "6. C.I. COMPRA CREDITO"
+      paTipoDocu(7) = "7. CONTADO I.V.A. INCLUIDO"
+      paTipoDocu(8) = "8. CREDITO I.V.A. INCLUIDO"
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        TIPODOC2/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htvej")
+	ACTIVATE WINDOW _5450htvej SAME
+ELSE
+	ACTIVATE WINDOW _5450htvej NOSHOW
+ENDIF
+@ 0,0 GET pnChoice ;
+ 	PICTURE "@&T" ;
+	FROM paTipoDocu ;
+	SIZE 6,29 ;
+	DEFAULT 1 ;
+	VALID _5450htveq() ;
+	COLOR SCHEME 14
+
+IF NOT WVISIBLE("_5450htvej")
+	ACTIVATE WINDOW _5450htvej
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN tipodoc2     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htvej
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           TIPODOC2/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTVEQ           pnChoice VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         TIPODOC2,     Record Number:    2  Ё
+*       Ё Variable:            pnChoice                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htveq     &&  pnChoice VALID
+#REGION 1
+IF LASTKEY() = 27
+   &cSaveTo = nNewVal
+ELSE
+   &cSaveTo = pnChoice
+ENDIF

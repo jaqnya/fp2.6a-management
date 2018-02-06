@@ -1,0 +1,199 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            SEARCH02.SPR               08:19:02 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450hts5a")
+	DEFINE WINDOW _5450hts5a ;
+		FROM INT((SROW()-3)/2),INT((SCOL()-23)/2) ;
+		TO INT((SROW()-3)/2)+2,INT((SCOL()-23)/2)+22 ;
+		TITLE " BUSQUEDA POR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   SEARCH02/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+m.fechadocu = DTOC(DATE())
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        SEARCH02/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450hts5a")
+	ACTIVATE WINDOW _5450hts5a SAME
+ELSE
+	ACTIVATE WINDOW _5450hts5a NOSHOW
+ENDIF
+@ 0,9 GET m.fechadocu ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "99/99/9999" ;
+	VALID _5450hts5c()
+@ 0,2 SAY "FECHA:" ;
+	SIZE 1,6, 0
+
+IF NOT WVISIBLE("_5450hts5a")
+	ACTIVATE WINDOW _5450hts5a
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN search02     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450hts5a
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTS5C           m.fechadocu VALID                  Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         SEARCH02,     Record Number:    2  Ё
+*       Ё Variable:            m.fechadocu                        Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450hts5c     &&  m.fechadocu VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnDia, pnMes, pnAnyo
+
+IF m.fechadocu = "00/00/0000" .OR. m.fechadocu = "  /  /    "
+   WAIT WINDOW "╜ FECHA INVALIDA !"
+   RETURN .F.
+ELSE
+   STORE VAL(SUBSTR(m.fechadocu, 1, 2)) TO pnDia
+   STORE VAL(SUBSTR(m.fechadocu, 4, 2)) TO pnMes
+
+   IF VAL(SUBSTR(m.fechadocu, 7, 4)) < 1000
+      pnAnyo = YEAR(DATE())
+   ELSE
+      pnAnyo = VAL(SUBSTR(m.fechadocu, 7, 4))
+   ENDIF
+
+   m.fechadocu = IIF(pnDia > 0 .AND. pnDia < 10, "0" + STR(pnDia, 1), STR(pnDia, 2)) +  "/" + IIF(pnMes > 0 .AND. pnMes < 10, "0" + STR(pnMes, 1), STR(pnMes, 2)) + "/" + STR(pnAnyo, 4)
+
+   IF pnDia  < 1    .OR. pnDia  > 31 .OR.;
+      pnMes  < 1    .OR. pnMes  > 12 .OR.;
+      pnAnyo < 1900 .OR. pnAnyo > 2500
+      WAIT WINDOW "╜ FECHA INVALIDA !"
+      RETURN .F.
+   ELSE
+      DO CASE
+         CASE INLIST(pnMes, 1, 3, 5, 7, 8, 10, 12)
+            IF NOT pnDia <= 31
+               WAIT WINDOW "╜ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+         CASE pnMes = 2
+            IF MOD(pnAnyo,4) <> 0
+               IF NOT pnDia <= 28
+                  WAIT WINDOW "╜ FECHA INVALIDA !"
+                  RETURN .F.
+               ENDIF
+            ELSE
+               IF NOT (MOD(pnAnyo,100) = 0 .AND. MOD(pnAnyo,400) <> 0)
+                  IF NOT pnDia <= 29
+                     WAIT WINDOW "╜ FECHA INVALIDA !"
+                     RETURN .F.
+                  ENDIF
+               ENDIF
+            ENDIF
+         CASE INLIST(pnMes, 4, 6, 9, 11)
+            IF NOT pnDia <= 30
+               WAIT WINDOW "╜ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+      ENDCASE
+   ENDIF
+ENDIF
+
+PRIVATE pcSelect, pcOrder, pnRecNo
+pcSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF NOT SEEK(DTOS(CTOD(m.fechadocu)))
+   WAIT WINDOW "╜ EL DATO BUSCADO NO HA SIDO ENCONTRADO !"
+
+   SELECT (pcSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+   _CUROBJ = OBJNUM(m.fechadocu)
+ELSE
+   CLEAR READ
+ENDIF

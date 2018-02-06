@@ -1,0 +1,270 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            IMPNOTAP.SPR               08:19:08 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htway")
+	DEFINE WINDOW _5450htway ;
+		FROM INT((SROW()-15)/2),INT((SCOL()-43)/2) ;
+		TO INT((SROW()-15)/2)+14,INT((SCOL()-43)/2)+42 ;
+		FLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   IMPNOTAP/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+PUSH KEY CLEAR
+
+PRIVATE pnRecNo, pnImputado
+pnRecNo    = IIF(EOF(), 0, RECNO())
+pnImputado = 0
+
+GO TOP
+SCAN ALL
+   IF INLIST(m.tiponota, 1, 3)
+      IF (tmpcuonota.monto_ndeb - tmpcuonota.monto <> 0)
+         pnImputado = pnImputado + tmpcuonota.monto_ndeb - tmpcuonota.monto
+      ENDIF
+   ENDIF
+
+   IF INLIST(m.tiponota, 2, 4)
+      IF (tmpcuonota.monto_ncre - tmpcuonota.monto <> 0)
+         pnImputado = pnImputado + tmpcuonota.monto_ncre - tmpcuonota.monto
+      ENDIF
+   ENDIF
+ENDSCAN
+
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+m.monto = m.monto_nota - pnImputado
+
+*IF INLIST(m.tiponota, 1, 3)
+*   IF (tmpcuonota.monto_ndeb - tmpcuonota.monto = 0)
+*      m.monto = m.monto_nota
+*   ELSE
+*      m.monto = m.monto_nota - (tmpcuonota.monto_ndeb - tmpcuonota.monto)
+*   ENDIF
+*ENDIF
+
+*IF INLIST(m.tiponota, 2, 4)
+*   IF (tmpcuonota.monto_ncre - tmpcuonota.monto = 0)
+*      m.monto = m.monto_nota
+*   ELSE
+*      m.monto = m.monto_nota - (tmpcuonota.monto_ncre - tmpcuonota.monto)
+*   ENDIF
+*ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        IMPNOTAP/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htway")
+	ACTIVATE WINDOW _5450htway SAME
+ELSE
+	ACTIVATE WINDOW _5450htway NOSHOW
+ENDIF
+@ 4,3 SAY "Importe de la Cuota:" ;
+	SIZE 1,20, 0
+@ 6,3 SAY "Saldo..............:" ;
+	SIZE 1,20, 0
+@ 9,3 SAY "Importe N. D┌bito..:" ;
+	SIZE 1,20, 0
+@ 10,3 SAY "Importe N. Cr┌dito.:" ;
+	SIZE 1,20, 0
+@ 12,3 SAY "Esta Imputaci╒n....:" ;
+	SIZE 1,20, 0
+@ 3,0 TO 3,40
+@ 11,0 TO 11,40
+@ 0,3 SAY "Cuota N╖...........:" ;
+	SIZE 1,20, 0
+@ 0,24 SAY nrocuota ;
+	SIZE 1,3 ;
+	PICTURE "999" ;
+	COLOR N/W     
+@ 2,24 SAY fecha ;
+	SIZE 1,10 ;
+	PICTURE "@D" ;
+	COLOR N/W     
+@ 4,24 SAY importe ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 6,24 SAY (importe + monto_ndeb) - (abonado + monto_ncre) ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 8,24 SAY abonado ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 9,24 SAY monto_ndeb ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 10,24 SAY monto_ncre ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 12,24 GET m.monto ;
+	SIZE 1,14 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999.99" ;
+	VALID _5450htwb4()
+@ 2,3 SAY "Fecha..............:" ;
+	SIZE 1,20, 0
+@ 8,3 SAY "Importe Pagado.....:" ;
+	SIZE 1,20, 0
+
+IF NOT WVISIBLE("_5450htway")
+	ACTIVATE WINDOW _5450htway
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN impnotap     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htway
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           IMPNOTAP/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWB4           m.monto VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         IMPNOTAP,     Record Number:   17  Ё
+*       Ё Variable:            m.monto                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwb4     &&  m.monto VALID
+#REGION 1
+IF INLIST(LASTKEY(), 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF m.monto_nota - pnImputado = 0 .AND. m.monto <> 0
+   WAIT WINDOW "PRESIONE [CERO] Y [ENTER] P/REVERTIR LA IMPUTACION o [ESC] P/CANCELAR !"
+   RETURN .F.
+ENDIF
+
+IF m.monto > (m.monto_nota - pnImputado) .OR. m.monto < 0
+   WAIT WINDOW "╜ EL IMPORTE DEBE SER >= 0 y <= " + ALLTRIM(TRANSFORM(m.monto_nota - pnImputado, "999,999,999")) + " !"
+   RETURN .F.
+ENDIF
+
+IF m.monto > (importe + monto_ndeb) - (abonado + monto_ncre)
+   WAIT WINDOW "╜ EL IMPORTE DEBE SER <= " + ALLTRIM(TRANSFORM((importe + monto_ndeb) - (abonado + monto_ncre), "999,999,999")) + " !"
+   RETURN .F.
+ENDIF
+
+IF m.monto = 0
+   IF INLIST(m.tiponota, 1, 3)
+      IF tmpcuonota.monto_ndeb - tmpcuonota.monto = 0
+         WAIT WINDOW "╜ EL IMPORTE DE ESTA IMPUTACION DEBE SER MAYOR QUE CERO !"
+         RETURN .F.
+      ELSE
+         REPLACE tmpcuonota.monto_ndeb WITH tmpcuonota.monto
+      ENDIF
+   ENDIF
+
+   IF INLIST(m.tiponota, 2, 4)
+      IF tmpcuonota.monto_ncre - tmpcuonota.monto = 0
+         WAIT WINDOW "╜ EL IMPORTE DE ESTA IMPUTACION DEBE SER MAYOR QUE CERO !"
+         RETURN .F.
+      ELSE
+         REPLACE tmpcuonota.monto_ncre WITH tmpcuonota.monto
+      ENDIF
+   ENDIF
+ELSE
+   IF INLIST(m.tiponota, 1, 3)
+      REPLACE tmpcuonota.monto_ndeb WITH (tmpcuonota.monto_ndeb + m.monto)
+   ELSE
+      IF INLIST(m.tiponota, 2, 4)
+         REPLACE tmpcuonota.monto_ncre WITH (tmpcuonota.monto_ncre + m.monto)
+      ENDIF
+   ENDIF
+ENDIF
+
+CLEAR READ

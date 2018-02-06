@@ -1,0 +1,195 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            ARTICULO.SPR               08:18:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+PARAMETERS pcsaveto
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   ARTICULO/MS-DOS C╒digo de configuraci╒n - SECCION 1   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+IF PARAMETERS() < 1
+   WAIT WINDOW "╜ NO SE HAN PASADO SUFICIENTES PARAMETROS !"
+   RETURN .F.
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htpg4")
+	DEFINE WINDOW _5450htpg4 ;
+		FROM INT((SROW()-16)/2),INT((SCOL()-65)/2) ;
+		TO INT((SROW()-16)/2)+15,INT((SCOL()-65)/2)+64 ;
+		TITLE " LISTADOS E INFORMES " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   ARTICULO/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+PRIVATE paArticulo, lstArticulo
+
+DIMENSION paArticulo[12, 02]
+
+paArticulo[01, 01] = " 1. De Existencias."
+paArticulo[01, 02] = "l_13.spr"
+paArticulo[02, 01] = " 2. De Stock M║nimo."
+paArticulo[02, 02] = "l_15.spr"
+paArticulo[03, 01] = " 3. De Stock M═ximo."
+paArticulo[03, 02] = "l_16.spr"
+paArticulo[04, 01] = " 4. De Stock Valorizado."
+paArticulo[04, 02] = "l_12.spr"
+paArticulo[05, 01] = " 5. De Precios de Venta."
+paArticulo[05, 02] = "l_08.spr"
+paArticulo[06, 01] = " 6. Evoluci╒n de Precios."
+paArticulo[07, 01] = " 7. Informe de Rentabilidad."
+paArticulo[08, 01] = " 8. Stock de Art║culos de Movimientos de OT."
+paArticulo[09, 01] = " 9. Ficha de Movimientos de Art║culos."
+paArticulo[09, 02] = "l_11.spr"
+paArticulo[10, 01] = "10. Estad║stico de Ventas y Compras de un art║culo."
+paArticulo[10, 02] = "l_10.spr"
+paArticulo[11, 01] = "11. Productos M═s Vendidos."
+paArticulo[11, 02] = "best_pro.spr"
+paArticulo[12, 01] = "12. Informe de Ultimo Movimiento de Compra y Venta."
+paArticulo[12, 02] = "l_23.prg"
+
+
+*paArticulo[01, 01] = " 1. De Art║culos."
+*paArticulo[01, 02] = "l_05.spr"
+*paArticulo[02, 01] = " 2. De Existencias."
+*paArticulo[03, 01] = " 3. De Stock M║nimo."
+*paArticulo[04, 01] = " 4. De Stock M═ximo."
+*paArticulo[05, 01] = " 5. De Stock Valorizado."
+*paArticulo[05, 02] = "l_12.spr"
+*paArticulo[06, 01] = " 6. De Precios de Venta."
+*paArticulo[06, 02] = "l_08.spr"
+*paArticulo[07, 01] = " 7. Evoluci╒n de Precios."
+*paArticulo[08, 01] = " 8. Ajustes de Inventario."
+*paArticulo[09, 01] = " 9. Informe de Rentabilidad."
+*paArticulo[10, 01] = "10. Stock de Art║culos de Movimientos de OT."
+*paArticulo[11, 01] = "11. Ficha de Movimientos de Art║culos."
+*paArticulo[11, 02] = "l_11.spr"
+*paArticulo[12, 01] = "12. Estad║stico de Ventas y Compras de un art║culo."
+*paArticulo[12, 02] = "l_10.spr"
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        ARTICULO/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htpg4")
+	ACTIVATE WINDOW _5450htpg4 SAME
+ELSE
+	ACTIVATE WINDOW _5450htpg4 NOSHOW
+ENDIF
+@ 0,0 GET lstArticulo ;
+ 	PICTURE "@&T" ;
+	FROM paArticulo ;
+	SIZE 14,63 ;
+	DEFAULT 1 ;
+	VALID _5450htpht() ;
+	COLOR SCHEME 14
+
+IF NOT WVISIBLE("_5450htpg4")
+	ACTIVATE WINDOW _5450htpg4
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN articulo     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htpg4
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPHT           lstArticulo VALID                  Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ARTICULO,     Record Number:    2  Ё
+*       Ё Variable:            lstArticulo                        Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpht     &&  lstArticulo VALID
+#REGION 1
+IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
+   &pcSaveTo = " "
+ELSE
+   IF EMPTY(paArticulo(lstArticulo, 2))
+      &pcSaveTo = " "
+   ELSE
+      &pcSaveTo = paArticulo(lstArticulo, 2)
+   ENDIF
+ENDIF

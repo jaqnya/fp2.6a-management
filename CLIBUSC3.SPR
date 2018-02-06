@@ -1,0 +1,150 @@
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ 01/23/18            CLIBUSC3.SPR               08:19:02 ³
+*       ³                                                         ³
+*       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*       ³                                                         ³
+*       ³ Nombre del autor                                        ³
+*       ³                                                         ³
+*       ³ Copyright (c) 2018 Nombre de la empresa                 ³
+*       ³ Direcci¢n                                               ³
+*       ³ Ciudad,     C.P.                                        ³
+*       ³ Pa¡s                                              ³
+*       ³                                                         ³
+*       ³ Description:                                            ³
+*       ³ Este programa lo ha generado autom ticamente GENSCRN.    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³             MS-DOS Definiciones de ventana              ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+IF NOT WEXIST("_5450htriv")
+	DEFINE WINDOW _5450htriv ;
+		FROM INT((SROW()-3)/2),INT((SCOL()-44)/2) ;
+		TO INT((SROW()-3)/2)+2,INT((SCOL()-44)/2)+43 ;
+		TITLE " BUSQUEDA POR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³        CLIBUSC3/MS-DOS Distribuci¢n de pantalla         ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF WVISIBLE("_5450htriv")
+	ACTIVATE WINDOW _5450htriv SAME
+ELSE
+	ACTIVATE WINDOW _5450htriv NOSHOW
+ENDIF
+@ 0,25 GET m.documento ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@!T" ;
+	VALID _5450htrix()
+@ 0,2 SAY "DOCUMENTO DEL CLIENTE:" ;
+	SIZE 1,22, 0
+
+IF NOT WVISIBLE("_5450htriv")
+	ACTIVATE WINDOW _5450htriv
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    MS-DOSREAD contiene cl usulas de SCREEN clibusc3     ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htriv
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTRIX           m.documento VALID                  ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         CLIBUSC3,     Record Number:    2  ³
+*       ³ Variable:            m.documento                        ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      1                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htrix     &&  m.documento VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT, K_F1, K_BSPACE)
+   RETURN .F.
+ENDIF
+
+IF OCCURS("*", m.documento) = LEN(m.documento)
+   WAIT WINDOW "­ DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !"
+   RETURN .F.
+ENDIF
+
+IF EMPTY(m.documento)
+   WAIT WINDOW "­ EL DOCUMENTO DEL CLIENTE NO PUEDE QUEDAR EN BLANCO !"
+   RETURN .F.
+ELSE
+   PRIVATE pcSelect, pcOrder, pnRecNo
+   pcSelect = SELECT()
+   pcOrder  = ORDER()
+   pnRecNo  = IIF(EOF(), 0, RECNO())
+   SELECT clientes
+   SET ORDER TO TAG indice3 OF clientes.cdx
+   IF OCCURS("*", m.documento) > 0
+      DO SQLquery.prg WITH m.documento, "clientes.documento"
+   ELSE
+      IF NOT SEEK(m.documento)
+         WAIT WINDOW "­ EL DATO BUSCADO NO HA SIDO ENCONTRADO !"
+         SELECT (pcSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo # 0
+            GOTO RECORD pnRecNo
+         ENDIF
+         _CUROBJ = OBJNUM(m.documento)
+      ELSE
+         CLEAR READ
+      ENDIF
+   ENDIF
+ENDIF

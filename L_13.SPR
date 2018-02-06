@@ -1,0 +1,463 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18              L_13.SPR                 08:18:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htpiv")
+	DEFINE WINDOW _5450htpiv ;
+		FROM INT((SROW()-12)/2),INT((SCOL()-77)/2) ;
+		TO INT((SROW()-12)/2)+11,INT((SCOL()-77)/2)+76 ;
+		TITLE " EXISTENCIA DE ARTICULOS " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     L_13/MS-DOS C╒digo de configuraci╒n - SECCION 2     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+mconexiste = "N"
+mvigente   = "T"
+mordenado  = "C"
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё          L_13/MS-DOS Distribuci╒n de pantalla           Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htpiv")
+	ACTIVATE WINDOW _5450htpiv SAME
+ELSE
+	ACTIVATE WINDOW _5450htpiv NOSHOW
+ENDIF
+@ 1,2 SAY "DEL ARTICULO:" ;
+	SIZE 1,13, 0
+@ 2,2 SAY "AL  ARTICULO:" ;
+	SIZE 1,13, 0
+@ 1,16 GET marti1 ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	VALID _5450htpiy()
+@ 2,16 GET marti2 ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	VALID _5450htpj0()
+@ 4,2 SAY "LISTAR ARTICULOS CON EXISTENCIA = 0:" ;
+	SIZE 1,36, 0
+@ 5,2 SAY "LISTAR ARTICULOS VIGENTES (S/N/T)..:" ;
+	SIZE 1,36, 0
+@ 6,2 SAY "ORDENADO POR (C)ODIGO O (N)OMBRE...:" ;
+	SIZE 1,36, 0
+@ 4,39 GET mconexistencia ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpj2()
+@ 5,39 GET mvigente ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpj3()
+@ 6,39 GET mordenado ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htpj4()
+@ 7,0 TO 7,74
+@ 8,23 GET cmgChoice ;
+	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
+	SIZE 1,12,5 ;
+	DEFAULT 1 ;
+	VALID _5450htpj5()
+
+IF NOT WVISIBLE("_5450htpiv")
+	ACTIVATE WINDOW _5450htpiv
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      MS-DOSREAD contiene cl═usulas de SCREEN l_13       Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htpiv
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   L_13/MS-DOS Procedimientos y funciones de soporte     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PROCEDURE sql_13
+
+SELECT 0
+
+CREATE TABLE l_13 ;
+  (codigo     C(15),;
+   codigo2    C(15),;
+   codorig    C(15),;
+   nombre     C(40),;
+   stock_actu N(11,2),;
+   stock_ot   N(11,2),;
+   ubicacion  C(10),;
+   vigente    L(01))
+
+USE l_13
+INDEX ON VAL(codigo) TAG "indice1"
+INDEX ON nombre      TAG "indice2"
+
+SELECT maesprod
+SET ORDER TO TAG "indice8"
+
+SEEK marti1
+
+IF FOUND()
+   SCAN WHILE VAL(codigo) >= VAL(marti1) .AND. VAL(codigo) <= VAL(marti2)
+      INSERT INTO l_13 (codigo, codigo2, codorig, nombre, stock_actu, stock_ot, ubicacion, vigente) ;
+         VALUES (maesprod.codigo, maesprod.codigo2, maesprod.codorig, ;
+                 maesprod.nombre, maesprod.stock_actu, maesprod.stock_ot, ;
+                 maesprod.ubicacion, maesprod.vigente)
+   ENDSCAN
+ENDIF
+
+SELECT l_13
+
+IF mconexiste = "N" THEN
+   DELETE FOR stock_actu - stock_ot = 0
+ENDIF
+
+IF mvigente = "S" THEN
+   DELETE FOR .NOT. vigente
+ENDIF
+
+IF mvigente = "N" THEN
+   DELETE FOR vigente
+ENDIF
+
+IF mordenado = "C" THEN
+   SET ORDER TO TAG "indice1"
+ELSE
+   SET ORDER TO TAG "indice2"
+ENDIF
+
+pcLocal = gcCompany
+
+
+DO WHILE .T.
+   WAIT WINDOW "DESTINO: (P)ANTALLA, (I)MPRESORA, (A)RCHIVO" TO mdestino
+   mdestino = UPPER(mdestino)
+
+   IF INLIST(mdestino, "P", "I", "A") OR LASTKEY() = 27 THEN
+      EXIT
+   ENDIF
+ENDDO
+
+DO CASE
+   CASE mdestino = "P"
+      REPORT FORM l_13 TO l_13.txt NOCONSOLE
+      DO lister.prg WITH "l_13.txt"
+      DELETE FILE l_13.txt
+   CASE mdestino = "I"
+      WAIT WINDOW "COLOQUE PAPEL CONTINUO TAMA╔O CARTA Y SELECCIONE LETRA CHICA..."
+      WAIT WINDOW "IMPRIMIENDO..." NOWAIT
+
+      REPORT FORM l_13 TO PRINTER NOCONSOLE
+
+      WAIT CLEAR
+   CASE mdestino = "A"
+      EXPORT TO c:\excel TYPE XLS
+      WAIT WINDOW "NOMBRE DEL ARCHIVO: EXCEL.XLS, EN C:\"
+ENDCASE
+
+SELECT l_13
+USE
+DELETE FILE l_13.dbf
+DELETE FILE l_13.cdx
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPIY           marti1 VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_13,     Record Number:    4      Ё
+*       Ё Variable:            marti1                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpiy     &&  marti1 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN 0
+ELSE
+   IF LASTKEY() = 27
+      RETURN
+   ENDIF
+ENDIF
+
+IF EMPTY(marti1)
+   PUSH KEY CLEAR
+
+*!*   *-- Procedimiento de inspecci╒n de art║culos.
+*!*	   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+*!*	   DO brwMaesp.prg
+*!*	   ON KEY LABEL "ENTER"
+
+   m.articulo = ""
+   DO brwmaesp WITH "m.articulo"
+
+   POP KEY
+
+   IF LASTKEY() <> K_ESCAPE
+      marti1 = m.articulo
+   ELSE
+      RETURN 0
+   ENDIF
+ENDIF
+
+SET EXACT ON
+
+SELECT maesprod
+SET ORDER TO TAG "indice1"
+
+SEEK marti1
+
+SET EXACT OFF
+
+IF FOUND() THEN
+   @ 01,33 SAY LEFT(maesprod.nombre, 40)
+ELSE
+   WAIT WINDOW "ARTICULO INEXISTENTE !"
+   RETURN 0
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPJ0           marti2 VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_13,     Record Number:    5      Ё
+*       Ё Variable:            marti2                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpj0     &&  marti2 VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF EMPTY(marti2)
+   PUSH KEY CLEAR
+
+*!*   *-- Procedimiento de inspecci╒n de art║culos.
+*!*	   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+*!*	   DO brwMaesp.prg
+*!*	   ON KEY LABEL "ENTER"
+
+   m.articulo = ""
+   DO brwmaesp WITH "m.articulo"
+
+   POP KEY
+
+   IF LASTKEY() <> K_ESCAPE
+      marti2 = m.articulo
+   ELSE
+      RETURN 0
+   ENDIF
+ENDIF
+
+SET EXACT ON
+
+SELECT maesprod
+SET ORDER TO TAG "indice1"
+
+SEEK marti2
+
+SET EXACT OFF
+
+IF FOUND() THEN
+   @ 02,33 SAY LEFT(maesprod.nombre, 40)
+ELSE
+   WAIT WINDOW "ARTICULO INEXISTENTE !"
+   RETURN 0
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPJ2           mconexistencia VALID               Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_13,     Record Number:    9      Ё
+*       Ё Variable:            mconexistencia                     Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpj2     &&  mconexistencia VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(mconexiste, "S", "N") THEN
+   WAIT WINDOW "LA OPCION CON EXISTENCIA = 0, DEBE SER: (S)I o (N)O !"
+   RETURN 0
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPJ3           mvigente VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_13,     Record Number:   10      Ё
+*       Ё Variable:            mvigente                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpj3     &&  mvigente VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(mvigente, "S", "N", "T") THEN
+   WAIT WINDOW "LA OPCION DE ARTICULOS VIGENTES, DEBE SER: (S)I, (N)O, (T)ODOS !"
+   RETURN 0
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPJ4           mordenado VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_13,     Record Number:   11      Ё
+*       Ё Variable:            mordenado                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpj4     &&  mordenado VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(mordenado, "C", "N") THEN
+   WAIT WINDOW "ORDENADO DEBE SER POR: (C)ODIGO O (N)OMBRE !"
+   RETURN 0
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPJ5           cmgChoice VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         L_13,     Record Number:   13      Ё
+*       Ё Variable:            cmgChoice                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpj5     &&  cmgChoice VALID
+#REGION 1
+IF cmgChoice = 1
+   DO sql_13
+   _CUROBJ = OBJNUM(marti1)
+ENDIF
+
+IF cmgChoice = 2
+   CLEAR READ
+ENDIF

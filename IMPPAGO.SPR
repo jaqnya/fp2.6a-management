@@ -1,0 +1,229 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18             IMPPAGO.SPR               08:19:11 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htyem")
+	DEFINE WINDOW _5450htyem ;
+		FROM INT((SROW()-11)/2),INT((SCOL()-56)/2) ;
+		TO INT((SROW()-11)/2)+10,INT((SCOL()-56)/2)+55 ;
+		FLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   IMPPAGO/MS-DOS C╒digo de configuraci╒n - SECCION 2    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+m.monto = (importe + monto_ndeb) - (abonado + monto_ncre + monto)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё         IMPPAGO/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htyem")
+	ACTIVATE WINDOW _5450htyem SAME
+ELSE
+	ACTIVATE WINDOW _5450htyem NOSHOW
+ENDIF
+@ 0,38 SAY "N╖:" ;
+	SIZE 1,3, 0
+@ 1,0 TO 1,53
+@ 0,14 SAY tipodocu ;
+	SIZE 1,1 ;
+	PICTURE "9" ;
+	COLOR N/W     
+@ 0,42 SAY nrodocu ;
+	SIZE 1,9 ;
+	PICTURE "999999999" ;
+	COLOR N/W     
+@ 2,24 SAY fechadocu ;
+	SIZE 1,10 ;
+	PICTURE "@D" ;
+	COLOR N/W     
+@ 0,3 SAY "Documento:" ;
+	SIZE 1,10, 0
+@ 4,3 SAY "Importe de la Cuota:" ;
+	SIZE 1,20, 0
+@ 2,3 SAY "Fecha..............:" ;
+	SIZE 1,20, 0
+@ 6,3 SAY "Saldo..............:" ;
+	SIZE 1,20, 0
+@ 4,24 SAY importe ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 6,24 SAY (importe + monto_ndeb) - (abonado + monto_ncre + monto) ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 8,24 GET m.monto ;
+	SIZE 1,14 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999.99" ;
+	VALID _5450htyeq()
+@ 8,3 SAY "Este Pago..........:" ;
+	SIZE 1,20, 0
+
+IF NOT WVISIBLE("_5450htyem")
+	ACTIVATE WINDOW _5450htyem
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     MS-DOSREAD contiene cl═usulas de SCREEN imppago     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	SHOW _5450htyer() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htyem
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё            IMPPAGO/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTYEQ           m.monto VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         IMPPAGO,     Record Number:   13   Ё
+*       Ё Variable:            m.monto                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htyeq     &&  m.monto VALID
+#REGION 1
+IF INLIST(LASTKEY(), 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF m.monto < 0
+   WAIT WINDOW "╜ EL MONTO INGRESADO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+IF m.monto > (importe + monto_ndeb) - (abonado + monto_ncre + monto)
+   WAIT WINDOW "╜ EL MONTO INGRESADO NO PUEDE SER MAYOR QUE EL SALDO !"
+   RETURN .F.
+ENDIF
+
+IF m.monto = 0
+   IF monto = 0
+      WAIT WINDOW "╜ EL MONTO INGRESADO DEBE SER MAYOR QUE CERO !"
+      RETURN .F.
+   ENDIF
+ENDIF
+
+REPLACE tmpdetapag.monto WITH m.monto
+
+CLEAR READ
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTYER           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         IMPPAGO                            Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htyer     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: IMPPAGO
+*
+#REGION 1
+DO CASE
+   CASE tipodocu = 2
+      @ 00,17 SAY "COMPRA CREDITO" ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 00,17 SAY REPLICATE(CHR(32), 14) ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

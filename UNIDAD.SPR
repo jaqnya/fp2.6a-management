@@ -1,0 +1,540 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18             UNIDAD.SPR                08:19:05 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    UNIDAD/MS-DOS C╒digo de configuraci╒n - SECCION 1    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF plAdding
+   pcMyTitle = " Crear Unidad de Medida "
+ELSE
+   IF plEditing
+      pcMyTitle = " Modificar Unidad de Medida "
+   ELSE
+      IF plDeleting
+         pcMyTitle = " Borrar Unidad de Medida "
+      ENDIF
+   ENDIF
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htuf2")
+	DEFINE WINDOW _5450htuf2 ;
+		FROM INT((SROW()-10)/2),INT((SCOL()-46)/2) ;
+		TO INT((SROW()-10)/2)+9,INT((SCOL()-46)/2)+45 ;
+		TITLE (pcMyTitle) ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    UNIDAD/MS-DOS C╒digo de configuraci╒n - SECCION 2    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF plAdding
+   m.codigo = NextNumber()
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё         UNIDAD/MS-DOS Distribuci╒n de pantalla          Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htuf2")
+	ACTIVATE WINDOW _5450htuf2 SAME
+ELSE
+	ACTIVATE WINDOW _5450htuf2 NOSHOW
+ENDIF
+@ 1,3 SAY "Codigo:" ;
+	SIZE 1,7, 0
+@ 2,3 SAY "Nombre:" ;
+	SIZE 1,7, 0
+@ 5,0 TO 5,43
+@ 4,3 SAY "Unidad de Medida Vigente [S/N] ? :" ;
+	SIZE 1,34, 0
+@ 1,11 GET m.codigo ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	WHEN plAdding ;
+	VALID _5450htuf4()
+@ 2,11 GET m.nombre ;
+	SIZE 1,30 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htuf5()
+@ 4,38 GET m.vigente ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htuf6()
+@ 6,5 GET pnChoice ;
+	PICTURE "@*HT \\\!\<Grabar;\?\<Cancelar" ;
+	SIZE 1,12,10 ;
+	DEFAULT 1 ;
+	VALID _5450htuf7()
+
+IF NOT WVISIBLE("_5450htuf2")
+	ACTIVATE WINDOW _5450htuf2
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     MS-DOSREAD contiene cl═usulas de SCREEN unidad      Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	ACTIVATE _5450htuf8() ;
+	SHOW _5450htuf9() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htuf2
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё            UNIDAD/MS-DOS C╒digo de limpieza             Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF pnChoice = 1 .AND. TYPE("paUnidades") <> "U"
+   PRIVATE pnCount
+   COUNT TO pnCount FOR vigente
+
+   IF EMPTY(pnCount)
+      DIMENSION paUnidades(1, 2)
+      paUnidades = ""
+   ELSE
+      DIMENSION paUnidades(pnCount, 2)
+      COPY TO ARRAY paUnidades FIELDS codigo, nombre FOR vigente
+      =ASORT(paUnidades, AELEMENT(paUnidades, 1, 2))
+   ENDIF
+
+   IF plAdding .OR. plEditing
+      IF .NOT. EMPTY(m.nombre)
+         IF ASCAN(paUnidades, m.nombre, 1) > 0
+            lstUnidades = ASUBSCRIPT(paUnidades, ASCAN(paUnidades, m.nombre, 1), 1)
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF plDeleting
+      IF lstUnidades > ALEN(paUnidades, 1)
+         lstUnidades = ALEN(paUnidades, 1)
+      ENDIF
+   ENDIF
+
+   IF pnCount = 0
+      SHOW GET cmdDelete DISABLE
+      SHOW GET cmdEdit   DISABLE
+   ELSE
+      SHOW GET cmdDelete ENABLE
+      SHOW GET cmdEdit   ENABLE
+   ENDIF
+   SHOW GET lstUnidades
+ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё  UNIDAD/MS-DOS Procedimientos y funciones de soporte    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PROCEDURE NextNumber
+PRIVATE pnSelect, pcOrder, pnRecNo, NextCode
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT unidad
+SET ORDER TO TAG indice1 OF unidad.cdx
+GO BOTTOM
+
+NextCode = unidad.codigo + 1
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (NextCode)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTUF4           m.codigo VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         UNIDAD,     Record Number:    6    Ё
+*       Ё Variable:            m.codigo                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htuf4     &&  m.codigo VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.codigo <= 0
+   WAIT WINDOW "╜ EL CODIGO DE LA UNIDAD DE MEDIDA DEBE SER MAYOR QUE CERO !"
+   m.codigo = NextNumber()
+   SHOW GET m.codigo
+   _CUROBJ = OBJNUM(m.codigo)
+ELSE
+   SELECT unidad
+   SET ORDER TO TAG indice1 OF unidad.cdx
+
+   IF SEEK(m.codigo)
+      WAIT WINDOW "╜ ESTE CODIGO YA HA SIDO UTILIZADO !"
+      WAIT WINDOW ALLTRIM(STR(unidad.codigo, 4)) + " - " + ALLTRIM(unidad.nombre)
+      m.codigo = NextNumber()
+      SHOW GET m.codigo
+      _CUROBJ = OBJNUM(m.codigo)
+   ENDIF
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTUF5           m.nombre VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         UNIDAD,     Record Number:    7    Ё
+*       Ё Variable:            m.nombre                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htuf5     &&  m.nombre VALID
+#REGION 1
+IF plAdding
+   IF INLIST(LASTKEY(), 5, 19, 27, 127)
+      IF EMPTY(m.nombre)
+         SHOW GET pnChoice, 1 DISABLE
+      ENDIF
+      RETURN
+   ENDIF
+ELSE
+   IF plEditing
+      IF LASTKEY() = 27
+         RETURN
+      ELSE
+         IF INLIST(LASTKEY(), 5, 19, 28, 127)
+            RETURN .F.
+         ENDIF
+      ENDIF
+   ENDIF
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF EMPTY(m.nombre)
+   WAIT WINDOW "╜ EL NOMBRE DE LA UNIDAD DE MEDIDA NO PUEDE QUEDAR EN BLANCO !"
+   RETURN .F.
+ELSE
+   IF plAdding
+      SELECT unidad
+      SET ORDER TO TAG indice2 OF unidad.cdx
+
+      IF SEEK(m.nombre)
+         WAIT WINDOW "╜ ESTE NOMBRE YA HA SIDO CARGADO !"
+         WAIT WINDOW ALLTRIM(STR(unidad.codigo, 4)) + " - " + ALLTRIM(unidad.nombre)
+
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+         SHOW GET pnChoice, 1 DISABLE
+         RETURN .F.
+      ELSE
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+         SHOW GET pnChoice, 1 ENABLE
+      ENDIF
+   ENDIF
+
+   IF plEditing
+      IF unidad.nombre = m.nombre
+         SHOW GET pnChoice, 1 DISABLE
+         RETURN
+      ENDIF
+
+      LOCATE FOR unidad.nombre = m.nombre
+      DO WHILE FOUND()
+   	     IF RECNO() = pnRecNo
+            CONTINUE
+         ELSE
+            WAIT WINDOW "╜ ESTE NOMBRE YA HA SIDO CARGADO !"
+            WAIT WINDOW ALLTRIM(STR(unidad.codigo, 4)) + " - " + ALLTRIM(unidad.nombre)
+
+            SELECT (pnSelect)
+            SET ORDER TO TAG (pcOrder)
+            IF pnRecNo <> 0
+               GOTO RECORD pnRecNo
+            ENDIF
+
+            SHOW GET pnChoice, 1 DISABLE
+            RETURN .F.
+         ENDIF
+      ENDDO
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      SHOW GET pnChoice, 1 ENABLE
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTUF6           m.vigente VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         UNIDAD,     Record Number:    8    Ё
+*       Ё Variable:            m.vigente                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htuf6     &&  m.vigente VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(m.vigente, "S", "N")
+   WAIT WINDOW "╜ UNIDAD DE MEDIDA VIGENTE DEBE SER (S)I o (N)O !"
+   SHOW GET pnChoice, 1 DISABLE
+   RETURN .F.
+ENDIF
+
+IF plEditing
+   IF m.nombre <> unidad.nombre .OR. ;
+      IIF(m.vigente = "S", .T., .F.) <> unidad.vigente
+      SHOW GET pnChoice, 1 ENABLE
+   ELSE
+      SHOW GET pnChoice, 1 DISABLE
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTUF7           pnChoice VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         UNIDAD,     Record Number:    9    Ё
+*       Ё Variable:            pnChoice                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htuf7     &&  pnChoice VALID
+#REGION 1
+IF pnChoice = 1
+   IF .NOT. INLIST(m.vigente, "S", "N")
+      WAIT WINDOW "╜ UNIDAD DE MEDIDA VIGENTE DEBE SER (S)I o (N)O !"
+      _CUROBJ = OBJNUM(m.vigente)
+      RETURN
+   ENDIF
+
+   IF plAdding .OR. plEditing
+      IF TYPE("m.vigente") = "C" .AND. m.vigente = "S"
+         m.vigente = .T.
+      ELSE
+         m.vigente = .F.
+      ENDIF
+
+      IF plAdding
+         INSERT INTO unidad (codigo, nombre, vigente, id_local) ;
+            VALUES (m.codigo, m.nombre, m.vigente, control.id_local)
+      ENDIF
+
+      IF plEditing
+         GATHER MEMVAR MEMO
+      ENDIF
+
+      CLEAR READ
+   ENDIF
+
+   IF plDeleting
+      CLEAR READ
+      DELETE
+   ENDIF
+ENDIF
+
+IF pnChoice = 2
+   CLEAR READ
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTUF8           Nivel de lectura ACTIVATE          Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         UNIDAD                             Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htuf8     && Read Level Activate
+*
+* C╒digo ACTIVATE de la pantalla: UNIDAD
+*
+#REGION 1
+IF plDeleting
+   SHOW GET pnChoice, 1 PROMPT "\!\<Borrar"
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTUF9           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         UNIDAD                             Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htuf9     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: UNIDAD
+*
+#REGION 1
+IF plAdding
+   m.vigente  = "S"
+ELSE
+   IF plEditing .OR. plDeleting
+      IF TYPE("m.vigente") = "L" .AND. m.vigente
+         m.vigente = "S"
+      ELSE
+         m.vigente = "N"
+      ENDIF
+   ENDIF
+ENDIF
+
+IF plDeleting
+   SHOW GET pnChoice, 1 ENABLE
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

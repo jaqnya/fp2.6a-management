@@ -1,0 +1,432 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            FILTER01.SPR               08:19:04 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   FILTER01/MS-DOS C╒digo de configuraci╒n - SECCION 1   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PRIVATE cScheme13, cScheme14
+
+cScheme13 = SCHEME(13)
+cScheme14 = SCHEME(14)
+
+SET COLOR OF SCHEME 13 TO &color_05
+SET COLOR OF SCHEME 14 TO &color_06
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htt6h")
+	DEFINE WINDOW _5450htt6h ;
+		FROM INT((SROW()-12)/2),INT((SCOL()-52)/2) ;
+		TO INT((SROW()-12)/2)+11,INT((SCOL()-52)/2)+51 ;
+		TITLE " Filtro para Art║culos " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		DOUBLE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   FILTER01/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+DIMENSION items[1,2]
+STORE "" TO items
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        FILTER01/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htt6h")
+	ACTIVATE WINDOW _5450htt6h SAME
+ELSE
+	ACTIVATE WINDOW _5450htt6h NOSHOW
+ENDIF
+@ 0,2 SAY "Rubros:" ;
+	SIZE 1,7, 0 ;
+	COLOR W+/W    
+@ 2,47 SAY "э" ;
+	SIZE 1,1, 0
+@ 3,37 SAY "ъъъъъъъъъъъ" ;
+	SIZE 1,11, 0
+@ 5,47 SAY "э" ;
+	SIZE 1,1, 0
+@ 6,37 SAY "ъъъъъъъъъъъ" ;
+	SIZE 1,11, 0
+@ 8,47 SAY "э" ;
+	SIZE 1,1, 0
+@ 9,37 SAY "ъъъъъъъъъъъ" ;
+	SIZE 1,11, 0
+@ 1,2 GET m.item ;
+ 	PICTURE "@&N" ;
+	FROM items ;
+	RANGE 2, _5450htt6l() ;
+	SIZE 9,32 ;
+	DEFAULT 1 ;
+	COLOR SCHEME 14
+@ 2,36 GET cmdEdit ;
+	PICTURE "@*VN \<Modificar" ;
+	SIZE 1,11,1 ;
+	DEFAULT 1 ;
+	VALID _5450htt6m()
+@ 5,36 GET cmdOk ;
+	PICTURE "@*VN \!\<Aceptar" ;
+	SIZE 1,11,1 ;
+	DEFAULT 1 ;
+	VALID _5450htt6o() ;
+	DISABLE
+@ 8,36 GET cmdCancel ;
+	PICTURE "@*VN \?\<Cancelar" ;
+	SIZE 1,11,1 ;
+	DEFAULT 1 ;
+	VALID _5450htt6p()
+
+IF NOT WVISIBLE("_5450htt6h")
+	ACTIVATE WINDOW _5450htt6h
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN filter01     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	SHOW _5450htt6q() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htt6h
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           FILTER01/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+
+SET COLOR OF SCHEME 13 TO &cScheme13
+SET COLOR OF SCHEME 14 TO &cScheme14
+*
+* SAVEITEMS - Save de Items selected.
+*
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё FILTER01/MS-DOS Procedimientos y funciones de soporte   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PROCEDURE saveitems
+PRIVATE m.recno, m.i, m.pos
+m.recno = RECNO()
+SELECT filter01
+SCAN FOR tabla = "rubros1.dbf"
+   m.pos = ASCAN(items, codigo)
+   IF m.pos = 0
+      DELETE
+   ENDIF
+ENDSCAN
+
+m.i = 1
+DO WHILE (m.i <= ALEN(items, 1)) AND NOT EMPTY(items[m.i, 1]))
+   LOCATE FOR filter01.codigo = items[m.i, 1] AND ;
+      filter01.tabla = "rubros1.dbf "
+
+      IF NOT FOUND()
+         APPEND BLANK
+         REPLACE tabla  WITH "rubros1.dbf"
+         REPLACE codigo WITH items[m.i, 1]
+      ENDIF
+   m.i = m.i + 1
+   GO TOP
+ENDDO
+
+*
+* BUILDEXPR - Construir la expresion que se utilizara como filtro.
+*
+FUNCTION BuildExpr
+
+* Declaraci╒n de variables.
+PRIVATE nSelect, cOrder, nRecNo
+nSelect = SELECT()
+cOrder  = ORDER()
+nRecNo  = IIF(EOF(), 0, RECNO())
+
+IF USED("filter01")
+   SELECT filter01
+   SET ORDER TO 0
+ELSE
+   SELECT 0
+   USE (LOCFILE("filter01.dbf", "DBF", "╗ D╒nde est═ FILTER01.DBF ?")) ;
+      AGAIN ALIAS filter01 SHARED ;
+      ORDER 0
+ENDIF
+
+cExpression = ""
+
+SCAN FOR filter01.tabla = "rubros1.dbf"
+   IF EMPTY(cExpression)
+      cExpression = "rubro = " + ALLTRIM(STR(codigo, 4))
+   ELSE
+      cExpression = cExpression + " .OR. rubro = " + ALLTRIM(STR(codigo, 4))
+   ENDIF
+ENDSCAN
+
+IF .NOT. EMPTY(ALIAS(nSelect))
+   SELECT (nSelect)
+   SET ORDER TO TAG (cOrder)
+   IF nRecNo <> 0
+      GOTO RECORD nRecNo
+   ENDIF
+ENDIF
+
+IF EMPTY(cExpression)
+   RETURN ""
+ELSE
+   RETURN (cExpression)
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTT6L           m.item Emerger desde               Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         FILTER01,     Record Number:    9  Ё
+*       Ё Variable:            m.item                             Ё
+*       Ё Called By:           Emerger desde Clause               Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htt6l     &&  m.item Emerger desde
+#REGION 1
+PRIVATE m.cnt, m.limit
+m.cnt = 1
+m.limit = ALEN(items, 1)
+DO WHILE m.cnt <= m.limit
+   IF EMPTY(items[m.cnt, 1])
+      RETURN m.cnt - 1
+   ENDIF
+   m.cnt = m.cnt + 1
+ENDDO
+RETURN m.cnt - 1
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTT6M           cmdEdit VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         FILTER01,     Record Number:   10  Ё
+*       Ё Variable:            cmdEdit                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htt6m     &&  cmdEdit VALID
+#REGION 1
+PRIVATE itemcpy, m.osize, m.nsize, m.i
+
+m.osize = size(ALEN(items, 1))
+IF m.osize > 0
+   DIMENSION itemcpy[m.osize]
+   FOR m.i = 1 TO m.osize
+      itemcpy[m.i] = items[m.i, 2]
+   ENDFOR
+ENDIF
+	
+DO addfil01.spr
+
+SHOW GET item
+	
+m.nsize = size(ALEN(items, 1))
+IF m.nsize = 0 AND m.osize = 0
+   RETURN
+ENDIF
+IF m.nsize <> m.osize OR m.nsize = 0
+   SHOW GET cmdOk, 1 ENABLE
+   RETURN
+ENDIF
+DIMENSION items[m.nsize, 2]
+
+m.i = 1
+= ASORT(itemcpy)
+= ASORT(items, 2)
+DO WHILE m.i <= m.osize
+   IF itemcpy[m.i] <> items[m.i, 2]
+      SHOW GET cmdOk, 1 ENABLE
+      RETURN
+   ELSE
+      m.i = m.i + 1
+   ENDIF
+ENDDO
+
+*
+* SIZE
+*
+FUNCTION size
+PARAMETER m.limit
+PRIVATE m.cnt
+m.cnt = 1
+DO WHILE m.cnt <= m.limit
+   IF EMPTY(items[m.cnt, 1])
+      RETURN m.cnt - 1
+   ENDIF
+   m.cnt = m.cnt + 1
+ENDDO
+RETURN m.cnt - 1
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTT6O           cmdOk VALID                        Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         FILTER01,     Record Number:   11  Ё
+*       Ё Variable:            cmdOk                              Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htt6o     &&  cmdOk VALID
+#REGION 1
+DO saveitems
+
+cCriteria = BuildExpr()
+
+SELECT maesprod
+
+IF .NOT. EMPTY(cCriteria)
+   SET FILTER TO &cCriteria
+ELSE
+   SET FILTER TO
+ENDIF
+
+CLEAR READ
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTT6P           cmdCancel VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         FILTER01,     Record Number:   12  Ё
+*       Ё Variable:            cmdCancel                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htt6p     &&  cmdCancel VALID
+#REGION 1
+CLEAR READ
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTT6Q           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         FILTER01                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htt6q     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: FILTER01
+*
+#REGION 1
+SELECT rubros1.codigo, rubros1.nombre ;
+   FROM rubros1, filter01 ;
+   WHERE rubros1.codigo = filter01.codigo .AND. filter01.tabla = "rubros1.dbf" ;
+   ORDER BY rubros1.nombre ;
+   INTO ARRAY items
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

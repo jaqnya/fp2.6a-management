@@ -1,0 +1,360 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            ADDFIL01.SPR               08:19:10 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htxqv")
+	DEFINE WINDOW _5450htxqv ;
+		FROM INT((SROW()-13)/2),INT((SCOL()-67)/2) ;
+		TO INT((SROW()-13)/2)+12,INT((SCOL()-67)/2)+66 ;
+		FLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		DOUBLE ;
+		COLOR SCHEME 5
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   ADDFIL01/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PRIVATE m.mover, m.item, m.allcnt, m.saverec, m.itemcnt, m.limit, ;
+   allitems, m.status, m.savearea
+
+SET EXACT ON
+m.item = 1
+m.savearea = SELECT()
+DIMENSION allitems[1,2]
+allitems = ""
+
+SELECT DISTINCT codigo, nombre ;
+   FROM rubros1 ;
+   ORDER BY rubros1.nombre ASC ;
+   INTO ARRAY allitems
+
+m.allcnt = ALEN(allitems, 1)
+
+IF EMPTY(items)
+   m.itemcnt = 0
+ELSE
+   m.itemcnt = 1
+   m.limit = ALEN(items, 1)
+   DO WHILE m.itemcnt <= m.limit
+      IF EMPTY(items[m.itemcnt, 1])
+         EXIT
+      ENDIF
+      m.itemcnt = m.itemcnt + 1
+   ENDDO
+   m.itemcnt = m.itemcnt - 1
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        ADDFIL01/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htxqv")
+	ACTIVATE WINDOW _5450htxqv SAME
+ELSE
+	ACTIVATE WINDOW _5450htxqv NOSHOW
+ENDIF
+@ 2,25 GET m.mover ;
+	PICTURE "@*VN \<Mover;   \<Quitar;\\Quitar Todo;\!\<Aceptar" ;
+	SIZE 1,15,1 ;
+	DEFAULT 1 ;
+	VALID _5450htxqz()
+@ 0,2 SAY "Lista de Selecci╒n:" ;
+	SIZE 1,19, 0
+@ 0,43 SAY "Seleccionados:" ;
+	SIZE 1,14, 0
+@ 1,1 GET m.allitem ;
+ 	PICTURE "@&N" ;
+	FROM allitems ;
+	RANGE 2, m.allcnt ;
+	SIZE 10,22 ;
+	DEFAULT 1 ;
+	VALID _5450htxr1() ;
+	COLOR SCHEME 6
+@ 1,42 GET m.item ;
+ 	PICTURE "@&N" ;
+	FROM items ;
+	RANGE 2, itemcnt ;
+	SIZE 10,22 ;
+	DEFAULT 1 ;
+	VALID _5450htxr2() ;
+	COLOR SCHEME 6
+
+IF NOT WVISIBLE("_5450htxqv")
+	ACTIVATE WINDOW _5450htxqv
+ENDIF
+
+READ CYCLE ;
+	ACTIVATE _5450htxr3() ;
+	SHOW _5450htxr4()
+
+RELEASE WINDOW _5450htxqv
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           ADDFIL01/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+SET EXACT OFF
+
+SELECT (m.savearea)
+
+*
+* ALREADYIN - Check if name already in the list.
+*
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё ADDFIL01/MS-DOS Procedimientos y funciones de soporte   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+FUNCTION alreadyin
+PARAMETER m.newname
+SET EXACT OFF
+IF ASCAN(items, ALLTRIM(m.newname)) <> 0
+   RETURN .T.
+ENDIF
+SET EXACT ON
+RETURN .F.
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTXQZ           m.mover VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ADDFIL01,     Record Number:    2  Ё
+*       Ё Variable:            m.mover                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htxqz     &&  m.mover VALID
+#REGION 1
+DO CASE
+   CASE m.mover = 1
+      IF alreadyin(allitems[m.allitem, 2]))
+         WAIT WINDOW "Entrada duplicada" NOWAIT
+         RETURN .F.
+      ENDIF
+      IF m.itemcnt + 1 > ALEN(items, 1)
+         DIMENSION items[m.itemcnt + 1, 3]
+      ENDIF
+
+      items[m.itemcnt + 1, 1] = allitems[m.allitem, 1]
+      items[m.itemcnt + 1, 2] = allitems[m.allitem, 2]
+      m.itemcnt = m.itemcnt + 1
+      m.item    = m.itemcnt
+      SHOW GET m.mover, 2 ENABLE
+      IF m.itemcnt > 1
+         SHOW GET m.mover, 3 ENABLE
+      ENDIF
+      SHOW GET m.item
+   CASE m.mover = 2
+      = ADEL(items, m.item)
+      m.itemcnt = m.itemcnt - 1
+      m.item    = m.itemcnt
+
+      IF m.itemcnt = 0
+         SHOW GET m.mover, 2 DISABLE
+         SHOW GET m.mover, 3 DISABLE
+      ENDIF
+      SHOW GET m.item
+   CASE m.mover = 3
+      items = ""
+      m.itemcnt = 0
+      SHOW GET m.mover, 2 DISABLE
+      SHOW GET m.mover, 3 DISABLE
+      SHOW GET m.item
+   CASE m.mover = 4
+      CLEAR READ
+ENDCASE
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTXR1           m.allitem VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ADDFIL01,     Record Number:    5  Ё
+*       Ё Variable:            m.allitem                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htxr1     &&  m.allitem VALID
+#REGION 1
+IF alreadyin(allitems[m.allitem, 2])
+   WAIT WINDOW "Entrada duplicada" NOWAIT
+   RETURN .F.
+ENDIF
+
+IF m.itemcnt + 1 > ALEN(items, 1)
+   DIMENSION items[m.itemcnt + 1, 3]
+ENDIF
+
+items[m.itemcnt + 1, 1] = allitems[m.allitem, 1]
+items[m.itemcnt + 1, 2] = allitems[m.allitem, 2]
+m.itemcnt = m.itemcnt + 1
+m.item    = m.itemcnt
+
+SHOW GET m.mover, 2 ENABLE
+IF m.itemcnt > 1
+   SHOW GET m.mover, 3 ENABLE
+ENDIF
+SHOW GET m.item
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTXR2           m.item VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ADDFIL01,     Record Number:    6  Ё
+*       Ё Variable:            m.item                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htxr2     &&  m.item VALID
+#REGION 1
+= ADEL(items, m.item)
+m.itemcnt = m.itemcnt - 1
+m.item    = m.itemcnt
+
+IF m.itemcnt = 0
+   SHOW GET m.mover, 2 DISABLE
+   SHOW GET m.mover, 3 DISABLE
+ENDIF
+SHOW GET m.item
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTXR3           Nivel de lectura ACTIVATE          Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ADDFIL01                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htxr3     && Read Level Activate
+*
+* C╒digo ACTIVATE de la pantalla: ADDFIL01
+*
+#REGION 1
+SHOW GET m.mover, 1 PROMPT "\<Mover " + CHR(26)
+SHOW GET m.mover, 2 PROMPT CHR(27) + " \<Quitar"
+
+IF EMPTY(allitems)
+   SHOW GET m.allitem DISABLE
+ENDIF
+IF m.itemcnt = 0
+   SHOW GET m.mover, 2 DISABLE
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTXR4           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ADDFIL01                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htxr4     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: ADDFIL01
+*
+#REGION 1
+IF m.itemcnt > 1
+   SHOW GET m.mover, 3 ENABLE
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

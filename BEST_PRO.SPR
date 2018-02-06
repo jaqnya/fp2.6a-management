@@ -1,0 +1,1364 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            BEST_PRO.SPR               08:19:00 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htpyl")
+	DEFINE WINDOW _5450htpyl ;
+		FROM INT((SROW()-20)/2),INT((SCOL()-65)/2) ;
+		TO INT((SROW()-20)/2)+19,INT((SCOL()-65)/2)+64 ;
+		TITLE " PRODUCTOS MAS VENDIDOS " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   BEST_PRO/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+STORE DATE() TO mfecha1, mfecha2
+STORE 1 TO morden
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        BEST_PRO/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htpyl")
+	ACTIVATE WINDOW _5450htpyl SAME
+ELSE
+	ACTIVATE WINDOW _5450htpyl NOSHOW
+ENDIF
+@ 15,0 TO 15,62
+@ 6,2 SAY "SUB-RUBRO:" ;
+	SIZE 1,10, 0
+@ 5,2 SAY "RUBRO....:" ;
+	SIZE 1,10, 0
+@ 4,2 SAY "FAMILIA..:" ;
+	SIZE 1,10, 0
+@ 2,2 SAY "HASTA EL.: " ;
+	SIZE 1,11, 0
+@ 1,2 SAY "DESDE EL.:" ;
+	SIZE 1,10, 0
+@ 7,2 SAY "MARCA....:" ;
+	SIZE 1,10, 0
+@ 9,2 SAY "PROVEEDOR:" ;
+	SIZE 1,10, 0
+@ 11,2 SAY "ORDERNADO POR:" ;
+	SIZE 1,14, 0
+@ 12,20 SAY "2. " ;
+	SIZE 1,3, 0
+@ 11,20 SAY "1. Por Cantidad de Unidades Vendidas." ;
+	SIZE 1,37, 0
+@ 12,23 SAY "Por Porcentaje de Utilidad." ;
+	SIZE 1,27, 0
+@ 13,20 SAY "3. Por Importe de Ventas." ;
+	SIZE 1,25, 0
+@ 1,13 GET mfecha1 ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	PICTURE "@DK" ;
+	VALID _5450htpyp()
+@ 2,13 GET mfecha2 ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	PICTURE "@DK" ;
+	VALID _5450htpyq()
+@ 4,13 GET mfamilia ;
+	SIZE 1,4 ;
+	DEFAULT " " ;
+	PICTURE "@K 9999" ;
+	VALID _5450htpyr()
+@ 5,13 GET mrubro ;
+	SIZE 1,4 ;
+	DEFAULT " " ;
+	PICTURE "@K 9999" ;
+	VALID _5450htpyu()
+@ 6,13 GET msubrubro ;
+	SIZE 1,4 ;
+	DEFAULT " " ;
+	PICTURE "@K 9999" ;
+	VALID _5450htq0g()
+@ 7,13 GET mmarca ;
+	SIZE 1,4 ;
+	DEFAULT " " ;
+	PICTURE "@K 9999" ;
+	VALID _5450htq0k()
+@ 9,13 GET mproveedor ;
+	SIZE 1,4 ;
+	DEFAULT " " ;
+	PICTURE "@K 9999" ;
+	VALID _5450htq0n()
+@ 11,17 GET morden ;
+	SIZE 1,1 ;
+	DEFAULT 0 ;
+	PICTURE "@K" ;
+	VALID _5450htq0o()
+@ 16,17 GET cmgChoice ;
+	PICTURE "@*HN \!\<Iniciar;\?\<Cancelar" ;
+	SIZE 1,12,5 ;
+	DEFAULT 1 ;
+	VALID _5450htq0p()
+
+IF NOT WVISIBLE("_5450htpyl")
+	ACTIVATE WINDOW _5450htpyl
+ENDIF
+
+READ CYCLE ;
+	SHOW _5450htq0q()
+
+RELEASE WINDOW _5450htpyl
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё BEST_PRO/MS-DOS Procedimientos y funciones de soporte   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PROCEDURE report
+
+PRIVATE temp_files, mwhere
+DIMENSION temp_files[7]
+STORE SPACE(1) TO mwhere, temp_files
+DO load_array
+
+mwhere = build_expr()
+
+*--------------------------------------------------------------------------*
+* Instrucciones SELECT - SQL                                               *
+*--------------------------------------------------------------------------*
+
+*
+* Procesa la tabla de compras
+*
+WAIT "PROCESANDO LA TABLA DE COMPRAS..." WINDOW NOWAIT
+
+SELECT d.articulo, SUM(d.cantidad) AS cantidad, SUM(line_value(d.cantidad, d.precio, d.pdescuento, c.porcdesc, c.importdesc, c.descuento, c.moneda, c.tipocambio)) AS importe ;
+   FROM cabecomp c, detacomp d ;
+   WHERE c.tipodocu  = d.tipodocu ;
+     AND c.nrodocu   = d.nrodocu ;
+     AND c.proveedor = d.proveedor ;
+     AND c.fechadocu <= mfecha2 ;
+   GROUP BY d.articulo ;
+   ORDER BY 1 ;
+   INTO TABLE temp_files[1]
+
+*
+* Procesa la tabla de notas de debito de proveedores
+*
+WAIT "PROCESANDO LA TABLA DE NOTAS DE DEBITO DE PROVEEDORES..." WINDOW NOWAIT
+
+SELECT d.articulo, SUM(line_value(d.cantidad, d.precio, d.pdescuento, 0, 0, 0, e.moneda, e.tipocambio)) AS importe ;
+   FROM cabenotp c, detanotp d, cabecomp e ;
+   WHERE c.tiponota  = d.tiponota ;
+     AND c.nronota   = d.nronota ;
+     AND c.proveedor = d.proveedor ;
+     AND c.fechanota <= mfecha2 ;
+     AND c.tipodocu  = e.tipodocu ;
+     AND c.nrodocu   = e.nrodocu ;
+     AND c.proveedor = e.proveedor ;
+     AND INLIST(c.tiponota, 1, 3) ;
+     AND d.tipo = "P" ;
+   GROUP BY d.articulo ;
+   ORDER BY 1 ;
+   INTO TABLE temp_files[2]
+
+*
+* Procesa la tabla de notas de credito de proveedores
+*
+WAIT "PROCESANDO LA TABLA DE NOTAS DE CREDITO DE PROVEEDORES..." WINDOW NOWAIT
+
+SELECT d.articulo, SUM(line_value(d.cantidad, d.precio, d.pdescuento, 0, 0, 0, e.moneda, e.tipocambio)) AS importe ;
+   FROM cabenotp c, detanotp d, cabecomp e ;
+   WHERE c.tiponota  = d.tiponota ;
+     AND c.nronota   = d.nronota ;
+     AND c.proveedor = d.proveedor ;
+     AND c.fechanota <= mfecha2 ;
+     AND c.tipodocu  = e.tipodocu ;
+     AND c.nrodocu   = e.nrodocu ;
+     AND c.proveedor = e.proveedor ;
+     AND INLIST(c.tiponota, 2, 4) ;
+     AND d.tipo = "P" ;
+   GROUP BY d.articulo ;
+   ORDER BY 1 ;
+   INTO TABLE temp_files[3]
+
+*
+* Procesa la tabla de ventas
+*
+WAIT "PROCESANDO LA TABLA DE VENTAS..." WINDOW NOWAIT
+
+SELECT d.articulo, m.codorig, m.nombre, SUM(d.cantidad) AS cantidad, SUM(line_value(d.cantidad, d.precio, d.pdescuento, c.porcdesc, c.importdesc, c.descuento, c.moneda, c.tipocambio)) AS importe ;
+   FROM maesprod m, cabevent c, detavent d ;
+   WHERE &mwhere ;
+   GROUP BY d.articulo ;
+   ORDER BY 1 ;
+   INTO TABLE temp_files[4]
+
+*
+* Procesa la tabla de notas de debito de clientes
+*
+WAIT "PROCESANDO LA TABLA DE NOTAS DE DEBITO DE CLIENTES..." WINDOW NOWAIT
+
+SELECT d.articulo, SUM(line_value(d.cantidad, d.precio, d.pdescuento, 0, 0, 0, e.moneda, e.tipocambio)) AS importe ;
+   FROM cabenotc c, detanotc d, cabevent e ;
+   WHERE c.tiponota  = d.tiponota ;
+     AND c.nronota   = d.nronota ;
+     AND BETWEEN(c.fechanota, mfecha1, mfecha2) ;
+     AND c.tipodocu  = e.tipodocu ;
+     AND c.nrodocu   = e.nrodocu ;
+     AND INLIST(c.tiponota, 1, 3) ;
+     AND d.tipo = "P" ;
+   GROUP BY d.articulo ;
+   ORDER BY 1 ;
+   INTO TABLE temp_files[5]
+
+*
+* Procesa la tabla de notas de credito de clientes
+*
+WAIT "PROCESANDO LA TABLA DE NOTAS DE CREDITO DE CLIENTES..." WINDOW NOWAIT
+
+SELECT d.articulo, SUM(line_value(d.cantidad, d.precio, d.pdescuento, 0, 0, 0, e.moneda, e.tipocambio)) AS importe ;
+   FROM cabenotc c, detanotc d, cabevent e ;
+   WHERE c.tiponota  = d.tiponota ;
+     AND c.nronota   = d.nronota ;
+     AND BETWEEN(c.fechanota, mfecha1, mfecha2) ;
+     AND c.tipodocu  = e.tipodocu ;
+     AND c.nrodocu   = e.nrodocu ;
+     AND INLIST(c.tiponota, 2, 4) ;
+     AND d.tipo = "P" ;
+   GROUP BY d.articulo ;
+   ORDER BY 1 ;
+   INTO TABLE temp_files[6]
+
+WAIT CLEAR
+
+*--------------------------------------------------------------------------*
+* Procesos de costo de ventas y calcula de rentabilidad                    *
+*--------------------------------------------------------------------------*
+
+SELECT temp_files[1]
+USE
+
+SELECT temp_files[2]
+USE
+
+SELECT temp_files[3]
+USE
+
+SELECT temp_files[4]
+USE
+
+SELECT temp_files[5]
+USE
+
+SELECT temp_files[6]
+USE
+
+SELECT 0
+USE temp_files[1] ALIAS compras EXCLUSIVE
+
+SELECT 0
+USE temp_files[2] ALIAS ndeb_prov EXCLUSIVE
+
+SELECT 0
+USE temp_files[3] ALIAS ncre_prov EXCLUSIVE
+
+SELECT 0
+USE temp_files[4] ALIAS ventas EXCLUSIVE
+
+SELECT 0
+USE temp_files[5] ALIAS ndeb_clien EXCLUSIVE
+
+SELECT 0
+USE temp_files[6] ALIAS ncre_clien EXCLUSIVE
+
+WAIT "CALCULANDO PRECIO DE COSTO PROMEDIO..." WINDOW NOWAIT
+
+archi_01 = createmp()
+
+SELECT 0
+CREATE TABLE &archi_01 ;
+  (codigo     C(15),;
+   cantidad   N(11,2),;
+   impo_total N(11),;
+   promedio   N(13,4))
+
+USE &archi_01 ALIAS costos EXCLUSIVE
+INDEX ON codigo TAG codigo
+
+SELECT costos
+SET ORDER TO 1
+
+APPEND FROM maesprod FIELDS codigo
+
+SELECT compras
+SCAN ALL
+   SELECT costos
+   IF SEEK(compras.articulo) THEN
+      REPLACE cantidad   WITH (cantidad  + compras.cantidad)
+      REPLACE impo_total WITH (impo_total + compras.importe)
+   ELSE
+      WAIT "EL ARTICULO: " + ALLTRIM(compras.articulo) + " NO HA SIDO ENCONTRADO !" WINDOW
+   ENDIF
+ENDSCAN
+
+SELECT ndeb_prov
+SCAN ALL
+   SELECT costos
+   IF SEEK(ndeb_prov.articulo) THEN
+      REPLACE impo_total WITH (impo_total + ndeb_prov.importe)
+   ELSE
+      WAIT "EL ARTICULO: " + ALLTRIM(ndeb_prov.articulo) + " NO HA SIDO ENCONTRADO !" WINDOW
+   ENDIF
+ENDSCAN
+
+SELECT ncre_prov
+SCAN ALL
+   SELECT costos
+   IF SEEK(ncre_prov.articulo) THEN
+      REPLACE impo_total WITH (impo_total - ncre_prov.importe)
+   ELSE
+      WAIT "EL ARTICULO: " + ALLTRIM(ncre_prov.articulo) + " NO HA SIDO ENCONTRADO !" WINDOW
+   ENDIF
+ENDSCAN
+
+DIMENSION mpcostog[1, 1]
+STORE 0 TO mpcostog
+
+SELECT costos
+REPLACE promedio WITH IIF(cantidad > 0, ROUND(impo_total / cantidad, 4), 0) ALL
+
+SCAN ALL
+   IF promedio = 0 THEN
+      mid_prod = costos.codigo
+      SELECT pcostog FROM maesprod WHERE codigo = mid_prod INTO ARRAY mpcostog
+      REPLACE promedio WITH mpcostog
+   ENDIF
+ENDSCAN
+
+DELETE FOR promedio = 0
+
+*--------------------------------------------------------------------------*
+WAIT "CALCULANDO PRECIO DE VENTA NETAS..." WINDOW NOWAIT
+
+archi_02 = createmp()
+
+SELECT 0
+CREATE TABLE &archi_02 ;
+  (articulo   C(15),;
+   codorig    C(15),;
+   nombre     C(40),;
+   cantidad   N(11,2),;
+   importe    N(11),;
+   costo_tota N(11),;
+   venta_unit N(13,4),;
+   costo_unit N(13,4),;
+   monto_util N(11),;
+   porc_utili N(6,2))
+
+USE &archi_02 ALIAS venta_neta EXCLUSIVE
+INDEX ON articulo   TAG articulo
+INDEX ON cantidad   TAG cantidad
+INDEX ON porc_utili TAG utilidad
+INDEX ON importe    TAG imporventa
+
+SELECT venta_neta
+SET ORDER TO 1
+
+SELECT ventas
+SCAN ALL
+   SCATTER MEMVAR MEMO
+   SELECT venta_neta
+   APPEND BLANK
+   GATHER MEMVAR MEMO
+ENDSCAN
+
+SELECT ndeb_clien
+SCAN ALL
+   SELECT venta_neta
+   IF SEEK(ndeb_clien.articulo) THEN
+      REPLACE importe WITH (importe + ndeb_clien.importe)
+   ELSE
+      WAIT "EL ARTICULO: " + ALLTRIM(ndeb_clien.articulo) + " NO HA SIDO ENCONTRADO !" WINDOW
+   ENDIF
+ENDSCAN
+
+SELECT ncre_clien
+SCAN ALL
+   SELECT venta_neta
+   IF SEEK(ncre_clien.articulo) THEN
+      REPLACE importe WITH (importe - ncre_clien.importe)
+   ELSE
+      WAIT "EL ARTICULO: " + ALLTRIM(ncre_clien.articulo) + " NO HA SIDO ENCONTRADO !" WINDOW
+   ENDIF
+ENDSCAN
+
+SELECT venta_neta
+REPLACE venta_unit WITH IIF(cantidad > 0, ROUND(importe / cantidad, 4), 0) ALL
+
+SELECT costos
+SET ORDER TO 1
+
+SELECT venta_neta
+SCAN ALL
+   SELECT costos
+   IF SEEK(venta_neta.articulo)
+      SELECT venta_neta
+      REPLACE costo_unit WITH costos.promedio
+   ENDIF
+ENDSCAN
+
+REPLACE costo_tota WITH ROUND(cantidad * costo_unit, 0) ALL
+REPLACE monto_util WITH importe - costo_tota ALL
+REPLACE porc_utili WITH IIF(costo_tota > 0, ROUND(monto_util / costo_tota * 100, 2), 0) ALL
+
+DO CASE
+   CASE morden = 1
+      SET ORDER TO 2 DESC
+   CASE morden = 2
+      SET ORDER TO 3 DESC
+   CASE morden = 3
+      SET ORDER TO 4 DESC
+ENDCASE
+
+WAIT CLEAR
+
+DO WHILE .T.
+   WAIT WINDOW "DESTINO: (P)ANTALLA, (I)MPRESORA, (A)RCHIVO" TO mdestino
+   mdestino = UPPER(mdestino)
+
+   IF INLIST(mdestino, "P", "I", "A") OR LASTKEY() = 27 THEN
+      EXIT
+   ENDIF
+ENDDO
+
+DO CASE
+   CASE mdestino = "P"
+      REPORT FORM best_pro TO best_pro.txt NOCONSOLE
+      DO lister.prg WITH "best_pro.txt"
+      DELETE FILE best_pro.txt
+   CASE mdestino = "I"
+      WAIT WINDOW "COLOQUE PAPEL CONTINUO TAMA╔O CARTA Y SELECCIONE LETRA CHICA..."
+      WAIT WINDOW "IMPRIMIENDO..." NOWAIT
+
+      REPORT FORM best_pro TO PRINTER NOCONSOLE
+
+      WAIT CLEAR
+   CASE mdestino = "A"
+      EXPORT TO c:\excel TYPE XLS
+      WAIT WINDOW "NOMBRE DEL ARCHIVO: EXCEL.XLS, EN C:\"
+ENDCASE
+
+*ENDPROC
+
+SELECT compras
+USE
+
+SELECT ndeb_prov
+USE
+
+SELECT ncre_prov
+USE
+
+SELECT ventas
+USE
+
+SELECT ndeb_clien
+USE
+
+SELECT ncre_clien
+USE
+
+SELECT costos
+USE
+
+SELECT venta_neta
+USE
+
+DO borratemp WITH temp_files[1]
+DO borratemp WITH temp_files[2]
+DO borratemp WITH temp_files[3]
+DO borratemp WITH temp_files[4]
+DO borratemp WITH temp_files[5]
+DO borratemp WITH temp_files[6]
+DO borratemp WITH archi_01
+DO borratemp WITH archi_02
+
+*--------------------------------------------------------------------------*
+FUNCTION build_expr
+   public mreturn
+
+   mreturn = "c.tipodocu  = d.tipodocu AND c.nrodocu = d.nrodocu AND BETWEEN(c.fechadocu, mfecha1, mfecha2) AND d.articulo = m.codigo"
+
+   IF .NOT. EMPTY(mfamilia)
+      IF .NOT. EMPTY(mreturn)
+         mreturn = mreturn + " .AND. "
+      ENDIF
+      mreturn = mreturn + "m.familia = " + ALLTRIM(mfamilia)
+   ENDIF
+
+   IF .NOT. EMPTY(mrubro)
+      IF .NOT. EMPTY(mreturn)
+         mreturn = mreturn + " .AND. "
+      ENDIF
+      mreturn = mreturn + "m.rubro = " + ALLTRIM(mrubro)
+   ENDIF
+
+   IF .NOT. EMPTY(msubrubro)
+      IF .NOT. EMPTY(mreturn)
+         mreturn = mreturn + " .AND. "
+      ENDIF
+      mreturn = mreturn + "m.subrubro = " + ALLTRIM(msubrubro)
+   ENDIF
+
+   IF .NOT. EMPTY(mmarca)
+      IF .NOT. EMPTY(mreturn)
+         mreturn = mreturn + " .AND. "
+      ENDIF
+      mreturn = mreturn + "m.marca = " + ALLTRIM(mmarca)
+   ENDIF
+
+   IF .NOT. EMPTY(mproveedor)
+      IF .NOT. EMPTY(mreturn)
+         mreturn = mreturn + " .AND. "
+      ENDIF
+      mreturn = mreturn + "m.proveedor = " + ALLTRIM(mproveedor)
+   ENDIF
+
+   RETURN (mreturn)
+*ENDFUNC
+
+*--------------------------------------------------------------------------*
+FUNCTION line_value
+PARAMETERS mcantidad, mprecio, mpdescuento, mporcdesc, mimportdesc, mdescuento, mdivisa, mtipocambio
+   PRIVATE mreturn, mmonto
+   STORE 0 TO mreturn, mmonto
+
+   IF mporcdesc = 0 .AND. mdescuento = 0 THEN
+      mreturn = (mprecio * mcantidad) - (mprecio * mcantidad * mpdescuento / 100)
+   ELSE
+      IF mporcdesc > 0 THEN
+         mmonto  = (mprecio * mcantidad) - (mprecio * mcantidad * mpdescuento / 100)
+         mreturn = (mmonto - (mmonto * mporcdesc / 100))
+      ELSE
+         IF mdescuento > 0 THEN
+            mmonto  = (mprecio * mcantidad) - (mprecio * mcantidad * mpdescuento / 100)
+            mreturn = (mmonto - (mmonto * mdescuento / 100))
+         ELSE
+            IF mimportdesc > 0 THEN
+               WAIT "UN ERROR DE CALCULO HA OCURRIDO !" WINDOW
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF mdivisa = 1 THEN
+      mreturn = ROUND(mreturn, 0)
+   ELSE
+      mreturn = ROUND(mreturn * mtipocambio, 0)
+   ENDIF
+
+   RETURN (mreturn)
+*ENDFUNC
+
+*--------------------------------------------------------------------------*
+PROCEDURE load_array
+   mrows = ALEN(temp_files, 1)
+   FOR mindex = 1 TO mrows
+      DO WHILE .T.
+         mname = createmp()
+         mpos  = ASCAN(temp_files, mname)
+
+         IF mpos = 0 THEN
+            temp_files[mindex] = mname
+            EXIT
+         ENDIF
+      ENDDO
+   ENDFOR
+*ENDPROC
+
+*--------------------------------------------------------------------------*
+FUNCTION createmp
+   PRIVATE mfile_name, mreturn
+   DO WHILE .T.
+      mfile_name = "tm" + RIGHT(SYS(3), 6)
+      IF .NOT. FILE(mfile_name + ".dbf")
+         mreturn = mfile_name
+         EXIT
+      ENDIF
+   ENDDO
+   RETURN (mreturn)
+*ENDFUNC
+
+*--------------------------------------------------------------------------*
+PROCEDURE borratemp
+PARAMETER mfile_name
+
+   PRIVATE architm1, architm2, architm3, architm4
+   architm1 = mfile_name + ".dbf"
+   architm2 = mfile_name + ".idx"
+   architm3 = mfile_name + ".vue"
+   architm4 = mfile_name + ".cdx"
+
+   IF FILE(architm1)
+      DELETE FILE &architm1
+   ENDIF
+
+   IF FILE(architm2)
+      DELETE FILE &architm2
+   ENDIF
+
+   IF FILE(architm3)
+      DELETE FILE &architm3
+   ENDIF
+
+   IF FILE(architm4)
+      DELETE FILE &architm4
+   ENDIF
+*ENDPROC
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPYP           mfecha1 VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   15  Ё
+*       Ё Variable:            mfecha1                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpyp     &&  mfecha1 VALID
+#REGION 1
+IF LASTKEY() = 27 THEN
+   RETURN
+ENDIF
+
+IF EMPTY(mfecha1) THEN
+   WAIT "LA FECHA INICIAL NO PUEDE QUEDAR EN BLANCO" WINDOW
+   RETURN 0
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPYQ           mfecha2 VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   16  Ё
+*       Ё Variable:            mfecha2                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpyq     &&  mfecha2 VALID
+#REGION 1
+IF LASTKEY() = 27 THEN
+   RETURN
+ENDIF
+
+IF EMPTY(mfecha2) THEN
+   WAIT "LA FECHA FINAL NO PUEDE QUEDAR EN BLANCO" WINDOW
+   RETURN 0
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPYR           mfamilia VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   17  Ё
+*       Ё Variable:            mfamilia                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpyr     &&  mfamilia VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF EMPTY(mfamilia)
+   @ 04,19 SAY PADR("TODAS", 40, CHR(32)) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+   RETURN
+ENDIF
+
+mfamilia = VAL(mfamilia)
+
+IF mfamilia <= 0
+   @ 04,19 SAY REPLICATE(CHR(32), 40) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+   DO fami_pop.spr WITH "mfamilia", 0, .F.
+ENDIF
+
+IF mfamilia = 0
+   mfamilia = LEFT(ALLTRIM(STR(mfamilia)) + SPACE(4), 4)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT familias
+SET ORDER TO TAG indice1 OF familias.cdx
+
+IF SEEK(mfamilia)
+   @ 04,19 SAY PADR(ALLTRIM(familias.nombre), 40, CHR(32)) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+
+   IF .NOT. familias.vigente
+      WAIT WINDOW "╜ CODIGO DE FAMILIA NO VIGENTE !"
+      @ 04,19 SAY REPLICATE(CHR(32), 40) ;
+         SIZE 1,40 ;
+         PICTURE "@!"
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      mfamilia = LEFT(ALLTRIM(STR(mfamilia)) + SPACE(4), 4)
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 04,19 SAY REPLICATE(CHR(32), 40) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+
+   WAIT WINDOW "╜ CODIGO DE FAMILIA INEXISTENTE !"
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   mfamilia = LEFT(ALLTRIM(STR(mfamilia)) + SPACE(4), 4)
+
+   RETURN .F.
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+mfamilia = LEFT(ALLTRIM(STR(mfamilia)) + SPACE(4), 4)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTPYU           mrubro VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   18  Ё
+*       Ё Variable:            mrubro                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htpyu     &&  mrubro VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF EMPTY(mrubro)
+   @ 05,19 SAY PADR("TODOS", 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+   RETURN
+ENDIF
+
+mrubro = VAL(mrubro)
+
+IF mrubro <= 0
+   @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+   DO rub1_pop.spr WITH "mrubro", 0, .F.
+ENDIF
+
+IF mrubro = 0
+   mrubro = LEFT(ALLTRIM(STR(mrubro)) + SPACE(4), 4)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT rubros1
+SET ORDER TO TAG indice1 OF rubros1.cdx
+
+IF SEEK(mrubro)
+   @ 05,19 SAY PADR(ALLTRIM(rubros1.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+
+   IF .NOT. rubros1.vigente
+      WAIT WINDOW "╜ CODIGO DE RUBRO NO VIGENTE !"
+      @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!"
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      mrubro = LEFT(ALLTRIM(STR(mrubro)) + SPACE(4), 4)
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 05,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+
+   WAIT WINDOW "╜ CODIGO DE RUBRO INEXISTENTE !"
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   mrubro = LEFT(ALLTRIM(STR(mrubro)) + SPACE(4), 4)
+
+   RETURN .F.
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+mrubro = LEFT(ALLTRIM(STR(mrubro)) + SPACE(4), 4)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTQ0G           msubrubro VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   19  Ё
+*       Ё Variable:            msubrubro                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htq0g     &&  msubrubro VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF EMPTY(msubrubro)
+   @ 06,19 SAY PADR("TODOS", 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+   RETURN
+ENDIF
+
+msubrubro = VAL(msubrubro)
+
+IF msubrubro <= 0
+   @ 06,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+   DO rub2_pop.spr WITH "msubrubro", 0, .F.
+ENDIF
+
+IF msubrubro = 0
+   msubrubro = LEFT(ALLTRIM(STR(msubrubro)) + SPACE(4), 4)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT rubros2
+SET ORDER TO TAG indice1 OF rubros2.cdx
+
+IF SEEK(msubrubro)
+   @ 06,19 SAY PADR(ALLTRIM(rubros2.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+
+   IF .NOT. rubros2.vigente
+      WAIT WINDOW "╜ CODIGO DE SUB-RUBRO NO VIGENTE !"
+      @ 06,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!"
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      msubrubro = LEFT(ALLTRIM(STR(msubrubro)) + SPACE(4), 4)
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 06,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+
+   WAIT WINDOW "╜ CODIGO DE SUB-RUBRO INEXISTENTE !"
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   msubrubro = LEFT(ALLTRIM(STR(msubrubro)) + SPACE(4), 4)
+
+   RETURN .F.
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+msubrubro = LEFT(ALLTRIM(STR(msubrubro)) + SPACE(4), 4)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTQ0K           mmarca VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   20  Ё
+*       Ё Variable:            mmarca                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htq0k     &&  mmarca VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF EMPTY(mmarca)
+   @ 07,19 SAY PADR("TODAS", 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+   RETURN
+ENDIF
+
+mmarca = VAL(mmarca)
+
+IF mmarca <= 0
+   @ 07,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+   DO mar1_pop.spr WITH "mmarca", 0, .F.
+ENDIF
+
+IF mmarca = 0
+   mmarca = LEFT(ALLTRIM(STR(mmarca)) + SPACE(4), 4)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT marcas1
+SET ORDER TO TAG indice1 OF marcas1.cdx
+
+IF SEEK(mmarca)
+   @ 07,19 SAY PADR(ALLTRIM(marcas1.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+
+   IF .NOT. marcas1.vigente
+      WAIT WINDOW "╜ CODIGO DE MARCA NO VIGENTE !"
+      @ 07,19 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!"
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+      mmarca = LEFT(ALLTRIM(STR(mmarca)) + SPACE(4), 4)
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 07,19 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!"
+
+   WAIT WINDOW "╜ CODIGO DE MARCA INEXISTENTE !"
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   mmarca = LEFT(ALLTRIM(STR(mmarca)) + SPACE(4), 4)
+
+   RETURN .F.
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+mmarca = LEFT(ALLTRIM(STR(mmarca)) + SPACE(4), 4)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTQ0N           mproveedor VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   21  Ё
+*       Ё Variable:            mproveedor                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      7                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htq0n     &&  mproveedor VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF EMPTY(mproveedor)
+   @ 09,19 SAY PADR("TODOS", 40, CHR(32)) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+   RETURN
+ENDIF
+
+mproveedor = VAL(mproveedor)
+
+IF mproveedor <= 0
+   @ 09,19 SAY REPLICATE(CHR(32), 40) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+   DO prov_pop.spr WITH "mproveedor", 0, .F.
+ENDIF
+
+IF mproveedor = 0
+   mproveedor = LEFT(ALLTRIM(STR(mproveedor)) + SPACE(4), 4)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT proveedo
+SET ORDER TO TAG indice1 OF proveedo.cdx
+
+IF SEEK(mproveedor)
+   @ 09,19 SAY PADR(ALLTRIM(proveedo.nombre), 40, CHR(32)) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+
+   IF .NOT. proveedo.vigente = "S"
+      WAIT WINDOW "╜ CODIGO DE PROVEEDOR NO VIGENTE !"
+      @ 09,19 SAY REPLICATE(CHR(32), 40) ;
+         SIZE 1,40 ;
+         PICTURE "@!"
+
+      IF .NOT. EMPTY(ALIAS(pnSelect))
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+      ENDIF
+
+      mproveedor = LEFT(ALLTRIM(STR(mproveedor)) + SPACE(4), 4)
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 09,19 SAY REPLICATE(CHR(32), 40) ;
+      SIZE 1,40 ;
+      PICTURE "@!"
+
+   WAIT WINDOW "╜ CODIGO DE PROVEEDOR INEXISTENTE !"
+
+   IF .NOT. EMPTY(ALIAS(pnSelect))
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF
+
+   mproveedor = LEFT(ALLTRIM(STR(mproveedor)) + SPACE(4), 4)
+
+   RETURN .F.
+ENDIF
+
+IF .NOT. EMPTY(ALIAS(pnSelect))
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+ENDIF
+
+mproveedor = LEFT(ALLTRIM(STR(mproveedor)) + SPACE(4), 4)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTQ0O           morden VALID                       Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   22  Ё
+*       Ё Variable:            morden                             Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      8                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htq0o     &&  morden VALID
+#REGION 1
+IF LASTKEY() = 27 THEN
+   RETURN
+ENDIF
+
+IF .NOT. INLIST(morden, 1, 2, 3) THEN
+   WAIT "ORDENADO POR, DEBE SER: 1, 2 ╒ 3)" WINDOW
+   RETURN 0
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTQ0P           cmgChoice VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO,     Record Number:   23  Ё
+*       Ё Variable:            cmgChoice                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Push Button                        Ё
+*       Ё Snippet Number:      9                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htq0p     &&  cmgChoice VALID
+#REGION 1
+IF cmgChoice = 1
+   DO report
+   _CUROBJ = OBJNUM(mfecha1)
+ENDIF
+
+IF cmgChoice = 2
+   CLEAR READ
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTQ0Q           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         BEST_PRO                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      10                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htq0q     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: BEST_PRO
+*
+#REGION 1
+@ 03,21 SAY REPLICATE(CHR(32), 40) ;
+   SIZE 1,40 ;
+   PICTURE "@!"
+
+@ 04,21 SAY REPLICATE(CHR(32), 40) ;
+   SIZE 1,40 ;
+   PICTURE "@!"
+
+@ 05,21 SAY REPLICATE(CHR(32), 40) ;
+   SIZE 1,40 ;
+   PICTURE "@!"
+
+@ 06,21 SAY REPLICATE(CHR(32), 40) ;
+   SIZE 1,40 ;
+   PICTURE "@!"
+
+@ 08,21 SAY REPLICATE(CHR(32), 40) ;
+   SIZE 1,40 ;
+   PICTURE "@!"
+
+@ 09,21 SAY REPLICATE(CHR(32), 40) ;
+   SIZE 1,40 ;
+   PICTURE "@!"
+
+@ 10,21 SAY REPLICATE(CHR(32), 40) ;
+   SIZE 1,40 ;
+   PICTURE "@!"
+
+STORE DATE()   TO mfecha
+STORE SPACE(4) TO mfamilia, mrubro, msubrubro, mmarca, munidad, mprocedencia, mproveedor
+STORE "N"      TO mconexistencia
+STORE "T"      TO mvigente
+
+_CUROBJ = OBJNUM(mfecha)
+
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

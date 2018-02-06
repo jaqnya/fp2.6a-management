@@ -1,0 +1,247 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            COMPINFO.SPR               08:19:03 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htsh8")
+	DEFINE WINDOW _5450htsh8 ;
+		FROM INT((SROW()-19)/2),INT((SCOL()-56)/2) ;
+		TO INT((SROW()-19)/2)+18,INT((SCOL()-56)/2)+55 ;
+		TITLE " Estado de la Factura de Compra " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   COMPINFO/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+PUSH KEY CLEAR
+
+PRIVATE pcCursor
+
+IF SET("CURSOR") = "ON"
+   pcCursor = "ON"
+   SET CURSOR OFF
+ELSE
+   pcCursor = "OFF"
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        COMPINFO/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htsh8")
+	ACTIVATE WINDOW _5450htsh8 SAME
+ELSE
+	ACTIVATE WINDOW _5450htsh8 NOSHOW
+ENDIF
+@ 1,2 SAY "Documento:" ;
+	SIZE 1,10, 0
+@ 1,40 SAY "N╖" ;
+	SIZE 1,2, 0
+@ 4,2 SAY "Proveedor:" ;
+	SIZE 1,10, 0
+@ 6,2 SAY "Moneda...:" ;
+	SIZE 1,10, 0
+@ 9,11 SAY "Monto Facturado:" ;
+	SIZE 1,16, 0
+@ 10,11 SAY "Monto Pagado...:" ;
+	SIZE 1,16, 0
+@ 11,11 SAY "Nota de D┌bito.:" ;
+	SIZE 1,16, 0
+@ 12,11 SAY "Nota de Cr┌dito:" ;
+	SIZE 1,16, 0
+@ 13,27 TO 13,42
+@ 14,11 SAY "Saldo..........:" ;
+	SIZE 1,16, 0
+@ 15,27 TO 15,42 DOUBLE
+@ 7,2 SAY "Consignac:" ;
+	SIZE 1,10, 0
+@ 2,2 SAY "Fecha....:" ;
+	SIZE 1,10, 0
+@ 1,13 SAY tipodocu ;
+	SIZE 1,1 ;
+	PICTURE "9" ;
+	COLOR N/W     
+@ 1,16 SAY IIF(tipodocu = 1, "COMPRA CONTADO", IIF(tipodocu = 2, "COMPRA CREDITO", IIF(tipodocu = 3, "COMPRA I.V.A. INCLUIDO", IIF(tipodocu = 4, "COMPRA TRIBUTO UNICO", "")))) ;
+	SIZE 1,22 ;
+	PICTURE "@!"
+@ 1,43 SAY nrodocu ;
+	SIZE 1,9 ;
+	PICTURE "999999999" ;
+	COLOR N/W     
+@ 2,13 SAY fechadocu ;
+	SIZE 1,10 ;
+	COLOR N/W     
+@ 4,13 SAY proveedor ;
+	SIZE 1,5 ;
+	PICTURE "99999" ;
+	COLOR N/W     
+@ 4,20 SAY SUBSTR(proveedo.nombre, 1, 32) ;
+	SIZE 1,32 ;
+	PICTURE "@!"
+@ 6,13 SAY moneda ;
+	SIZE 1,4 ;
+	PICTURE "9999" ;
+	COLOR N/W     
+@ 7,13 SAY IIF(consignaci, "S║", "No") ;
+	SIZE 1,2 ;
+	COLOR N/W     
+@ 9,28 SAY monto_fact ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 10,28 SAY monto_pago ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 11,28 SAY monto_ndeb ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 12,28 SAY monto_ncre ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR N/W     
+@ 14,28 SAY (monto_fact + monto_ndeb) - (monto_pago + monto_ncre) ;
+	SIZE 1,14 ;
+	PICTURE "999,999,999.99" ;
+	COLOR B/W     
+
+IF NOT WVISIBLE("_5450htsh8")
+	ACTIVATE WINDOW _5450htsh8
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN compinfo     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	WHEN _5450htshc() ;
+	MODAL TIMEOUT 0
+
+RELEASE WINDOW _5450htsh8
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           COMPINFO/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+IF pcCursor = "ON"
+   SET CURSOR ON
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTSHC           Nivel de lectura WHEN              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         COMPINFO                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htshc     && Read Level When
+*
+* C╒digo WHEN de la pantalla: COMPINFO
+*
+#REGION 1
+*-- Imprime el nombre de la moneda.
+IF cabecomp.moneda <> 0
+   SELECT monedas
+   SET ORDER TO indice1 OF monedas.cdx
+
+   IF SEEK(cabecomp.moneda)
+      IF cabecomp.moneda = 1
+         @ 06,20 SAY PADR(ALLTRIM(monedas.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 06,20 SAY PADR(ALLTRIM(monedas.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ENDIF
+   ELSE
+      @ 06,20 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   SELECT cabecomp
+ELSE
+   @ 06,20 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF

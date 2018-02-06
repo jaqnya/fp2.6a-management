@@ -1,0 +1,2069 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18               OT.SPR                  08:19:08 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      OT/MS-DOS C╒digo de configuraci╒n - SECCION 1      Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF plAdding
+   pcMyTitle = " Crear Orden de Trabajo "
+ELSE
+   IF plEditing
+      pcMyTitle = " Modificar Orden de Trabajo "
+   ELSE
+      IF plDeleting
+         pcMyTitle = " Borrar Orden de Trabajo "
+      ENDIF
+   ENDIF
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htwcm")
+	DEFINE WINDOW _5450htwcm ;
+		FROM 1, 0 ;
+		TO 23,79 ;
+		TITLE (pcMyTitle) ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё      OT/MS-DOS C╒digo de configuraci╒n - SECCION 2      Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF plAdding
+   m.fentrega = {  /  /    }
+   m.serie    = SUBSTR(control.serieot, 1, 1)
+   m.fecha    = {  /  /    }
+   m.estadoot = 1
+   STORE DATE() TO m.frecepcion, m.fpentrega
+ELSE
+   IF plEditing
+      PRIVATE pnSelect, pcOrder, pnRecNo
+
+      pnSelect = SELECT()
+      pcOrder  = ORDER()
+      pnRecNo  = IIF(EOF(), 0, RECNO())
+
+      SELECT cabemot
+      SET ORDER TO TAG indice1 OF cabemot.cdx
+
+      IF SEEK(STR(2, 1) + m.serie + STR(m.nroot, 7))
+         m.fecha = cabemot.fecha
+      ELSE
+         m.fecha = {  /  /    }
+      ENDIF
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+   ENDIF
+ENDIF
+
+
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           OT/MS-DOS Distribuci╒n de pantalla            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htwcm")
+	ACTIVATE WINDOW _5450htwcm SAME
+ELSE
+	ACTIVATE WINDOW _5450htwcm NOSHOW
+ENDIF
+@ 10,44 SAY "Barrio:" ;
+	SIZE 1,7, 0
+@ 9,2 SAY "Departamen.:" ;
+	SIZE 1,12, 0
+@ 1,33 SAY "M┌canico:" ;
+	SIZE 1,9, 0
+@ 14,42 SAY "Color.:" ;
+	SIZE 1,7, 0
+@ 15,2 SAY "Accesorio..:" ;
+	SIZE 1,12, 0
+@ 20,2 SAY "Estado de la OT:" ;
+	SIZE 1,16, 0
+@ 16,2 SAY "Trabajo....:" ;
+	SIZE 1,12, 0
+@ 19,0 TO 19,77
+@ 14,67 SAY "Km:" ;
+	SIZE 1,3, 0
+@ 14,2 SAY "Chapa N╖...:" ;
+	SIZE 1,12, 0
+@ 13,2 SAY "Motor N╖...:" ;
+	SIZE 1,12, 0
+@ 11,0 TO 11,77
+@ 8,56 SAY "Doc.Id.:" ;
+	SIZE 1,8, 0
+@ 10,2 SAY "Ciudad.....:" ;
+	SIZE 1,12, 0
+@ 8,2 SAY "Tel┌fono...:" ;
+	SIZE 1,12, 0
+@ 7,2 SAY "Direcci╒n..: " ;
+	SIZE 1,13, 0
+@ 6,2 SAY "Contacto...: " ;
+	SIZE 1,13, 0
+@ 5,2 SAY "Cliente....:" ;
+	SIZE 1,12, 0
+@ 0,63 SAY "/" ;
+	SIZE 1,1, 0
+@ 0,50 SAY "Factura N╖:" ;
+	SIZE 1,11, 0
+@ 4,0 TO 4,77
+@ 2,2 SAY "Referencia.:" ;
+	SIZE 1,12, 0
+@ 1,2 SAY "Local Rep..:" ;
+	SIZE 1,12, 0
+@ 0,2 SAY "OT N╖......:" ;
+	SIZE 1,12, 0
+@ 12,2 SAY "M═quina....:" ;
+	SIZE 1,12, 0
+@ 2,51 SAY "Terminado:" ;
+	SIZE 1,10, 0
+@ 3,51 SAY "Entregado:" ;
+	SIZE 1,10, 0
+@ 2,27 SAY "Recepci╒n:" ;
+	SIZE 1,10, 0
+@ 3,27 SAY "Prometido:" ;
+	SIZE 1,10, 0
+@ 0,15 GET m.serie ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN plAdding ;
+	VALID _5450htwcu()
+@ 0,18 GET m.nroot ;
+	SIZE 1,7 ;
+	DEFAULT 0 ;
+	PICTURE "9999999" ;
+	WHEN plAdding ;
+	VALID _5450htwcw()
+@ 0,62 GET m.tipodocu ;
+	SIZE 1,1 ;
+	DEFAULT 0 ;
+	PICTURE "9" ;
+	WHEN .F.
+@ 0,64 GET m.nrodocu ;
+	SIZE 1,7 ;
+	DEFAULT 0 ;
+	PICTURE "9999999" ;
+	WHEN .F.
+@ 1,15 GET m.localrep ;
+	SIZE 1,2 ;
+	DEFAULT 0 ;
+	PICTURE "99" ;
+	WHEN .F. ;
+	VALID _5450htwcy()
+@ 1,43 GET m.mecanico ;
+	SIZE 1,3 ;
+	DEFAULT 0 ;
+	PICTURE "999" ;
+	WHEN plEditing ;
+	VALID _5450htwd1()
+@ 2,15 GET m.referencia ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "@! A 99999999"
+@ 2,38 GET m.frecepcion ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	WHEN _5450htwd4() ;
+	VALID _5450htwd5()
+@ 2,62 SAY m.fecha ;
+	SIZE 1,10 ;
+	PICTURE "@D" ;
+	COLOR N/W     
+@ 3,38 GET m.fpentrega ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	WHEN _5450htwd6() ;
+	VALID _5450htwep()
+@ 3,62 GET m.fentrega ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	WHEN _5450htweq() ;
+	VALID _5450htwer()
+@ 5,15 GET m.cliente ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	PICTURE "99999" ;
+	VALID _5450htwes()
+@ 5,22 GET m.nombreot ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	VALID _5450htwex()
+@ 6,15 GET m.contacto ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 7,15 GET m.direcot ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 8,15 GET m.telefot ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 8,65 GET m.cedulaot ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "@! 9999999999"
+@ 9,15 GET m.departamen ;
+	SIZE 1,3 ;
+	DEFAULT 0 ;
+	PICTURE "999" ;
+	VALID _5450htwey()
+@ 10,15 GET m.ciudad ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	VALID _5450htwf1()
+@ 10,52 GET m.barrio ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	VALID _5450htwf2()
+@ 12,15 GET m.maquina ;
+	SIZE 1,3 ;
+	DEFAULT 0 ;
+	PICTURE "999" ;
+	VALID _5450htwf3()
+@ 12,36 GET m.marca ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	VALID _5450htwf4()
+@ 12,57 GET m.modelo ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	VALID _5450htwf5()
+@ 13,15 GET m.motor ;
+	SIZE 1,25 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 13,50 GET m.chasis ;
+	SIZE 1,25 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 14,15 GET m.chapa ;
+	SIZE 1,25 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 14,50 GET m.color ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 14,71 GET m.km ;
+	SIZE 1,7 ;
+	DEFAULT " " ;
+	PICTURE "9999999"
+@ 15,15 GET m.accesorio ;
+	SIZE 1,56 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 16,15 GET m.trabajo1 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 17,15 GET m.trabajo2 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 18,15 GET m.trabajo3 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!"
+@ 20,19 GET m.estadoot ;
+	SIZE 1,3 ;
+	DEFAULT 0 ;
+	PICTURE "999" ;
+	WHEN gnUser = 1 ;
+	VALID _5450htwf6()
+@ 13,42 SAY "Caja #:" ;
+	SIZE 1,7, 0
+
+IF NOT WVISIBLE("_5450htwcm")
+	ACTIVATE WINDOW _5450htwcm
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё       MS-DOSREAD contiene cl═usulas de SCREEN ot        Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ ;
+	VALID _5450htwfn() ;
+	SHOW _5450htwfo() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htwcm
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWCU           m.serie VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   31        Ё
+*       Ё Variable:            m.serie                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwcu     &&  m.serie VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF ATC(m.serie, control.serieot) = 0 .OR. EMPTY(m.serie)
+   PRIVATE pcString
+   pcString = ""
+   FOR pnCounter = 1 TO LEN(ALLTRIM(control.serieot))
+      IF ISALPHA(SUBSTR(ALLTRIM(control.serieot), pnCounter, 1))
+         pcString = pcString + "< " + SUBSTR(ALLTRIM(control.serieot), pnCounter, 1) + " >" + IIF(pnCounter <> LEN(ALLTRIM(control.serieot)), ", ", "")
+      ENDIF
+   ENDFOR
+
+   WAIT WINDOW "╜ LA SERIE DEBE SER: " + pcString + " !"
+
+   RETURN .F.
+ENDIF
+
+
+*!* * Deshabilitado el 05/11/2013 10:57
+*!* * Calcula el siguiente numero de OT
+*!* PRIVATE pnSelect, pcOrder, pnRecNo
+*!* pnSelect = SELECT()
+*!* pcOrder  = ORDER()
+*!* pnRecNo  = IIF(EOF(), 0, RECNO())
+
+*!* SELECT ot
+*!* SET ORDER TO TAG indice1 OF ot.cdx DESCENDING
+
+*!* IF SEEK(m.serie)
+*!*    m.nroot = ot.nroot + 1
+*!* ELSE
+*!*    m.nroot = 1
+*!* ENDIF
+
+*!* SET ORDER TO TAG indice1 OF ot.cdx ASCENDING
+
+*!* SELECT (pnSelect)
+*!* SET ORDER TO TAG (pcOrder)
+*!* IF pnRecNo <> 0
+*!*    GOTO RECORD pnRecNo
+*!* ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWCW           m.nroot VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   32        Ё
+*       Ё Variable:            m.nroot                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwcw     &&  m.nroot VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.nroot <= 0
+   WAIT WINDOW "╜ EL N╖ DE LA ORDEN DE TRABAJO DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ELSE
+
+   PRIVATE pnSelect, pcOrder, pnRecNo
+   pnSelect = SELECT()
+   pcOrder  = ORDER()
+   pnRecNo  = IIF(EOF(), 0, RECNO())
+
+   SELECT ot
+   SET ORDER TO TAG indice1 OF ot.cdx
+
+   IF SEEK((m.serie) + STR(m.nroot, 7))
+      WAIT WINDOW "╜ ESTA ORDEN DE TRABAJO YA HA SIDO CARGADA !"
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWCY           m.localrep VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   35        Ё
+*       Ё Variable:            m.localrep                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwcy     &&  m.localrep VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.localrep <= 0
+   @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+      SIZE 1,12 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO loca_pop.spr WITH "m.localrep", 0, .F.
+ENDIF
+
+IF m.localrep = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT locales
+SET ORDER TO TAG indice1 OF locales.cdx
+
+IF SEEK(m.localrep)
+   @ 01,19 SAY PADR(ALLTRIM(locales.nombre), 12, CHR(32)) ;
+      SIZE 1,12 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. locales.vigente
+      WAIT WINDOW "╜ CODIGO DE LOCAL NO VIGENTE !"
+      @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+      SIZE 1,12 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "╜ CODIGO DE LOCAL INEXISTENTE !"
+   DO loca_pop.spr WITH "m.localrep", 0, .F.
+   SHOW GETS
+
+   SELECT locales
+   SET ORDER TO TAG indice1 OF locales.cdx
+
+   IF SEEK(m.localrep)
+      @ 01,19 SAY PADR(ALLTRIM(locales.nombre), 12, CHR(32)) ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWD1           m.mecanico VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   36        Ё
+*       Ё Variable:            m.mecanico                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwd1     &&  m.mecanico VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.mecanico <= 0
+   @ 01,48 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO meca_pop.spr WITH "m.mecanico", 0, .F., ""
+ENDIF
+
+IF m.mecanico = 0
+   RETURN .F.
+ENDIF
+
+SELECT mecanico
+SET ORDER TO TAG indice1 OF mecanico.cdx
+
+IF SEEK(m.mecanico)
+   @ 01,48 SAY PADR(ALLTRIM(mecanico.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. mecanico.vigente
+      WAIT WINDOW "╜ CODIGO DE MECANICO NO VIGENTE !"
+      @ 01,48 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 01,48 SAY REPLICATE(CHR(32),30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "╜ CODIGO DE MECANICO INEXISTENTE !"
+
+   DO meca_pop.spr WITH "m.mecanico", 0, .F., ""
+   SHOW GETS
+
+   IF SEEK(m.mecanico)
+      @ 01,48 SAY PADR(ALLTRIM(mecanico.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,48 SAY REPLICATE(CHR(32),30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWD4           m.frecepcion WHEN                  Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   38        Ё
+*       Ё Variable:            m.frecepcion                       Ё
+*       Ё Called By:           WHEN Clause                        Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwd4     &&  m.frecepcion WHEN
+#REGION 1
+SET NOTIFY ON
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWD5           m.frecepcion VALID                 Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   38        Ё
+*       Ё Variable:            m.frecepcion                       Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwd5     &&  m.frecepcion VALID
+#REGION 1
+SET NOTIFY OFF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWD6           m.fpentrega WHEN                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   40        Ё
+*       Ё Variable:            m.fpentrega                        Ё
+*       Ё Called By:           WHEN Clause                        Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      7                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwd6     &&  m.fpentrega WHEN
+#REGION 1
+SET NOTIFY ON
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWEP           m.fpentrega VALID                  Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   40        Ё
+*       Ё Variable:            m.fpentrega                        Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      8                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwep     &&  m.fpentrega VALID
+#REGION 1
+SET NOTIFY OFF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWEQ           m.fentrega WHEN                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   41        Ё
+*       Ё Variable:            m.fentrega                         Ё
+*       Ё Called By:           WHEN Clause                        Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      9                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htweq     &&  m.fentrega WHEN
+#REGION 1
+IF plEditing
+   SET NOTIFY ON
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWER           m.fentrega VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   41        Ё
+*       Ё Variable:            m.fentrega                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      10                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwer     &&  m.fentrega VALID
+#REGION 1
+SET NOTIFY OFF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWES           m.cliente VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   42        Ё
+*       Ё Variable:            m.cliente                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      11                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwes     &&  m.cliente VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.cliente <= 0
+   STORE SPACE(40) TO m.nombreot, m.direcot, m.telefot
+   STORE SPACE(10) TO m.cedulaot
+   STORE 0 TO m.departamen, m.ciudad, m.barrio
+
+   @ 09,22 SAY REPLICATE(CHR(32),30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   @ 10,22 SAY REPLICATE(CHR(32),20) ;
+      SIZE 1,20 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   @ 10,58 SAY REPLICATE(CHR(32),19) ;
+      SIZE 1,19 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   SHOW GETS
+
+   PUSH KEY CLEAR
+
+   PRIVATE pnSelect
+   pnSelect = SELECT()
+
+   *-- Procedimiento de visualizar la tabla en modo hoja de datos.
+   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+   DO brwClien.prg
+   ON KEY LABEL "ENTER"
+
+   POP KEY
+
+   SELECT (pnSelect)
+
+   IF LASTKEY() <> 27
+      m.cliente = clientes.codigo
+      SHOW GETS
+   ELSE
+      RETURN .F.
+   ENDIF
+
+ENDIF
+
+IF m.cliente = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT clientes
+SET ORDER TO TAG indice1 OF clientes.cdx
+
+IF .NOT. SEEK(m.cliente)
+   WAIT WINDOW "╜ CODIGO DE CLIENTE INEXISTENTE !"
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+   RETURN .F.
+ELSE
+   IF m.cliente > 1
+      m.nombreot   = SUBSTR(clientes.nombre, 1, 40)
+      m.direcot    = SUBSTR(clientes.direc1, 1, 40)
+      m.telefot    = SUBSTR(clientes.telefono, 1, 30) + REPLICATE(CHR(32), 10)
+      m.cedulaot   = SUBSTR(clientes.documento, 1, 10)
+      m.departamen = clientes.departamen
+      m.ciudad     = clientes.ciudad
+      m.barrio     = clientes.barrio
+
+      SELECT depar
+      IF SEEK(m.departamen)
+         @ 09,22 SAY ALLTRIM(depar.nombre) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 09,22 SAY REPLICATE(CHR(32),30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+
+      SELECT ciudades
+      IF SEEK(m.ciudad)
+         @ 10,22 SAY ALLTRIM(ciudades.nombre) ;
+            SIZE 1,20 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 10,22 SAY REPLICATE(CHR(32),20) ;
+            SIZE 1,20 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+
+      SELECT barrios
+      IF SEEK(m.barrio)
+         @ 10,58 SAY ALLTRIM(barrios.nombre) ;
+            SIZE 1,19 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 10,58 SAY REPLICATE(CHR(32),19) ;
+            SIZE 1,19 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+      SHOW GETS
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWEX           m.nombreot VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   43        Ё
+*       Ё Variable:            m.nombreot                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      12                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwex     &&  m.nombreot VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF .NOT. EMPTY(m.nombreot)
+   DO WHILE AT(",,", m.nombreot) > 0
+      m.nombreot = STRTRAN(m.nombreot, ",,", ",")
+   ENDDO
+   DO WHILE AT("..", m.nombreot) > 0
+      m.nombreot = STRTRAN(m.nombreot, "..", ".")
+   ENDDO
+   IF OCCURS(",", m.nombreot) = 1
+      m.nombreot = ALLTRIM(SUBSTR(m.nombreot, 1, AT(",", m.nombreot, 1))) + " " + LTRIM(SUBSTR(m.nombreot, AT(",", m.nombreot, 1) + 1))
+   ELSE	
+      IF OCCURS(".", m.nombreot) = 1
+         m.nombreot = ALLTRIM(SUBSTR(m.nombreot, 1, AT(".", m.nombreot, 1))) + " " + ALLTRIM(SUBSTR(m.nombreot, AT(".", m.nombreot, 1) + 1))
+      ENDIF
+   ENDIF
+
+   m.nombreot = PADR(ALLTRIM(m.nombreot), 40, CHR(32))
+ELSE
+   WAIT WINDOW "╜ EL NOMBRE DEL CLIENTE NO PUEDE QUEDAR EN BLANCO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWEY           m.departamen VALID                 Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   48        Ё
+*       Ё Variable:            m.departamen                       Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      13                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwey     &&  m.departamen VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.departamen <= 0
+   @ 09,22 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO depa_pop.spr WITH "m.departamen", 0, .F.
+ENDIF
+
+IF m.departamen = 0
+   RETURN .F.
+ENDIF
+
+SELECT depar
+SET ORDER TO TAG indice1 OF depar.cdx
+
+IF SEEK(m.departamen)
+   @ 09,22 SAY PADR(ALLTRIM(depar.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. depar.vigente
+      WAIT WINDOW "╜ CODIGO DE DEPARTAMENTO NO VIGENTE !"
+      @ 09,22 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 09,22 SAY REPLICATE(CHR(32),30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "╜ CODIGO DE DEPARTAMENTO INEXISTENTE !"
+
+   DO depa_pop.spr WITH "m.departamen", 0, .F.
+   SHOW GETS
+
+   IF SEEK(m.departamen)
+      @ 09,22 SAY PADR(ALLTRIM(depar.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 09,22 SAY REPLICATE(CHR(32),30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWF1           m.ciudad VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   49        Ё
+*       Ё Variable:            m.ciudad                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      14                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwf1     &&  m.ciudad VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.ciudad <= 0
+   @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+      SIZE 1,20 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO ciud_pop.spr WITH "m.ciudad", 0, .F., .T.
+ENDIF
+
+IF m.ciudad = 0
+   RETURN .F.
+ENDIF
+
+SELECT ciudades
+SET ORDER TO TAG indice1 OF ciudades.cdx
+
+IF SEEK(m.ciudad)
+   IF m.departamen = ciudades.departamen .OR. m.ciudad = 1
+      @ 10,22 SAY PADR(ALLTRIM(ciudades.nombre), 20, CHR(32)) ;
+         SIZE 1,20 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. ciudades.vigente
+         WAIT WINDOW "╜ CODIGO DE CIUDAD NO VIGENTE !"
+         @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+            SIZE 1,20 ;
+            PICTURE "@!" ;
+            COLOR W/N
+
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+         RETURN .F.
+      ENDIF
+
+   ELSE
+      @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+         SIZE 1,20 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "╜ EL CODIGO DE CIUDAD INGRESADO NO CORRESPONDE AL DEPARTAMENTO !"
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ELSE
+   @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+      SIZE 1,20 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "╜ CODIGO DE CIUDAD INEXISTENTE !"
+
+   DO ciud_pop.spr WITH "m.ciudad", 0, .F., .T.
+   SHOW GETS
+
+   IF SEEK(m.ciudad)
+      @ 10,22 SAY PADR(ALLTRIM(ciudades.nombre), 20, CHR(32)) ;
+         SIZE 1,20 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 10,22 SAY REPLICATE(CHR(32),20) ;
+         SIZE 1,20 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWF2           m.barrio VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   50        Ё
+*       Ё Variable:            m.barrio                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      15                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwf2     &&  m.barrio VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.barrio <= 0
+   @ 10,58 SAY REPLICATE(CHR(32), 19) ;
+      SIZE 1,19 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO barr_pop.spr WITH "m.barrio", 0, .F., .T.
+ENDIF
+
+IF m.barrio = 0
+   RETURN .F.
+ENDIF
+
+SELECT barrios
+SET ORDER TO TAG indice1 OF barrios.cdx
+
+IF SEEK(m.barrio)
+   IF (m.departamen = barrios.departamen .OR. m.barrio = 1) .AND. ;
+      (m.ciudad = barrios.ciudad .OR. m.barrio = 1)
+
+      @ 10,58 SAY PADR(ALLTRIM(barrios.nombre), 19, CHR(32)) ;
+         SIZE 1,19 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      IF .NOT. barrios.vigente
+         WAIT WINDOW "╜ CODIGO DE BARRIO NO VIGENTE !"
+         @ 10,58 SAY REPLICATE(CHR(32), 19) ;
+            SIZE 1,19 ;
+            PICTURE "@!" ;
+            COLOR W/N
+
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+         RETURN .F.
+      ENDIF
+
+   ELSE
+      @ 10,58 SAY REPLICATE(CHR(32), 19) ;
+         SIZE 1,19 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "╜ EL CODIGO DEL BARRIO INGRESADO NO CORRESPONDE A LA CIUDAD !"
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ELSE
+   @ 10,58 SAY REPLICATE(CHR(32),19) ;
+      SIZE 1,19 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "╜ CODIGO DE BARRIO INEXISTENTE !"
+
+   DO barr_pop.spr WITH "m.barrio", 0, .F., .T.
+   SHOW GETS
+
+   IF SEEK(m.barrio)
+      @ 10,58 SAY PADR(ALLTRIM(barrios.nombre), 19, CHR(32)) ;
+         SIZE 1,19 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 10,58 SAY REPLICATE(CHR(32),19) ;
+         SIZE 1,19 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWF3           m.maquina VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   51        Ё
+*       Ё Variable:            m.maquina                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      16                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwf3     &&  m.maquina VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo, plReturnedValue
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+plReturnedValue = .T.
+
+IF m.maquina <= 0
+   @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+      SIZE 1,14 ;
+      PICTURE "@!" ;
+      COLOR G/N
+   DO maqu_pop.spr WITH "m.maquina", 0, .F.
+ENDIF
+
+IF m.maquina = 0
+   RETURN .F.
+ENDIF
+
+SELECT maquinas
+SET ORDER TO TAG indice1 OF maquinas.cdx
+
+IF SEEK(m.maquina)
+   @ 12,20 SAY PADR(ALLTRIM(maquinas.nombre), 14, CHR(32)) ;
+      SIZE 1,14 ;
+      PICTURE "@!" ;
+      COLOR G/N
+
+   IF .NOT. maquinas.vigente
+      WAIT WINDOW "╜ CODIGO DE MAQUINA NO VIGENTE !"
+      @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR G/N
+
+      plReturnedValue = .F.
+   ENDIF
+
+ELSE
+   @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+      SIZE 1,14 ;
+      PICTURE "@!" ;
+      COLOR G/N
+
+   WAIT WINDOW "╜ CODIGO DE MAQUINA INEXISTENTE !"
+
+   DO maqu_pop.spr WITH "m.maquina", 0, .F.
+   SHOW GETS
+
+   IF SEEK(m.maquina)
+      @ 12,20 SAY PADR(ALLTRIM(maquinas.nombre), 14, CHR(32)) ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ELSE
+      @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR G/N
+
+      plReturnedValue = .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (plReturnedValue)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWF4           m.marca VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   52        Ё
+*       Ё Variable:            m.marca                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      17                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwf4     &&  m.marca VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo, plReturnedValue
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+plReturnedValue = .T.
+
+IF m.marca <= 0
+   @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+      SIZE 1,13 ;
+      PICTURE "@!" ;
+      COLOR G/N
+   DO mar2_pop.spr WITH "m.marca", 0, .F.
+ENDIF
+
+IF m.marca = 0
+   RETURN .F.
+ENDIF
+
+SELECT marcas2
+SET ORDER TO TAG indice1 OF marcas2.cdx
+
+IF SEEK(m.marca)
+   @ 12,42 SAY PADR(ALLTRIM(marcas2.nombre), 13, CHR(32)) ;
+      SIZE 1,13 ;
+      PICTURE "@!" ;
+      COLOR G/N
+
+   IF .NOT. marcas2.vigente
+      WAIT WINDOW "╜ CODIGO DE MARCA NO VIGENTE !"
+      @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+
+      plReturnedValue = .F.
+   ENDIF
+
+ELSE
+   @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+      SIZE 1,13 ;
+      PICTURE "@!" ;
+      COLOR G/N
+
+   WAIT WINDOW "╜ CODIGO DE MARCA INEXISTENTE !"
+
+   DO  mar2_pop.spr WITH "m.marca", 0, .F.
+   SHOW GETS
+
+   IF SEEK(m.marca)
+      @ 12,42 SAY PADR(ALLTRIM(marcas2.nombre), 13, CHR(32)) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ELSE
+      @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+
+      plReturnedValue = .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (plReturnedValue)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWF5           m.modelo VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   53        Ё
+*       Ё Variable:            m.modelo                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      18                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwf5     &&  m.modelo VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo, plReturnedValue
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+plReturnedValue = .T.
+
+IF m.modelo <= 0
+   @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+      SIZE 1,13 ;
+      PICTURE "@!" ;
+      COLOR G/N
+   DO mode_pop.spr WITH "m.modelo", 0, .F., .T.
+ENDIF
+
+IF m.modelo = 0
+   RETURN .F.
+ENDIF
+
+SELECT modelos
+SET ORDER TO TAG indice1 OF modelos.cdx
+
+IF SEEK(m.modelo)
+   IF m.marca = modelos.marca .OR. m.modelo = 1
+      @ 12,63 SAY PADR(ALLTRIM(modelos.nombre), 13, CHR(32)) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+
+      IF .NOT. modelos.vigente
+         WAIT WINDOW "╜ CODIGO DE MODELO NO VIGENTE !"
+         @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+            SIZE 1,13 ;
+            PICTURE "@!" ;
+            COLOR G/N
+
+         plReturnedValue = .F.
+      ENDIF
+
+   ELSE
+      @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+      WAIT WINDOW "╜ EL CODIGO DE MODELO INGRESADO NO CORRESPONDE A LA MARCA !"
+
+      plReturnedValue = .F.
+   ENDIF
+ELSE
+   @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+      SIZE 1,13 ;
+      PICTURE "@!" ;
+      COLOR G/N
+
+   WAIT WINDOW "╜ CODIGO DE MODELO INEXISTENTE !"
+
+   DO mode_pop.spr WITH "m.modelo", 0, .F., .T.
+   SHOW GETS
+
+   IF SEEK(m.modelo)
+      @ 12,63 SAY PADR(ALLTRIM(modelos.nombre), 13, CHR(32)) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ELSE
+      @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+
+      plReturnedValue = .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (plReturnedValue)
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWF6           m.estadoot VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT,     Record Number:   63        Ё
+*       Ё Variable:            m.estadoot                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      19                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwf6     &&  m.estadoot VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.estadoot <= 0
+   @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+      SIZE 1,24 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO esot_pop.spr WITH "m.estadoot", 0, .F.
+ENDIF
+
+IF m.estadoot = 0
+   RETURN .F.
+ENDIF
+
+SELECT estadoot
+SET ORDER TO TAG indice1 OF estadoot.cdx
+
+IF SEEK(m.estadoot)
+   @ 20,24 SAY PADR(ALLTRIM(estadoot.nombre), 24, CHR(32)) ;
+      SIZE 1,24 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   IF .NOT. estadoot.vigente
+      WAIT WINDOW "╜ CODIGO DE ESTADO DE LA OT NO VIGENTE !"
+      @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+         SIZE 1,24 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+
+ELSE
+   @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+      SIZE 1,24 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "╜ CODIGO DE ESTADO DE OT INEXISTENTE !"
+
+   DO esot_pop.spr WITH "m.estadoot", 0, .F.
+   SHOW GETS
+
+   IF SEEK(m.estadoot)
+      @ 20,24 SAY PADR(ALLTRIM(estadoot.nombre), 24, CHR(32)) ;
+         SIZE 1,24 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+         SIZE 1,24 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWFN           Nivel de lectura v═lido            Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT                                 Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      20                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwfn     && Read Level Valid
+*
+* C╒digo v═lido de la pantalla: OT
+*
+#REGION 1
+IF plAdding .OR. plEditing .OR. plDeleting
+      IF INLIST(LASTKEY(), K_PGUP, K_PGDN, K_ENTER)
+         IF EMPTY(m.serie)
+            ?? CHR(7)
+            WAIT WINDOW "╜ DEBE PROPORCIONAR UNA SERIE A LA OT !"
+            _CUROBJ = OBJNUM(m.serie)
+            RETURN .F.
+         ELSE
+            IF m.nroot <= 0
+               ?? CHR(7)
+               WAIT WINDOW "╜ DEBE PROPORCIONAR UN N╖ A LA OT !"
+               _CUROBJ = OBJNUM(m.nroot)
+               RETURN .F.
+            ELSE
+               IF m.cliente <= 0
+                  ?? CHR(7)
+                  WAIT WINDOW "╜ DEBE SELECCIONAR UN CLIENTE !"
+                  _CUROBJ = OBJNUM(m.cliente)
+                  RETURN .F.
+               ELSE
+                  IF EMPTY(m.nombreot)
+                     ?? CHR(7)
+                     WAIT WINDOW "╜ DEBE SELECCIONAR UN NOMBRE AL CLIENTE !"
+                     _CUROBJ = OBJNUM(m.nombreot)
+                     RETURN .F.
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+
+         IF plEditing
+            IF .NOT. _DataChanged()
+               RETURN .F.
+            ENDIF
+         ENDIF
+         pnSaveWarn = 0
+         IF RDLEVEL() < 5
+            DO savewarn.spr WITH "pnSaveWarn"
+         ELSE
+            IF plAdding
+               WAIT WINDOW "╜ PROCEDIMIENTO AGREGAR CANCELADO !"
+            ELSE
+               IF plEditing
+                  WAIT WINDOW "╜ PROCEDIMIENTO MODIFICAR CANCELADO !"
+               ENDIF
+            ENDIF
+            pnSaveWarn = 2          && Cancelar.
+         ENDIF
+         DO CASE
+            CASE pnSaveWarn = 1     && Guardar.
+               RETURN
+            CASE pnSaveWarn = 2     && Cancelar.
+               RETURN
+            CASE pnSaveWarn = 3     && Modificar.
+               RETURN .F.
+         ENDCASE
+      ENDIF
+ELSE
+   IF plConsulting
+      WAIT WINDOW ""
+   ENDIF
+ENDIF
+
+FUNCTION _DataChanged
+PRIVATE pcVarMem, pcField, pnCounter, plDataChanged
+
+DO SaveWorkArea
+
+plDataChanged = .F.
+
+SELECT ot
+FOR pnCounter = 1 TO FCOUNT()
+   pcVarMem = "m." + LOWER(FIELD(pnCounter))
+   pcField  = LOWER(ALIAS()) + "." + LOWER(FIELD(pnCounter))
+   IF &pcVarMem # &pcField
+      plDataChanged = .T.
+      EXIT
+   ENDIF
+ENDFOR
+
+DO RestoreWorkArea
+
+IF plDataChanged
+   RETURN
+ELSE
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWFO           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT                                 Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      21                                 Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwfo     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: OT
+*
+#REGION 1
+IF plAdding .OR. plEditing
+
+   PRIVATE pnSelect, pcOrder, pnRecNo
+
+   pnSelect = SELECT()
+   pcOrder  = ORDER()
+   pnRecNo  = IIF(EOF(), 0, RECNO())
+
+   IF m.localrep <> 0
+      SELECT locales
+      SET ORDER TO indice1 OF locales.cdx
+
+      IF SEEK(m.localrep)
+         @ 01,19 SAY PADR(ALLTRIM(locales.nombre), 12, CHR(32)) ;
+            SIZE 1,12 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+            SIZE 1,12 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   IF m.mecanico <> 0
+      SELECT mecanico
+      SET ORDER TO indice1 OF mecanico.cdx
+
+      IF SEEK(m.mecanico)
+         @ 01,48 SAY PADR(ALLTRIM(mecanico.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 01,48 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 01,48 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   IF m.departamen <> 0
+      SELECT depar
+      SET ORDER TO indice1 OF depar.cdx
+
+      IF SEEK(m.departamen)
+         @ 09,22 SAY PADR(ALLTRIM(depar.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 09,22 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 09,22 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   IF m.ciudad <> 0
+      SELECT ciudades
+      SET ORDER TO indice1 OF ciudades.cdx
+
+      IF SEEK(m.ciudad)
+         @ 10,22 SAY PADR(ALLTRIM(ciudades.nombre), 20, CHR(32)) ;
+            SIZE 1,20 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+            SIZE 1,20 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+         SIZE 1,20 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   IF m.barrio <> 0
+      SELECT barrios
+      SET ORDER TO indice1 OF barrios.cdx
+
+      IF SEEK(m.barrio)
+         @ 10,58 SAY PADR(ALLTRIM(barrios.nombre), 19, CHR(32)) ;
+            SIZE 1,19 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 10,58 SAY REPLICATE(CHR(32), 19) ;
+            SIZE 1,19 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 10,58 SAY REPLICATE(CHR(32), 19) ;
+         SIZE 1,19 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   IF m.maquina <> 0
+      SELECT maquinas
+      SET ORDER TO indice1 OF maquinas.cdx
+
+      IF SEEK(m.maquina)
+         @ 12,20 SAY PADR(ALLTRIM(maquinas.nombre), 14, CHR(32)) ;
+            SIZE 1,14 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ELSE
+         @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+            SIZE 1,14 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ENDIF
+   ELSE
+      @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ENDIF
+
+   IF m.marca <> 0
+      SELECT marcas2
+      SET ORDER TO indice1 OF marcas2.cdx
+
+      IF SEEK(m.marca)
+         @ 12,42 SAY PADR(ALLTRIM(marcas2.nombre), 13, CHR(32)) ;
+            SIZE 1,13 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ELSE
+         @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+            SIZE 1,13 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ENDIF
+   ELSE
+      @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ENDIF
+
+   IF m.modelo <> 0
+      SELECT modelos
+      SET ORDER TO indice1 OF modelos.cdx
+
+      IF SEEK(m.modelo)
+         @ 12,63 SAY PADR(ALLTRIM(modelos.nombre), 13, CHR(32)) ;
+            SIZE 1,13 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ELSE
+         @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+            SIZE 1,13 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ENDIF
+   ELSE
+      @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ENDIF
+
+   IF m.estadoot <> 0
+      SELECT estadoot
+      SET ORDER TO indice1 OF estadoot.cdx
+
+      IF SEEK(m.estadoot)
+         @ 20,24 SAY PADR(ALLTRIM(estadoot.nombre), 24, CHR(32)) ;
+            SIZE 1,24 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+            SIZE 1,24 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+         SIZE 1,24 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

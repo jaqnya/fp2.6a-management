@@ -1,0 +1,204 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18             ORDEN04.SPR               08:19:02 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htrpl")
+	DEFINE WINDOW _5450htrpl ;
+		FROM INT((SROW()-7)/2),INT((SCOL()-31)/2) ;
+		TO INT((SROW()-7)/2)+6,INT((SCOL()-31)/2)+30 ;
+		TITLE " ORDENAR POR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   ORDEN04/MS-DOS C╒digo de configuraci╒n - SECCION 2    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+IF EOF()
+   DO WHILE .T.
+      WAIT WINDOW "    LA TABLA SE ENCUENTRA VACIA" + CHR(13) + "╗ DESEA AGREGAR UN NUEVO REGISTRO ? [S/N]" TO pcAppend
+      IF UPPER(pcAppend) = "S"
+
+         IF LOWER(ALIAS()) = "cabevent"
+            DO mkventas.prg WITH "Add"
+            DO _RefreshInvoice
+         ENDIF
+
+         IF LOWER(ALIAS()) = "cabenotc"
+            DO mknota_c.prg
+            DO _RefreshInvoice
+         ENDIF
+
+         IF LOWER(ALIAS()) = "cabecob"
+            DO cobros.prg WITH "Add"
+         ENDIF
+
+         IF LOWER(ALIAS()) = "cabecomp"
+            DO mkcompra.prg WITH "Add"
+            DO _RefreshInvoice
+         ENDIF
+
+         IF LOWER(ALIAS()) = "cabepag"
+            DO pagos.prg WITH "Add"
+         ENDIF
+
+         IF LOWER(ALIAS()) = "cabenotp"
+            DO mknota_p.prg
+            DO _RefreshInvoice
+         ENDIF
+
+         EXIT DO
+      ENDIF
+      IF UPPER(pcAppend) = "N"
+         EXIT DO
+      ENDIF
+   ENDDO
+   POP KEY
+   RETURN
+ENDIF
+
+PRIVATE pnChoice, paOrder
+
+DIMENSION paOrder(3)
+
+IF INLIST(LOWER(ALIAS()), "cabevent", "cabenotc", "cabecob")
+   paOrder(1) = "1. TIPO + N╖ DE DOCUMENTO"
+   paOrder(2) = "2. FECHA DEL DOCUMENTO"
+   paOrder(3) = "3. CLIENTE"
+ELSE
+   IF INLIST(LOWER(ALIAS()), "cabecomp", "cabenotp", "cabepag")
+      paOrder(1) = "1. TIPO + N╖ DE DOCUMENTO"
+      paOrder(2) = "2. FECHA DEL DOCUMENTO"
+      paOrder(3) = "3. PROVEEDOR"
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё         ORDEN04/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htrpl")
+	ACTIVATE WINDOW _5450htrpl SAME
+ELSE
+	ACTIVATE WINDOW _5450htrpl NOSHOW
+ENDIF
+@ 0,0 GET pnChoice ;
+ 	PICTURE "@&T" ;
+	FROM paOrder ;
+	SIZE 5,29 ;
+	DEFAULT 1 ;
+	VALID _5450htrpo() ;
+	COLOR SCHEME 14
+
+IF NOT WVISIBLE("_5450htrpl")
+	ACTIVATE WINDOW _5450htrpl
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     MS-DOSREAD contiene cl═usulas de SCREEN orden04     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htrpl
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё            ORDEN04/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTRPO           pnChoice VALID                     Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ORDEN04,     Record Number:    2   Ё
+*       Ё Variable:            pnChoice                           Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htrpo     &&  pnChoice VALID
+#REGION 1
+IF INLIST(LOWER(ALIAS()), "cabevent", "cabenotc", "cabecob", "cabecomp" , "cabepag", "cabenotp")
+   DO CASE
+      CASE pnChoice = 1
+         SET ORDER TO TAG indice1
+      CASE pnChoice = 2
+         SET ORDER TO TAG indice2
+      CASE pnChoice = 3
+         SET ORDER TO TAG indice3
+   ENDCASE
+ENDIF

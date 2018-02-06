@@ -1,0 +1,712 @@
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ 01/23/18            MAESPRO2.SPR               08:19:06 ³
+*       ³                                                         ³
+*       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*       ³                                                         ³
+*       ³ Nombre del autor                                        ³
+*       ³                                                         ³
+*       ³ Copyright (c) 2018 Nombre de la empresa                 ³
+*       ³ Direcci¢n                                               ³
+*       ³ Ciudad,     C.P.                                        ³
+*       ³ Pa¡s                                              ³
+*       ³                                                         ³
+*       ³ Description:                                            ³
+*       ³ Este programa lo ha generado autom ticamente GENSCRN.    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³   MAESPRO2/MS-DOS C¢digo de configuraci¢n - SECCION 1   ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF plAdding
+   pcMyTitle = " Crear Art¡culo "
+ELSE
+   IF plEditing
+      pcMyTitle = " Modificar Art¡culo "
+   ELSE
+      IF plDeleting
+         pcMyTitle = " Eliminar Art¡culo "
+      ENDIF
+   ENDIF
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³             MS-DOS Definiciones de ventana              ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+IF NOT WEXIST("_5450htupa")
+	DEFINE WINDOW _5450htupa ;
+		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
+		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
+		TITLE (pcMyTitle) ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³        MAESPRO2/MS-DOS Distribuci¢n de pantalla         ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF WVISIBLE("_5450htupa")
+	ACTIVATE WINDOW _5450htupa SAME
+ELSE
+	ACTIVATE WINDOW _5450htupa NOSHOW
+ENDIF
+@ 6,0 TO 6,77
+@ 9,0 TO 9,77
+@ 19,0 TO 19,77
+@ 7,3 SAY "Stock M¡nimo:" ;
+	SIZE 1,13, 0
+@ 8,3 SAY "Stock M ximo:" ;
+	SIZE 1,13, 0
+@ 7,35 SAY "Avisar cuando sea alcanzado (S/N):" ;
+	SIZE 1,34, 0
+@ 8,35 SAY "Avisar cuando sea alcanzado (S/N):" ;
+	SIZE 1,34, 0
+@ 10,3 SAY "Caracter¡sticas:" ;
+	SIZE 1,16, 0
+@ 15,3 SAY "Otras Informaciones:" ;
+	SIZE 1,20, 0
+@ 20,3 SAY "Fecha de Ultima Compra:" ;
+	SIZE 1,23, 0
+@ 20,50 SAY "STOCK ACTUAL:" ;
+	SIZE 1,13, 0
+@ 1,52 SAY "C.Origen:" ;
+	SIZE 1,9, 0
+@ 0,3 SAY "C¢digo:" ;
+	SIZE 1,7, 0
+@ 1,3 SAY "Nombre:" ;
+	SIZE 1,7, 0
+@ 2,62 SAY "3    4    5" ;
+	SIZE 1,11, 0
+@ 2,3 SAY "Familia.....:" ;
+	SIZE 1,13, 0
+@ 3,3 SAY "Rubro Gral..:" ;
+	SIZE 1,13, 0
+@ 4,3 SAY "Sub-Rubro...:" ;
+	SIZE 1,13, 0
+@ 5,3 SAY "Marca.......:" ;
+	SIZE 1,13, 0
+@ 0,47 SAY "C.Alternativo:" ;
+	SIZE 1,14, 0
+@ 0,11 GET m.codigo ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN .F.
+@ 0,62 GET m.codigo2 ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	WHEN .F.
+@ 1,11 GET m.nombre ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN .F.
+@ 1,62 GET m.codorig ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	WHEN .F.
+@ 2,17 GET m.familia ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	WHEN .F.
+@ 2,64 GET m.lista3 ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN .F.
+@ 2,69 GET m.lista4 ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN .F.
+@ 2,74 GET m.lista5 ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN .F.
+@ 3,17 GET m.rubro ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	WHEN .F.
+@ 4,17 GET m.subrubro ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	WHEN .F.
+@ 5,17 GET m.marca ;
+	SIZE 1,4 ;
+	DEFAULT 0 ;
+	PICTURE "9999" ;
+	WHEN .F.
+@ 7,17 GET m.stock_min ;
+	SIZE 1,13 ;
+	DEFAULT 0 ;
+	PICTURE "99,999,999.99" ;
+	WHEN plAdding .OR. plEditing
+@ 7,70 GET m.polinvsmin ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htuph()
+@ 8,17 GET m.stock_max ;
+	SIZE 1,13 ;
+	DEFAULT 0 ;
+	PICTURE "99,999,999.99" ;
+	WHEN plAdding .OR. plEditing
+@ 8,70 GET m.polinvsmax ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htupi()
+@ 11,3 GET m.caracter1 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 12,3 GET m.caracter2 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 13,3 GET m.caracter3 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 16,3 GET m.otros1 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 17,3 GET m.otros2 ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 20,27 GET m.fecucompra ;
+	SIZE 1,10 ;
+	DEFAULT {  /  /  } ;
+	WHEN .F.
+@ 20,64 GET m.stock_actu ;
+	SIZE 1,13 ;
+	DEFAULT 0 ;
+	PICTURE "99,999,999.99" ;
+	WHEN .F.
+@ 2,43 SAY "Incluir en Listas:" ;
+	SIZE 1,18, 0
+
+IF NOT WVISIBLE("_5450htupa")
+	ACTIVATE WINDOW _5450htupa
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    MS-DOSREAD contiene cl usulas de SCREEN maespro2     ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+READ ;
+	VALID _5450htupk() ;
+	SHOW _5450htupl() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htupa
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³           MAESPRO2/MS-DOS C¢digo de limpieza            ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+DO _CharToLogical
+
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ MAESPRO2/MS-DOS Procedimientos y funciones de soporte   ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+FUNCTION _CharToLogical
+IF TYPE("m.lista3") = "C" .AND. m.lista3 = "X"
+   m.lista3 = .T.
+ELSE
+   m.lista3 = .F.
+ENDIF
+IF TYPE("m.lista4") = "C" .AND. m.lista4 = "X"
+   m.lista4 = .T.
+ELSE
+   m.lista4 = .F.
+ENDIF
+IF TYPE("m.lista5") = "C" .AND. m.lista5 = "X"
+   m.lista5 = .T.
+ELSE
+   m.lista5 = .F.
+ENDIF
+IF TYPE("m.vigente") = "C" .AND. m.vigente = "S"
+   m.vigente = .T.
+ELSE
+   m.vigente = .F.
+ENDIF
+IF TYPE("m.lprecio") = "C" .AND. m.lprecio = "S"
+   m.lprecio = .T.
+ELSE
+   m.lprecio = .F.
+ENDIF
+IF TYPE("m.impuesto") = "C" .AND. m.impuesto = "G"
+   m.impuesto = .T.
+ELSE
+   m.impuesto = .F.
+ENDIF
+IF TYPE("m.polinvsmin") = "C" .AND. m.polinvsmin = "S"
+   m.polinvsmin = .T.
+ELSE
+   m.polinvsmin = .F.
+ENDIF
+IF TYPE("m.polinvsmax") = "C" .AND. m.polinvsmax = "S"
+   m.polinvsmax = .T.
+ELSE
+   m.polinvsmax = .F.
+ENDIF
+
+FUNCTION _LogicalToChar
+IF TYPE("m.lista3") = "L" .AND. m.lista3
+   m.lista3 = "X"
+ELSE
+   m.lista3 = " "
+ENDIF
+IF TYPE("m.lista4") = "L" .AND. m.lista4
+   m.lista4 = "X"
+ELSE
+   m.lista4 = " "
+ENDIF
+IF TYPE("m.lista5") = "L" .AND. m.lista5
+   m.lista5 = "X"
+ELSE
+   m.lista5 = " "
+ENDIF
+IF TYPE("m.vigente") = "L" .AND. m.vigente
+   m.vigente = "S"
+ELSE
+   m.vigente = "N"
+ENDIF
+IF TYPE("m.lprecio") = "L" .AND. m.lprecio
+   m.lprecio = "S"
+ELSE
+   m.lprecio = "N"
+ENDIF
+IF TYPE("m.impuesto") = "L" .AND. m.impuesto
+   m.impuesto = "G"
+ELSE
+   m.impuesto = "E"
+ENDIF
+IF TYPE("m.polinvsmin") = "L" .AND. m.polinvsmin
+   m.polinvsmin = "S"
+ELSE
+   m.polinvsmin = "N"
+ENDIF
+IF TYPE("m.polinvsmax") = "L" .AND. m.polinvsmax
+   m.polinvsmax = "S"
+ELSE
+   m.polinvsmax = "N"
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTUPH           m.polinvsmin VALID                 ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         MAESPRO2,     Record Number:   34  ³
+*       ³ Variable:            m.polinvsmin                       ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      1                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htuph     &&  m.polinvsmin VALID
+#REGION 1
+IF .NOT. INLIST(m.polinvsmin, "S", "N")
+   WAIT WINDOW "­ AVISAR DEBE SER (S)I o (N)O !"
+   RETURN .F.
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTUPI           m.polinvsmax VALID                 ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         MAESPRO2,     Record Number:   36  ³
+*       ³ Variable:            m.polinvsmax                       ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      2                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htupi     &&  m.polinvsmax VALID
+#REGION 1
+IF .NOT. INLIST(m.polinvsmax, "S", "N")
+   WAIT WINDOW "­ AVISAR DEBE SER (S)I o (N)O !"
+   RETURN .F.
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTUPK           Nivel de lectura v lido            ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         MAESPRO2                           ³
+*       ³ Called By:           READ Statement                     ³
+*       ³ Snippet Number:      3                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htupk     && Read Level Valid
+*
+* C¢digo v lido de la pantalla: MAESPRO2
+*
+#REGION 1
+IF INLIST(LASTKEY(), 18, 27)   && Tecla PAGE UP o ESCAPE presionada.
+   IF EMPTY(m.codigo)
+      ?? CHR(7)
+      WAIT WINDOW "­ DEBE PROPORCIONAR UN CODIGO PARA EL PROVEEDOR !"
+      _CUROBJ = OBJNUM(m.codigo)
+      RETURN .F.
+   ELSE
+      IF EMPTY(m.nombre)
+         ?? CHR(7)
+         WAIT WINDOW "­ DEBE PROPORCIONAR UN NOMBRE PARA EL PROVEEDOR !"
+         _CUROBJ = OBJNUM(m.nombre)
+         RETURN .F.
+      ELSE
+         pnNextScreen = 1
+      ENDIF
+   ENDIF
+ELSE
+   IF INLIST(LASTKEY(), 3, 13)   && Tecla PAGE DOWN o ENTER presionada.
+      IF plEditing
+         IF NOT _DataChanged()
+            pnNextScreen = 2
+            RETURN
+         ENDIF
+      ENDIF
+      pnSaveWarn = 0
+      DO savewarn.spr WITH "pnSaveWarn"
+      DO CASE
+         CASE pnSaveWarn = 1     && Guardar.
+            pnNextScreen = 0
+            RETURN
+         CASE pnSaveWarn = 2     && Cancelar.
+            pnNextScreen = 0
+            RETURN
+         CASE pnSaveWarn = 3     && Modificar.
+            pnNextScreen = 1
+            RETURN
+      ENDCASE
+   ENDIF
+ENDIF
+
+
+FUNCTION _DataChanged
+PRIVATE pnSelect, pcOrder, pnRecord, pcVarMem, pcField, pnCounter, plDataChanged, pcSetExact
+
+DO _CharToLogical
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecord = IIF(EOF(), 0, RECNO())
+plDataChanged = .F.
+
+IF SET("EXACT") = "OFF"
+   SET EXACT ON
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+SELECT maesprod
+FOR pnCounter = 1 TO FCOUNT()
+   pcVarMem = "m." + LOWER(FIELD(pnCounter))
+   pcField  = LOWER(ALIAS()) + "." + LOWER(FIELD(pnCounter))
+   IF &pcVarMem <> &pcField
+      plDataChanged = .T.
+      EXIT
+   ENDIF
+ENDFOR
+
+IF pcSetExact = "OFF"
+   SET EXACT OFF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecord <> 0
+   GOTO RECORD pnRecord
+ENDIF
+
+DO _LogicalToChar
+
+IF plDataChanged
+   RETURN
+ELSE
+   RETURN .F.
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTUPL           Nivel de lectura SHOW              ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         MAESPRO2                           ³
+*       ³ Called By:           READ Statement                     ³
+*       ³ Snippet Number:      4                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htupl     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C¢digo SHOW de la pantalla: MAESPRO2
+*
+#REGION 1
+IF plAdding .OR. plEditing
+   IF TYPE("m.lista3") = "L"
+      IF m.lista3
+         m.lista3 = "X"
+      ELSE
+         m.lista3 = " "
+      ENDIF
+   ENDIF
+
+   IF TYPE("m.lista4") = "L"
+      IF m.lista4
+         m.lista4 = "X"
+      ELSE
+         m.lista4 = " "
+      ENDIF
+   ENDIF
+
+   IF TYPE("m.lista5") = "L"
+      IF m.lista5
+         m.lista5 = "X"
+      ELSE
+         m.lista5 = " "
+      ENDIF
+   ENDIF
+
+   IF TYPE("m.vigente") = "L"
+      IF m.vigente
+         m.vigente = "S"
+      ELSE
+         m.vigente = "N"
+      ENDIF
+   ENDIF
+
+   IF TYPE("m.lprecio") = "L"
+      IF m.lprecio
+         m.lprecio = "S"
+      ELSE
+         m.lprecio = "N"
+      ENDIF
+   ENDIF
+
+   IF TYPE("m.impuesto") = "L"
+      IF m.impuesto
+         m.impuesto = "G"
+      ELSE
+         m.impuesto = "E"
+      ENDIF
+   ENDIF
+
+   IF TYPE("m.polinvsmin") = "L"
+      IF m.polinvsmin
+         m.polinvsmin = "S"
+      ELSE
+         m.polinvsmin = "N"
+      ENDIF
+   ENDIF
+
+   IF TYPE("m.polinvsmax") = "L"
+      IF m.polinvsmax
+         m.polinvsmax = "S"
+      ELSE
+         m.polinvsmax = "N"
+      ENDIF
+   ENDIF
+
+   IF m.familia <> 0
+      SELECT familias
+      SET ORDER TO indice1 OF familias.cdx
+      IF SEEK(m.familia)
+         @ 02,24 SAY PADR(ALLTRIM(familias.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 02,24 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 02,24 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+   IF m.rubro <> 0
+      SELECT rubros1
+      SET ORDER TO TAG indice1 OF rubros1.cdx
+      IF SEEK(m.rubro)
+         @ 03,24 SAY PADR(ALLTRIM(rubros1.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 03,24 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 03,24 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+   IF m.subrubro <> 0
+      SELECT rubros2
+      SET ORDER TO TAG indice1 OF rubros2.cdx
+      IF SEEK(m.subrubro)
+         @ 04,24 SAY PADR(ALLTRIM(rubros2.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 04,24 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 04,24 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+   IF m.marca <> 0
+      SELECT marcas1
+      SET ORDER TO TAG indice1 OF marcas1.cdx
+      IF SEEK(m.marca)
+         @ 05,24 SAY PADR(ALLTRIM(marcas1.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 05,24 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ENDIF
+   ELSE
+      @ 05,24 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+   SELECT maesprod
+ENDIF
+
+
+*-- Utilizar este algoritmo si se desea que los campos m.polinvsmin y
+*-- m.polinvsmax tengan valor "S" cuando se agrega un nuevo registro.
+
+*pnSelect = SELECT()
+*pcOrder  = ORDER()
+*pnRecNo  = IIF(EOF(), 0, RECNO())
+
+*SELECT maesprod
+*SET ORDER TO TAG indice1 OF maesprod.cdx
+*IF NOT SEEK(m.codigo)
+*   IF TYPE("m.polinvsmin") = "C"
+*      m.polinvsmin = "S"
+*   ENDIF
+
+*   IF TYPE("m.polinvsmax") = "C"
+*      m.polinvsmin = "S"
+*   ENDIF
+*ENDIF
+
+*SELECT (pnSelect)
+*SET ORDER TO TAG (pcOrder)
+*IF pnRecNo # 0
+*   GOTO RECORD pnRecNo
+*ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

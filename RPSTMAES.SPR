@@ -1,0 +1,370 @@
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ 01/23/18            RPSTMAES.SPR               08:18:58 ³
+*       ³                                                         ³
+*       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*       ³                                                         ³
+*       ³ Nombre del autor                                        ³
+*       ³                                                         ³
+*       ³ Copyright (c) 2018 Nombre de la empresa                 ³
+*       ³ Direcci¢n                                               ³
+*       ³ Ciudad,     C.P.                                        ³
+*       ³ Pa¡s                                              ³
+*       ³                                                         ³
+*       ³ Description:                                            ³
+*       ³ Este programa lo ha generado autom ticamente GENSCRN.    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³             MS-DOS Definiciones de ventana              ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+IF NOT WEXIST("_5450htonv")
+	DEFINE WINDOW _5450htonv ;
+		FROM INT((SROW()-14)/2),INT((SCOL()-62)/2) ;
+		TO INT((SROW()-14)/2)+13,INT((SCOL()-62)/2)+61 ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³        RPSTMAES/MS-DOS Distribuci¢n de pantalla         ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF WVISIBLE("_5450htonv")
+	ACTIVATE WINDOW _5450htonv SAME
+ELSE
+	ACTIVATE WINDOW _5450htonv NOSHOW
+ENDIF
+@ 1,0 TO 1,59
+@ 0,11 SAY "REPROCESAMIENTO DE STOCK DE ARTICULOS" ;
+	SIZE 1,37, 0 ;
+	COLOR G/N     
+@ 3,3 SAY " Inicializa el campo stock actual en Art¡culos." ;
+	SIZE 1,48, 0
+@ 4,3 SAY " Actualiza el stock desde Mov. de Dep¢sito y Ajustes." ;
+	SIZE 1,54, 0
+@ 5,3 SAY " Actualiza el stock desde Compras." ;
+	SIZE 1,35, 0
+@ 6,3 SAY " Actualiza el stock desde N.Deb./Cred. de Proveedores." ;
+	SIZE 1,55, 0
+@ 7,3 SAY " Actualiza el stock desde Ventas." ;
+	SIZE 1,34, 0
+@ 8,3 SAY " Actualiza el stock desde N.Deb./Cred. de Clientes." ;
+	SIZE 1,52, 0
+@ 10,0 TO 10,59
+@ 11,13 GET pnChoice ;
+	PICTURE "@*HN \!\<Iniciar;\?\<Cancelar" ;
+	SIZE 1,12,10 ;
+	DEFAULT 1 ;
+	VALID _5450htonz()
+
+IF NOT WVISIBLE("_5450htonv")
+	ACTIVATE WINDOW _5450htonv
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    MS-DOSREAD contiene cl usulas de SCREEN rpstmaes     ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+READ CYCLE ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htonv
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTONZ           pnChoice VALID                     ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         RPSTMAES,     Record Number:   11  ³
+*       ³ Variable:            pnChoice                           ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Push Button                        ³
+*       ³ Snippet Number:      1                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htonz     &&  pnChoice VALID
+#REGION 1
+DO CASE
+   CASE pnChoice = 1     && Iniciar.
+      DO _clcMaesprodStock
+   CASE pnChoice = 2     && Cancelar.
+      CLEAR READ
+ENDCASE
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _clcMaesprodStock
+*!
+*!  Llamado por: RPSTMAES.SPR
+*!
+*!  Descripci¢n: Reprocesamiento de Stock de Art¡culos.
+*!
+*!*********************************************************************
+FUNCTION _clcMaesprodStock
+PRIVATE nCounter, pcSetExact, pcPrint, pcReportTitle
+
+*-- MS-DOS Base de datos, ¡ndices, relaciones.
+SELECT 0
+temp01 = "tm" + RIGHT(SYS(3), 6) + ".dbf"
+CREATE TABLE &temp01 (nombre C(76))
+
+USE &temp01 ALIAS tmpErrors EXCLUSIVE
+
+IF SET("EXACT") = "OFF"
+   SET EXACT ON
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+*-- 1. Inicializa el campo stock actual en Art¡culos.
+SELECT maesprod
+
+@ 3,3 SAY " Inicializa el campo stock actual en Art¡culos." ;
+	SIZE 1,48, 0 ;
+	COLOR W+/N
+
+REPLACE stock_actu WITH 0 ALL
+
+@ 3,3 SAY " Inicializa el campo stock actual en Art¡culos." ;
+	SIZE 1,48, 0	
+	
+*-- 2. Actualiza el stock desde Mov. de Dep¢sito y Ajustes.
+nCounter = 1
+SELECT detamovi
+
+@ 4,3 SAY " Actualiza el stock desde Mov. de Dep¢sito y Ajustes." ;
+	SIZE 1,54, 0 ;
+	COLOR W+/N
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 2/6: " + LTRIM(TRANSFORM(nCounter,"9,999,999")) + "/" + LTRIM(TRANSFORM(RECCOUNT(),"9,999,999")) NOWAIT
+   SELECT maesprod
+   IF SEEK(detamovi.articulo)
+      IF INLIST(detamovi.tipobole, 1, 3)
+         REPLACE maesprod.stock_actu WITH (maesprod.stock_actu + detamovi.cantidad)
+      ELSE
+         IF INLIST(detamovi.tipobole, 2, 4)
+            REPLACE maesprod.stock_actu WITH (maesprod.stock_actu - detamovi.cantidad)
+         ENDIF
+      ENDIF
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se encontr¢ el art¡culo: " + ALLTRIM(detamovi.articulo) + " desde el Mov. de Dep. y/o Aj.: " + LTRIM(STR(detamovi.tipobole, 1)) + "/" + LTRIM(STR(detamovi.nrobole, 7)))
+   ENDIF
+   SELECT detamovi
+   nCounter = nCounter + 1
+ENDSCAN
+
+@ 4,3 SAY " Actualiza el stock desde Mov. de Dep¢sito y Ajustes." ;
+	SIZE 1,54, 0
+
+*-- 3. Actualiza el stock desde Compras.
+nCounter = 1
+SELECT detacomp
+GO TOP
+
+@ 5,3 SAY " Actualiza el stock desde Compras." ;
+	SIZE 1,35, 0 ;
+	COLOR W+/N
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 3/6: " + LTRIM(TRANSFORM(nCounter,"9,999,999")) + "/" + LTRIM(TRANSFORM(RECCOUNT(),"9,999,999")) NOWAIT
+   SELECT maesprod
+   IF SEEK(detacomp.articulo)
+      REPLACE maesprod.stock_actu WITH (maesprod.stock_actu + detacomp.cantidad)
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se encontr¢ el art¡culo: " + ALLTRIM(detacomp.articulo) + " desde la Compra: " + LTRIM(STR(detacomp.tipodocu, 1)) + "/" + LTRIM(STR(detacomp.nrodocu, 7)))
+   ENDIF
+   SELECT detacomp
+   nCounter = nCounter + 1
+ENDSCAN
+
+@ 5,3 SAY " Actualiza el stock desde Compras." ;
+	SIZE 1,35, 0
+
+*-- Actualiza el stock desde N.Deb./Cred. de Proveedores.
+nCounter = 1
+SELECT detanotp
+GO TOP
+
+@ 6,3 SAY " Actualiza el stock desde N.Deb./Cred. de Proveedores." ;
+	SIZE 1,55, 0 ;
+	COLOR W+/N
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 4/6: " + LTRIM(TRANSFORM(nCounter,"9,999,999")) + "/" + LTRIM(TRANSFORM(RECCOUNT(),"9,999,999")) NOWAIT
+   SELECT maesprod
+   IF SEEK(detanotp.articulo)
+      IF INLIST(detanotp.tiponota, 1, 3) .AND. detanotp.tipo = "S"
+         REPLACE maesprod.stock_actu WITH (maesprod.stock_actu + detanotp.cantidad)
+      ELSE
+         IF INLIST(detanotp.tiponota, 2, 4) .AND. detanotp.tipo = "S"
+            REPLACE maesprod.stock_actu WITH (maesprod.stock_actu - detanotp.cantidad)
+         ENDIF
+      ENDIF
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se encontr¢ el art¡culo: " + ALLTRIM(detanotp.articulo) + " desde la N.D‚b./Cr‚d. (P): " + LTRIM(STR(detanotp.tiponota, 1)) + "/" + LTRIM(STR(detanotp.nronota, 7)))
+   ENDIF
+   SELECT detanotp
+   nCounter = nCounter + 1
+ENDSCAN
+
+@ 6,3 SAY " Actualiza el stock desde N.Deb./Cred. de Proveedores." ;
+	SIZE 1,55, 0
+
+*-- Actualiza el stock desde Ventas.
+nCounter = 1
+SELECT detavent
+GO TOP
+
+@ 7,3 SAY " Actualiza el stock desde Ventas." ;
+	SIZE 1,34, 0 ;
+	COLOR W+/N
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 5/6: " + LTRIM(TRANSFORM(nCounter,"9,999,999")) + "/" + LTRIM(TRANSFORM(RECCOUNT(),"9,999,999")) NOWAIT
+   SELECT maesprod
+   IF SEEK(detavent.articulo)
+      REPLACE maesprod.stock_actu WITH (maesprod.stock_actu - detavent.cantidad)
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se encontr¢ el art¡culo: " + ALLTRIM(detavent.articulo) + " desde la Venta: " + LTRIM(STR(detavent.tipodocu, 1)) + "/" + LTRIM(STR(detavent.nrodocu, 7)))
+   ENDIF
+   SELECT detavent
+   nCounter = nCounter + 1
+ENDSCAN
+
+@ 7,3 SAY " Actualiza el stock desde Ventas." ;
+	SIZE 1,34, 0
+
+*-- Actualiza el stock desde N.Deb./Cred. de Clientes.
+nCounter = 1
+SELECT detanotc
+GO TOP
+
+@ 8,3 SAY " Actualiza el stock desde N.Deb./Cred. de Clientes." ;
+	SIZE 1,52, 0 ;
+	COLOR W+/N
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 6/6: " + LTRIM(TRANSFORM(nCounter,"9,999,999")) + "/" + LTRIM(TRANSFORM(RECCOUNT(),"9,999,999")) NOWAIT
+   SELECT maesprod
+   IF SEEK(detanotc.articulo)
+      IF INLIST(detanotc.tiponota, 1, 3) .AND. detanotc.tipo = "S"
+         REPLACE maesprod.stock_actu WITH (maesprod.stock_actu - detanotc.cantidad)
+      ELSE
+         IF INLIST(detanotc.tiponota, 2, 4) .AND. detanotc.tipo = "S"
+            REPLACE maesprod.stock_actu WITH (maesprod.stock_actu + detanotc.cantidad)
+         ENDIF
+      ENDIF
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se encontr¢ el art¡culo: " + ALLTRIM(detanotc.articulo) + " desde la N.D‚b./Cr‚d. (C): " + LTRIM(STR(detanotc.tiponota,1)) + "/" + LTRIM(STR(detanotc.nronota,7)))
+   ENDIF
+   SELECT detanotc
+   nCounter = nCounter + 1
+ENDSCAN
+
+@ 8,3 SAY " Actualiza el stock desde N.Deb./Cred. de Clientes." ;
+	SIZE 1,52, 0
+
+IF pcSetExact = "OFF"
+   SET EXACT OFF
+ENDIF
+
+WAIT CLEAR
+
+SELECT tmpErrors
+
+IF RECCOUNT() > 0
+   *-- MS-DOS Definiciones de ventanas.
+   IF .NOT. WEXIST("tmpErrors")
+      DEFINE WINDOW tmpErrors ;
+         FROM 01,00 ;
+         TO 23,79 ;
+         TITLE "< ERRORES ENCONTRADOS DURANTE EL REPROCESAMIENTO: " + ALLTRIM(STR(RECCOUNT(), 5)) + " >" ;
+         SYSTEM ;
+         CLOSE ;
+         NOFLOAT ;
+         GROW ;
+         MDI ;
+         NOMINIMIZE ;
+         SHADOW ;
+         ZOOM ;
+         COLOR SCHEME 15
+   ENDIF
+
+   BROWSE WINDOW tmpErrors FIELDS ;
+      nombre :R:76:H = "Descripci¢n" ;
+      NODELETE NOAPPEND NOMODIFY
+
+   DO WHILE .T.
+      WAIT WINDOW " ¨ DESEA IMPRIMIR ? [S/N]" TO pcPrint
+      IF UPPER(pcPrint) = "S"
+         pcReportTitle = "REPROCESAMIENTO DE STOCK DE ARTICULOS"
+         REPORT FORM l_errors.frx TO PRINTER
+         EXIT DO
+      ENDIF
+      IF UPPER(pcPrint) = "N"
+         EXIT DO
+      ENDIF
+   ENDDO
+
+ELSE
+   WAIT WINDOW "­ REPROCESAMIENTO CONCLUIDO: NO SE HAN ENCONTRADO PROBLEMAS !" NOWAIT
+ENDIF
+
+*-- MS-DOS Cierre de Bases de Datos.
+IF USED("tmpErrors")
+   SELECT tmpErrors
+   USE
+ENDIF
+
+DELETE FILE &temp01
+DELETE FILE SUBSTR(temp01, 1, ATC(".", temp01)) + "CDX"

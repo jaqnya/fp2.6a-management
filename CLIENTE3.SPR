@@ -1,0 +1,536 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18            CLIENTE3.SPR               08:19:06 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   CLIENTE3/MS-DOS C╒digo de configuraci╒n - SECCION 1   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF plAdding
+   pcMyTitle = " Crear Cliente "
+ELSE
+   IF plEditing
+      pcMyTitle = " Modificar Cliente "
+   ELSE
+      IF plDeleting
+         pcMyTitle = " Borrar Cliente "
+      ELSE
+         IF plConsulting
+            pcMyTitle = " Consultar Cliente "
+         ENDIF
+      ENDIF
+   ENDIF
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htv2v")
+	DEFINE WINDOW _5450htv2v ;
+		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
+		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
+		TITLE (pcMyTitle) ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   CLIENTE3/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        CLIENTE3/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htv2v")
+	ACTIVATE WINDOW _5450htv2v SAME
+ELSE
+	ACTIVATE WINDOW _5450htv2v NOSHOW
+ENDIF
+@ 0,3 SAY "Documento:" ;
+	SIZE 1,10, 0
+@ 1,3 SAY "Codigo:" ;
+	SIZE 1,7, 0
+@ 2,0 TO 2,77
+@ 3,3 SAY "Conyuge.....:" ;
+	SIZE 1,13, 0
+@ 4,3 SAY "Documento...:" ;
+	SIZE 1,13, 0
+@ 5,3 SAY "Fecha Nac...:" ;
+	SIZE 1,13, 0
+@ 7,3 SAY "Trabaja en..:" ;
+	SIZE 1,13, 0
+@ 8,3 SAY "Direcci╒n...:" ;
+	SIZE 1,13, 0
+@ 10,3 SAY "Cargo.......:" ;
+	SIZE 1,13, 0
+@ 9,3 SAY "Tel┌fono....:" ;
+	SIZE 1,13, 0
+@ 11,3 SAY "Antig│edad..:" ;
+	SIZE 1,13, 0
+@ 12,3 SAY "Sueldo......:" ;
+	SIZE 1,13, 0
+@ 13,3 SAY "O. Ingresos.:" ;
+	SIZE 1,13, 0
+@ 14,3 SAY "Gastos......:" ;
+	SIZE 1,13, 0
+@ 0,14 GET m.documento ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@! 999999999999999" ;
+	WHEN .F.
+@ 1,11 GET m.codigo ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	PICTURE "99999" ;
+	WHEN .F.
+@ 1,18 GET m.nombre ;
+	SIZE 1,56 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN .F.
+@ 3,17 GET m.nombre_c ;
+	SIZE 1,50 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htv31()
+@ 4,17 GET m.docconyuge ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 5,17 GET m.fechanacco ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "99/99/9999" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htv32()
+@ 7,17 GET m.trabajocon ;
+	SIZE 1,50 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 8,17 GET m.dirtracony ;
+	SIZE 1,60 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 9,17 GET m.teltracony ;
+	SIZE 1,15 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 10,17 GET m.cargoconyu ;
+	SIZE 1,40 ;
+	DEFAULT " " ;
+	PICTURE "@!" ;
+	WHEN plAdding .OR. plEditing
+@ 11,17 GET m.antiguec ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	PICTURE "99.99" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htv34()
+@ 12,17 GET m.sueldoc ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htv35()
+@ 13,17 GET m.oingresosc ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htv36()
+@ 14,17 GET m.gastosc ;
+	SIZE 1,11 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htv37()
+@ 0,63 SAY "Paso 3 de 5" ;
+	SIZE 1,11, 0
+
+IF NOT WVISIBLE("_5450htv2v")
+	ACTIVATE WINDOW _5450htv2v
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё    MS-DOSREAD contiene cl═usulas de SCREEN cliente3     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ ;
+	VALID _5450htv38() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htv2v
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           CLIENTE3/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF plAdding .OR. plEditing .OR. plDeleting
+   IF INLIST(LASTKEY(), K_PGDN, K_ENTER)
+      pnNextScreen = 4
+   ELSE
+      pnNextScreen = 2
+   ENDIF
+ELSE
+   IF plConsulting
+      IF INLIST(LASTKEY(), K_PGDN, K_ENTER)
+         pnNextScreen = 4
+      ELSE
+        IF INLIST(LASTKEY(), K_PGUP, K_ESCAPE)
+           pnNextScreen = 2
+        ELSE
+           pnNextScreen = 3
+        ENDIF
+      ENDIF
+   ENDIF
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTV31           m.nombre_c VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CLIENTE3,     Record Number:   19  Ё
+*       Ё Variable:            m.nombre_c                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htv31     &&  m.nombre_c VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT, K_BSPACE)
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTV32           m.fechanacco VALID                 Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CLIENTE3,     Record Number:   21  Ё
+*       Ё Variable:            m.fechanacco                       Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htv32     &&  m.fechanacco VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT, K_ESCAPE)
+   RETURN
+ENDIF
+
+IF m.fechanacco = "00/00/0000"
+   WAIT WINDOW "╜ FECHA INVALIDA !"
+   RETURN .F.
+ENDIF
+
+IF EMPTY(m.fechanacco) .OR. m.fechanacco = "  /  /    "
+   RETURN
+ELSE
+   STORE VAL(SUBSTR(m.fechanacco,1,2)) TO pnDia
+   STORE VAL(SUBSTR(m.fechanacco,4,2)) TO pnMes
+
+   IF VAL(SUBSTR(m.fechanacco,7,4)) < 1000
+      pnAnyo = YEAR(DATE())
+   ELSE
+      pnAnyo = VAL(SUBSTR(m.fechanacco,7,4))
+   ENDIF
+
+   m.fechanacco = IIF(pnDia > 0 .AND. pnDia < 10, "0"+STR(pnDia,1), STR(pnDia,2)) +  "/"+ IIF(pnMes > 0 .AND. pnMes < 10, "0"+STR(pnMes,1), STR(pnMes,2)) + "/"+ STR(pnAnyo,4)
+
+   IF pnDia  < 1    .OR. pnDia  > 31 .OR.;
+      pnMes  < 1    .OR. pnMes  > 12 .OR.;
+      pnAnyo < 1900 .OR. pnAnyo > 2500
+      WAIT WINDOW "╜ FECHA INVALIDA !"
+      RETURN .F.
+   ELSE
+      DO CASE
+         CASE INLIST(pnMes, 1, 3, 5, 7, 8, 10, 12)
+            IF pnDia <= 31
+               RETURN .T.
+            ELSE
+               WAIT WINDOW "╜ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+         CASE pnMes = 2
+            IF MOD(pnAnyo,4) # 0
+               IF pnDia <= 28
+                  RETURN .T.
+               ELSE
+                  WAIT WINDOW "╜ FECHA INVALIDA !"
+                  RETURN .F.
+               ENDIF
+            ELSE
+               IF MOD(pnAnyo,100) = 0 .AND. MOD(pnAnyo,400) # 0
+                  IF pnDia <= 28
+                     RETURN .T.
+                  ENDIF
+               ELSE
+                  IF pnDia <= 29
+                     RETURN .T.
+                  ELSE
+                     WAIT WINDOW "╜ FECHA INVALIDA !"
+                     RETURN .F.
+                  ENDIF
+               ENDIF
+            ENDIF
+         CASE INLIST(pnMes, 4, 6, 9, 11)
+            IF pnDia <= 30
+               RETURN .T.
+            ELSE
+               WAIT WINDOW "╜ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+            RETURN .T.
+      ENDCASE
+   ENDIF
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTV34           m.antiguec VALID                   Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CLIENTE3,     Record Number:   26  Ё
+*       Ё Variable:            m.antiguec                         Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      3                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htv34     &&  m.antiguec VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT)
+   RETURN
+ENDIF
+
+IF m.antiguec < 0
+   WAIT WINDOW "╜ LA ANTIG EDAD DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTV35           m.sueldoc VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CLIENTE3,     Record Number:   27  Ё
+*       Ё Variable:            m.sueldoc                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      4                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htv35     &&  m.sueldoc VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT)
+   RETURN
+ENDIF
+
+IF m.sueldoc < 0
+   WAIT WINDOW "╜ EL SUELDO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTV36           m.oingresosc VALID                 Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CLIENTE3,     Record Number:   28  Ё
+*       Ё Variable:            m.oingresosc                       Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      5                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htv36     &&  m.oingresosc VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT)
+   RETURN
+ENDIF
+
+IF m.oingresosc < 0
+   WAIT WINDOW "╜ OTROS INGRESOS DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTV37           m.gastosc VALID                    Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CLIENTE3,     Record Number:   29  Ё
+*       Ё Variable:            m.gastosc                          Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         Field                              Ё
+*       Ё Snippet Number:      6                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htv37     &&  m.gastosc VALID
+#REGION 1
+IF INLIST(LASTKEY(), K_UP, K_LEFT)
+   RETURN
+ENDIF
+
+IF m.gastosc < 0
+   WAIT WINDOW "╜ GASTOS DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTV38           Nivel de lectura v═lido            Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         CLIENTE3                           Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      7                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htv38     && Read Level Valid
+*
+* C╒digo v═lido de la pantalla: CLIENTE3
+*
+#REGION 1
+IF plAdding .OR. plEditing .OR. plDeleting
+   IF INLIST(LASTKEY(), K_PGDN, K_ENTER)
+      IF m.antiguec < 0
+         ?? CHR(7)
+         WAIT WINDOW "╜ LA ANTIG EDAD DEBE SER MAYOR O IGUAL QUE CERO !"
+         _CUROBJ = OBJNUM(m.antiguec)
+         RETURN .F.
+      ELSE
+         IF m.sueldoc < 0
+            ?? CHR(7)
+            WAIT WINDOW "╜ EL SUELDO DEBE SER MAYOR O IGUAL QUE CERO !"
+            _CUROBJ = OBJNUM(m.sueldoc)
+            RETURN .F.
+         ELSE
+            IF m.oingresosc < 0
+               ?? CHR(7)
+               WAIT WINDOW "╜ OTROS INGRESOS DEBE SER MAYOR O IGUAL QUE CERO !"
+               _CUROBJ = OBJNUM(m.oingresosc)
+               RETURN .F.
+            ELSE
+               IF m.gastosc < 0
+                  WAIT WINDOW "╜ GASTOS DEBE SER MAYOR O IGUAL QUE CERO !"
+                  _CUROBJ = OBJNUM(m.gastosc)
+                  RETURN .F.
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+   ELSE
+      IF INLIST(LASTKEY(), K_ESCAPE, K_PGUP)
+         RETURN .T.
+      ELSE
+         IF plEditing
+            _CUROBJ = OBJNUM(m.nombre_c)
+         ENDIF
+         RETURN .F.
+      ENDIF
+   ENDIF
+ELSE
+   IF plConsulting
+      WAIT WINDOW ""
+   ENDIF
+ENDIF

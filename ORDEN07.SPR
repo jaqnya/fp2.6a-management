@@ -1,0 +1,177 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18             ORDEN07.SPR               08:19:03 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   ORDEN07/MS-DOS C╒digo de configuraci╒n - SECCION 1    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PRIVATE cScheme13, cScheme14
+
+cScheme13 = SCHEME(13)
+cScheme14 = SCHEME(14)
+
+SET COLOR OF SCHEME 13 TO &color_08
+SET COLOR OF SCHEME 14 TO &color_09
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450hts9l")
+	DEFINE WINDOW _5450hts9l ;
+		FROM INT((SROW()-6)/2),INT((SCOL()-31)/2) ;
+		TO INT((SROW()-6)/2)+5,INT((SCOL()-31)/2)+30 ;
+		TITLE " ORDENAR POR " ;
+		FLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		SYSTEM ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   ORDEN07/MS-DOS C╒digo de configuraci╒n - SECCION 2    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+PUSH KEY CLEAR
+
+PRIVATE nChoice, aOrder
+
+DIMENSION aOrder(2)
+
+DO CASE
+   CASE INLIST(LOWER(ALIAS()), "cabemot", "cabemot2")
+      aOrder(1) = "1. N╖ DE ORDEN DE TRABAJO"
+      aOrder(2) = "2. FECHA DEL MOVIMIENTO"
+   CASE LOWER(ALIAS()) = "cabemovi"
+      aOrder(1) = "1. TIPO + N╖ DE DOCUMENTO"
+      aOrder(2) = "2. FECHA DEL DOCUMENTO"
+ENDCASE
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё         ORDEN07/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450hts9l")
+	ACTIVATE WINDOW _5450hts9l SAME
+ELSE
+	ACTIVATE WINDOW _5450hts9l NOSHOW
+ENDIF
+@ 0,0 GET nChoice ;
+ 	PICTURE "@&T" ;
+	FROM aOrder ;
+	SIZE 4,29 ;
+	DEFAULT 1 ;
+	VALID _5450htsb8() ;
+	COLOR SCHEME 14
+
+IF NOT WVISIBLE("_5450hts9l")
+	ACTIVATE WINDOW _5450hts9l
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     MS-DOSREAD contiene cl═usulas de SCREEN orden07     Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	MODAL
+
+RELEASE WINDOW _5450hts9l
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё            ORDEN07/MS-DOS C╒digo de limpieza            Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+SET COLOR OF SCHEME 13 TO &cScheme13
+SET COLOR OF SCHEME 14 TO &cScheme14
+
+POP KEY
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTSB8           nChoice VALID                      Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         ORDEN07,     Record Number:    2   Ё
+*       Ё Variable:            nChoice                            Ё
+*       Ё Called By:           VALID Clause                       Ё
+*       Ё Object Type:         List                               Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htsb8     &&  nChoice VALID
+#REGION 1
+IF INLIST(LOWER(ALIAS()), "cabemot", "cabemot2", "cabemovi")
+   DO CASE
+      CASE nChoice = 1
+         SET ORDER TO TAG indice1
+      CASE nChoice = 2
+         SET ORDER TO TAG indice2
+   ENDCASE
+ENDIF

@@ -1,0 +1,98 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 10/06/10            FREINDEX.SPR               10:47:59 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2010 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("freindex") ;
+	OR UPPER(WTITLE("FREINDEX")) == "FREINDEX.PJX" ;
+	OR UPPER(WTITLE("FREINDEX")) == "FREINDEX.SCX" ;
+	OR UPPER(WTITLE("FREINDEX")) == "FREINDEX.MNX" ;
+	OR UPPER(WTITLE("FREINDEX")) == "FREINDEX.PRG" ;
+	OR UPPER(WTITLE("FREINDEX")) == "FREINDEX.FRX" ;
+	OR UPPER(WTITLE("FREINDEX")) == "FREINDEX.QPR"
+	DEFINE WINDOW freindex ;
+		FROM INT((SROW()-11)/2),INT((SCOL()-41)/2) ;
+		TO INT((SROW()-11)/2)+10,INT((SCOL()-41)/2)+40 ;
+		TITLE " RE-ORGANIZADOR " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		NOMINIMIZE ;
+		DOUBLE ;
+		COLOR SCHEME 13
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё   FREINDEX/MS-DOS C╒digo de configuraci╒n - SECCION 2   Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё        FREINDEX/MS-DOS Distribuci╒n de pantalla         Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("freindex")
+	ACTIVATE WINDOW freindex SAME
+ELSE
+	ACTIVATE WINDOW freindex NOSHOW
+ENDIF
+@ 6,4 SAY "INDICE NRO.  ддд" ;
+	SIZE 1,17, 0
+@ 4,4 SAY "ACTUALIZANDO ддд" ;
+	SIZE 1,17, 0
+@ 2,10 SAY "CREANDO 142 INDICES" ;
+	SIZE 1,19, 0
+
+IF NOT WVISIBLE("freindex")
+	ACTIVATE WINDOW freindex
+ENDIF
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF

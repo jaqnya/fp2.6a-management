@@ -1,0 +1,768 @@
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё 01/23/18               OT1.SPR                 08:19:08 Ё
+*       Ё                                                         Ё
+*       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
+*       Ё                                                         Ё
+*       Ё Nombre del autor                                        Ё
+*       Ё                                                         Ё
+*       Ё Copyright (c) 2018 Nombre de la empresa                 Ё
+*       Ё Direcci╒n                                               Ё
+*       Ё Ciudad,     C.P.                                        Ё
+*       Ё Pa║s                                              Ё
+*       Ё                                                         Ё
+*       Ё Description:                                            Ё
+*       Ё Este programa lo ha generado autom═ticamente GENSCRN.    Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё             MS-DOS Definiciones de ventana              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+IF NOT WEXIST("_5450htwhf")
+	DEFINE WINDOW _5450htwhf ;
+		FROM 1, 0 ;
+		TO 23,79 ;
+		TITLE " Consultar Orden de Trabajo " ;
+		NOFLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё     OT1/MS-DOS C╒digo de configuraci╒n - SECCION 2      Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+
+PUSH KEY CLEAR
+
+PRIVATE pcCursor, pnSelect, pcOrder, pnRecNo
+
+IF SET("CURSOR") = "ON"
+   pcCursor = "ON"
+   SET CURSOR OFF
+ELSE
+   pcCursor = "OFF"
+ENDIF
+
+
+*-- Obtiene la fecha de terminaci╒n y el importe total del movimiento.
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+* Iniciliazacion de variables
+m.fecha = {  /  /    }
+m.monto_fact = 0
+
+IF INLIST(m.estadoot, 3, 15) THEN   && 3 - EN REPARACION, 15 - PRESUPUESTO
+   SELECT cabemot2
+   SET ORDER TO TAG indice1 OF cabemot2.cdx
+
+   IF SEEK(STR(2, 1) + m.serie + STR(m.nroot, 7))
+      m.fecha      = cabemot2.fecha
+      m.monto_fact = cabemot2.monto_fact
+   ENDIF
+ENDIF
+
+IF INLIST(m.estadoot, 5, 6) THEN   && 5 - TERMINADO, 6 - FACTURADO
+   SELECT cabemot
+   SET ORDER TO TAG indice1 OF cabemot.cdx
+
+   IF SEEK(STR(2, 1) + m.serie + STR(m.nroot, 7))
+      m.fecha      = cabemot.fecha
+      m.monto_fact = cabemot.monto_fact
+   ENDIF
+ENDIF
+
+* Desactivado el 26/07/2013
+*SELECT cabemot
+*SET ORDER TO TAG indice1 OF cabemot.cdx
+*
+*IF SEEK(STR(2, 1) + m.serie + STR(m.nroot, 7))
+*   m.fecha      = cabemot.fecha
+*   m.monto_fact = cabemot.monto_fact
+*ELSE
+*   SELECT cabemot2
+*   SET ORDER TO TAG indice1 OF cabemot2.cdx
+*
+*   IF SEEK(STR(2, 1) + m.serie + STR(m.nroot, 7))
+*      m.fecha      = cabemot2.fecha
+*      m.monto_fact = cabemot2.monto_fact
+*   ELSE
+*      m.fecha = {  /  /    }
+*      m.monto_fact = 0
+*   ENDIF
+*ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё           OT1/MS-DOS Distribuci╒n de pantalla           Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+IF WVISIBLE("_5450htwhf")
+	ACTIVATE WINDOW _5450htwhf SAME
+ELSE
+	ACTIVATE WINDOW _5450htwhf NOSHOW
+ENDIF
+@ 10,44 SAY "Barrio:" ;
+	SIZE 1,7, 0
+@ 9,2 SAY "Departamen.:" ;
+	SIZE 1,12, 0
+@ 1,33 SAY "M┌canico:" ;
+	SIZE 1,9, 0
+@ 14,42 SAY "Color.:" ;
+	SIZE 1,7, 0
+@ 15,2 SAY "Accesorio..:" ;
+	SIZE 1,12, 0
+@ 20,2 SAY "Estado de la OT:" ;
+	SIZE 1,16, 0
+@ 16,2 SAY "Trabajo....:" ;
+	SIZE 1,12, 0
+@ 19,0 TO 19,77
+@ 14,67 SAY "Km:" ;
+	SIZE 1,3, 0
+@ 14,2 SAY "Chapa N╖...:" ;
+	SIZE 1,12, 0
+@ 13,2 SAY "Motor N╖...:" ;
+	SIZE 1,12, 0
+@ 11,0 TO 11,77
+@ 8,56 SAY "Doc.Id.:" ;
+	SIZE 1,8, 0
+@ 10,2 SAY "Ciudad.....:" ;
+	SIZE 1,12, 0
+@ 8,2 SAY "Tel┌fono...:" ;
+	SIZE 1,12, 0
+@ 7,2 SAY "Direcci╒n..: " ;
+	SIZE 1,13, 0
+@ 6,2 SAY "Contacto...: " ;
+	SIZE 1,13, 0
+@ 5,2 SAY "Cliente....:" ;
+	SIZE 1,12, 0
+@ 0,63 SAY "/" ;
+	SIZE 1,1, 0
+@ 0,50 SAY "Factura N╖:" ;
+	SIZE 1,11, 0
+@ 4,0 TO 4,77
+@ 3,51 SAY "Entregado: " ;
+	SIZE 1,11, 0
+@ 3,27 SAY "Prometido:" ;
+	SIZE 1,10, 0
+@ 2,2 SAY "Referencia.:" ;
+	SIZE 1,12, 0
+@ 1,2 SAY "Local Rep..:" ;
+	SIZE 1,12, 0
+@ 0,2 SAY "OT N╖......:" ;
+	SIZE 1,12, 0
+@ 20,50 SAY "TOTAL M.O.T.:" ;
+	SIZE 1,13, 0
+@ 12,2 SAY "M═quina....:" ;
+	SIZE 1,12, 0
+@ 2,27 SAY "Recepci╒n:" ;
+	SIZE 1,10, 0
+@ 2,51 SAY "Terminado:" ;
+	SIZE 1,10, 0
+@ 0,15 SAY m.serie ;
+	SIZE 1,1 ;
+	PICTURE "@A!" ;
+	COLOR N/W     
+@ 0,18 SAY m.nroot ;
+	SIZE 1,7 ;
+	PICTURE "9999999" ;
+	COLOR N/W     
+@ 0,62 SAY m.tipodocu ;
+	SIZE 1,1 ;
+	PICTURE "9" ;
+	COLOR N/W     
+@ 0,64 SAY m.nrodocu ;
+	SIZE 1,7 ;
+	PICTURE "9999999" ;
+	COLOR N/W     
+@ 1,15 SAY m.localrep ;
+	SIZE 1,2 ;
+	PICTURE "9" ;
+	COLOR N/W     
+@ 1,43 SAY m.mecanico ;
+	SIZE 1,3 ;
+	PICTURE "999" ;
+	COLOR N/W     
+@ 2,15 SAY m.referencia ;
+	SIZE 1,10 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 2,38 SAY m.frecepcion ;
+	SIZE 1,10 ;
+	COLOR N/W     
+@ 2,62 SAY m.fecha ;
+	SIZE 1,10 ;
+	COLOR N/W     
+@ 3,38 SAY m.fpentrega ;
+	SIZE 1,10 ;
+	COLOR N/W     
+@ 3,62 SAY m.fentrega ;
+	SIZE 1,10 ;
+	COLOR N/W     
+@ 5,15 SAY m.cliente ;
+	SIZE 1,5 ;
+	PICTURE "99999" ;
+	COLOR N/W     
+@ 5,22 SAY m.nombreot ;
+	SIZE 1,40 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 6,15 SAY m.contacto ;
+	SIZE 1,40 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 7,15 SAY m.direcot ;
+	SIZE 1,40 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 8,15 SAY m.telefot ;
+	SIZE 1,40 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 8,65 SAY m.cedulaot ;
+	SIZE 1,10 ;
+	PICTURE "@! 9999999999" ;
+	COLOR N/W     
+@ 9,15 SAY m.departamen ;
+	SIZE 1,3 ;
+	PICTURE "999" ;
+	COLOR N/W     
+@ 10,15 SAY m.ciudad ;
+	SIZE 1,5 ;
+	COLOR N/W     
+@ 10,52 SAY m.barrio ;
+	SIZE 1,4 ;
+	PICTURE "9999" ;
+	COLOR N/W     
+@ 12,15 SAY m.maquina ;
+	SIZE 1,3 ;
+	PICTURE "999" ;
+	COLOR N/W     
+@ 12,36 SAY m.marca ;
+	SIZE 1,4 ;
+	PICTURE "9999" ;
+	COLOR N/W     
+@ 12,57 SAY m.modelo ;
+	SIZE 1,4 ;
+	PICTURE "9999" ;
+	COLOR N/W     
+@ 13,15 SAY m.motor ;
+	SIZE 1,25 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 13,50 SAY m.chasis ;
+	SIZE 1,25 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 14,15 SAY m.chapa ;
+	SIZE 1,25 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 14,50 SAY m.color ;
+	SIZE 1,15 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 14,71 SAY m.km ;
+	SIZE 1,7 ;
+	PICTURE "9999999" ;
+	COLOR N/W     
+@ 15,15 SAY m.accesorio ;
+	SIZE 1,56 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 16,15 SAY m.trabajo1 ;
+	SIZE 1,60 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 17,15 SAY m.trabajo2 ;
+	SIZE 1,60 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 18,15 SAY m.trabajo3 ;
+	SIZE 1,60 ;
+	PICTURE "@!" ;
+	COLOR N/W     
+@ 20,19 SAY m.estadoot ;
+	SIZE 1,3 ;
+	PICTURE "999" ;
+	COLOR N/W     
+@ 20,64 SAY m.monto_fact ;
+	SIZE 1,11 ;
+	PICTURE "999,999,999" ;
+	COLOR B/W     
+@ 13,42 SAY "Caja #:" ;
+	SIZE 1,7, 0
+
+IF NOT WVISIBLE("_5450htwhf")
+	ACTIVATE WINDOW _5450htwhf
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё       MS-DOSREAD contiene cl═usulas de SCREEN ot1       Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+READ CYCLE ;
+	WHEN _5450htwhs() ;
+	SHOW _5450htwht() ;
+	MODAL TIMEOUT 0
+
+RELEASE WINDOW _5450htwhf
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё              OT1/MS-DOS C╒digo de limpieza              Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+
+#REGION 1
+POP KEY
+IF pcCursor = "ON"
+   SET CURSOR ON
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWHS           Nivel de lectura WHEN              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT1                                Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      1                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwhs     && Read Level When
+*
+* C╒digo WHEN de la pantalla: OT1
+*
+#REGION 1
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+*-- Imprime el nombre del local.
+IF m.localrep <> 0
+   SELECT locales
+   SET ORDER TO indice1 OF locales.cdx
+
+   IF SEEK(m.localrep)
+      @ 01,19 SAY PADR(ALLTRIM(locales.nombre), 12, CHR(32)) ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   @ 01,19 SAY REPLICATE(CHR(32), 12) ;
+      SIZE 1,12 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+
+*-- Imprime el nombre del mec═nico.
+IF m.mecanico <> 0
+   SELECT mecanico
+   SET ORDER TO indice1 OF mecanico.cdx
+
+   IF SEEK(m.mecanico)
+      @ 01,48 SAY PADR(ALLTRIM(mecanico.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 01,48 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   @ 01,48 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+
+*-- Imprime el nombre del departamento.
+IF m.departamen <> 0
+   SELECT depar
+   SET ORDER TO indice1 OF depar.cdx
+
+   IF SEEK(m.departamen)
+      @ 09,22 SAY PADR(ALLTRIM(depar.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 09,22 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   @ 09,22 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+
+*-- Imprime el nombre de la ciudad.
+IF m.ciudad <> 0
+   SELECT ciudades
+   SET ORDER TO indice1 OF ciudades.cdx
+
+   IF SEEK(m.ciudad)
+      @ 10,22 SAY PADR(ALLTRIM(ciudades.nombre), 20, CHR(32)) ;
+         SIZE 1,20 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+         SIZE 1,20 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   @ 10,22 SAY REPLICATE(CHR(32), 20) ;
+      SIZE 1,20 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+
+*-- Imprime el nombre del barrio.
+IF m.barrio <> 0
+   SELECT barrios
+   SET ORDER TO indice1 OF barrios.cdx
+
+      IF SEEK(m.barrio)
+      @ 10,58 SAY PADR(ALLTRIM(barrios.nombre), 19, CHR(32)) ;
+         SIZE 1,19 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 10,58 SAY REPLICATE(CHR(32), 19) ;
+         SIZE 1,19 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   @ 10,58 SAY REPLICATE(CHR(32), 19) ;
+      SIZE 1,19 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+
+*-- Imprime el nombre de la m═quina.
+IF m.maquina <> 0
+   SELECT maquinas
+   SET ORDER TO indice1 OF maquinas.cdx
+
+   IF SEEK(m.maquina)
+      @ 12,20 SAY PADR(ALLTRIM(maquinas.nombre), 14, CHR(32)) ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ELSE
+      @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+         SIZE 1,14 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ENDIF
+ELSE
+   @ 12,20 SAY REPLICATE(CHR(32), 14) ;
+      SIZE 1,14 ;
+      PICTURE "@!" ;
+      COLOR G/N
+ENDIF
+
+*-- Imprime el nombre de la marca.
+IF m.marca <> 0
+   SELECT marcas2
+   SET ORDER TO indice1 OF marcas2.cdx
+
+   IF SEEK(m.marca)
+      @ 12,42 SAY PADR(ALLTRIM(marcas2.nombre), 13, CHR(32)) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ELSE
+      @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ENDIF
+ELSE
+   @ 12,42 SAY REPLICATE(CHR(32), 13) ;
+      SIZE 1,13 ;
+      PICTURE "@!" ;
+      COLOR G/N
+ENDIF
+
+*-- Imprime el nombre del modelo.
+IF m.modelo <> 0
+   SELECT modelos
+   SET ORDER TO indice1 OF modelos.cdx
+
+   IF SEEK(m.modelo)
+      @ 12,63 SAY PADR(ALLTRIM(modelos.nombre), 13, CHR(32)) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ELSE
+      @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+         SIZE 1,13 ;
+         PICTURE "@!" ;
+         COLOR G/N
+   ENDIF
+ELSE
+   @ 12,63 SAY REPLICATE(CHR(32), 13) ;
+      SIZE 1,13 ;
+      PICTURE "@!" ;
+      COLOR G/N
+ENDIF
+
+*-- Imprime el nombre del estado de la orden de trabajo.
+IF m.estadoot <> 0
+   SELECT estadoot
+   SET ORDER TO indice1 OF estadoot.cdx
+
+   IF SEEK(m.estadoot)
+      @ 20,24 SAY PADR(ALLTRIM(estadoot.nombre), 24, CHR(32)) ;
+         SIZE 1,24 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+         SIZE 1,24 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   @ 20,24 SAY REPLICATE(CHR(32), 24) ;
+      SIZE 1,24 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
+*       Ё                                                         Ё
+*       Ё _5450HTWHT           Nivel de lectura SHOW              Ё
+*       Ё                                                         Ё
+*       Ё Function Origin:                                        Ё
+*       Ё                                                         Ё
+*       Ё                                                         Ё
+*       Ё From Platform:       MS-DOS                             Ё
+*       Ё From Screen:         OT1                                Ё
+*       Ё Called By:           READ Statement                     Ё
+*       Ё Snippet Number:      2                                  Ё
+*       Ё                                                         Ё
+*       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
+*
+FUNCTION _5450htwht     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C╒digo SHOW de la pantalla: OT1
+*
+#REGION 1
+IF SYS(2016) = "_5450HTWHF" OR SYS(2016) = "*"
+	ACTIVATE WINDOW _5450htwhf SAME
+	@ 0,15 SAY m.serie ;
+		SIZE 1,1, 0 ;
+		PICTURE "@A!" ;
+		COLOR N/W     
+	@ 0,18 SAY m.nroot ;
+		SIZE 1,7, 0 ;
+		PICTURE "9999999" ;
+		COLOR N/W     
+	@ 0,62 SAY m.tipodocu ;
+		SIZE 1,1, 0 ;
+		PICTURE "9" ;
+		COLOR N/W     
+	@ 0,64 SAY m.nrodocu ;
+		SIZE 1,7, 0 ;
+		PICTURE "9999999" ;
+		COLOR N/W     
+	@ 1,15 SAY m.localrep ;
+		SIZE 1,2, 0 ;
+		PICTURE "9" ;
+		COLOR N/W     
+	@ 1,43 SAY m.mecanico ;
+		SIZE 1,3, 0 ;
+		PICTURE "999" ;
+		COLOR N/W     
+	@ 2,15 SAY m.referencia ;
+		SIZE 1,10, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 2,38 SAY m.frecepcion ;
+		SIZE 1,10, 0 ;
+		COLOR N/W     
+	@ 2,62 SAY m.fecha ;
+		SIZE 1,10, 0 ;
+		COLOR N/W     
+	@ 3,38 SAY m.fpentrega ;
+		SIZE 1,10, 0 ;
+		COLOR N/W     
+	@ 3,62 SAY m.fentrega ;
+		SIZE 1,10, 0 ;
+		COLOR N/W     
+	@ 5,15 SAY m.cliente ;
+		SIZE 1,5, 0 ;
+		PICTURE "99999" ;
+		COLOR N/W     
+	@ 5,22 SAY m.nombreot ;
+		SIZE 1,40, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 6,15 SAY m.contacto ;
+		SIZE 1,40, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 7,15 SAY m.direcot ;
+		SIZE 1,40, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 8,15 SAY m.telefot ;
+		SIZE 1,40, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 8,65 SAY m.cedulaot ;
+		SIZE 1,10, 0 ;
+		PICTURE "@! 9999999999" ;
+		COLOR N/W     
+	@ 9,15 SAY m.departamen ;
+		SIZE 1,3, 0 ;
+		PICTURE "999" ;
+		COLOR N/W     
+	@ 10,15 SAY m.ciudad ;
+		SIZE 1,5, 0 ;
+		COLOR N/W     
+	@ 10,52 SAY m.barrio ;
+		SIZE 1,4, 0 ;
+		PICTURE "9999" ;
+		COLOR N/W     
+	@ 12,15 SAY m.maquina ;
+		SIZE 1,3, 0 ;
+		PICTURE "999" ;
+		COLOR N/W     
+	@ 12,36 SAY m.marca ;
+		SIZE 1,4, 0 ;
+		PICTURE "9999" ;
+		COLOR N/W     
+	@ 12,57 SAY m.modelo ;
+		SIZE 1,4, 0 ;
+		PICTURE "9999" ;
+		COLOR N/W     
+	@ 13,15 SAY m.motor ;
+		SIZE 1,25, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 13,50 SAY m.chasis ;
+		SIZE 1,25, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 14,15 SAY m.chapa ;
+		SIZE 1,25, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 14,50 SAY m.color ;
+		SIZE 1,15, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 14,71 SAY m.km ;
+		SIZE 1,7, 0 ;
+		PICTURE "9999999" ;
+		COLOR N/W     
+	@ 15,15 SAY m.accesorio ;
+		SIZE 1,56, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 16,15 SAY m.trabajo1 ;
+		SIZE 1,60, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 17,15 SAY m.trabajo2 ;
+		SIZE 1,60, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 18,15 SAY m.trabajo3 ;
+		SIZE 1,60, 0 ;
+		PICTURE "@!" ;
+		COLOR N/W     
+	@ 20,19 SAY m.estadoot ;
+		SIZE 1,3, 0 ;
+		PICTURE "999" ;
+		COLOR N/W     
+	@ 20,64 SAY m.monto_fact ;
+		SIZE 1,11, 0 ;
+		PICTURE "999,999,999" ;
+		COLOR B/W     
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF

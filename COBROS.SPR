@@ -1,0 +1,1503 @@
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ 01/23/18             COBROS.SPR                08:19:08 ³
+*       ³                                                         ³
+*       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*       ³                                                         ³
+*       ³ Nombre del autor                                        ³
+*       ³                                                         ³
+*       ³ Copyright (c) 2018 Nombre de la empresa                 ³
+*       ³ Direcci¢n                                               ³
+*       ³ Ciudad,     C.P.                                        ³
+*       ³ Pa¡s                                              ³
+*       ³                                                         ³
+*       ³ Description:                                            ³
+*       ³ Este programa lo ha generado autom ticamente GENSCRN.    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    COBROS/MS-DOS C¢digo de configuraci¢n - SECCION 1    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF plAdding
+   pcMyTitle = " Crear Recibo de Cobro "
+ELSE
+   IF plEditing
+      pcMyTitle = " Modificar Recibo de Cobro "
+   ELSE
+      IF plDeleting
+         pcMyTitle = " Borrar Recibo de Cobro "
+      ENDIF
+   ENDIF
+ENDIF
+
+
+#REGION 0
+REGIONAL m.currarea, m.talkstat, m.compstat
+
+IF SET("TALK") = "ON"
+	SET TALK OFF
+	m.talkstat = "ON"
+ELSE
+	m.talkstat = "OFF"
+ENDIF
+m.compstat = SET("COMPATIBLE")
+SET COMPATIBLE FOXPLUS
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³             MS-DOS Definiciones de ventana              ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+IF NOT WEXIST("_5450htw2k")
+	DEFINE WINDOW _5450htw2k ;
+		FROM INT((SROW()-14)/2),INT((SCOL()-67)/2) ;
+		TO INT((SROW()-14)/2)+13,INT((SCOL()-67)/2)+66 ;
+		TITLE (pcMyTitle) ;
+		FLOAT ;
+		NOCLOSE ;
+		SHADOW ;
+		NOMINIMIZE ;
+		COLOR SCHEME 1
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³    COBROS/MS-DOS C¢digo de configuraci¢n - SECCION 2    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF plAdding
+*  m.tiporeci = 1
+*  m.nroreci  = NextNumber()
+   IF EMPTY(m.fechareci)
+      m.fechareci = DTOC(DATE())
+   ENDIF
+   IF EMPTY(m.factura)
+      m.factura = "S"
+   ENDIF
+   IF EMPTY(m.id_local)
+      m.local = control.id_local
+   ENDIF
+ELSE
+   IF plEditing
+      IF TYPE("m.fechareci") = "D"
+         m.fechareci = DTOC(m.fechareci)
+      ENDIF
+   ENDIF
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³         COBROS/MS-DOS Distribuci¢n de pantalla          ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+IF WVISIBLE("_5450htw2k")
+	ACTIVATE WINDOW _5450htw2k SAME
+ELSE
+	ACTIVATE WINDOW _5450htw2k NOSHOW
+ENDIF
+@ 0,42 SAY "N§:" ;
+	SIZE 1,3, 0
+@ 0,3 SAY "Tipo de Recibo:" ;
+	SIZE 1,15, 0
+@ 1,0 TO 1,64
+@ 2,3 SAY "Fecha...:" ;
+	SIZE 1,9, 0
+@ 4,3 SAY "Cliente.:" ;
+	SIZE 1,9, 0
+@ 5,3 SAY "Cobrador:" ;
+	SIZE 1,9, 0
+@ 6,3 SAY "Comisi¢n:" ;
+	SIZE 1,9, 0
+@ 10,0 TO 10,64
+@ 11,12 SAY "Importe de ‚sta cobranza:" ;
+	SIZE 1,25, 0
+@ 3,39 SAY "Local:" ;
+	SIZE 1,6, 0
+@ 2,25 SAY "Con Factura (S/N) ?:" ;
+	SIZE 1,20, 0
+@ 0,19 GET m.tiporeci ;
+	SIZE 1,1 ;
+	DEFAULT 0 ;
+	PICTURE "9" ;
+	WHEN plAdding ;
+	VALID _5450htw2m()
+@ 0,46 GET m.nroreci ;
+	SIZE 1,7 ;
+	DEFAULT 0 ;
+	PICTURE "9999999" ;
+	WHEN plAdding ;
+	VALID _5450htw2n()
+@ 2,13 GET m.fechareci ;
+	SIZE 1,10 ;
+	DEFAULT " " ;
+	PICTURE "99/99/9999" ;
+	WHEN plAdding ;
+	VALID _5450htw2o()
+@ 2,46 GET m.factura ;
+	SIZE 1,1 ;
+	DEFAULT " " ;
+	PICTURE "@A!" ;
+	VALID _5450htw2p()
+@ 3,46 GET m.id_local ;
+	SIZE 1,2 ;
+	DEFAULT " " ;
+	PICTURE "99" ;
+	WHEN .F. ;
+	VALID _5450htw2q()
+@ 4,13 GET m.cliente ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	PICTURE "99999" ;
+	WHEN plAdding ;
+	VALID _5450htw2r()
+@ 5,13 GET m.cobrador ;
+	SIZE 1,3 ;
+	DEFAULT 0 ;
+	PICTURE "999" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htw2s()
+@ 6,13 GET m.comision ;
+	SIZE 1,6 ;
+	DEFAULT 0 ;
+	PICTURE "999.99" ;
+	WHEN .F. ;
+	VALID _5450htw44()
+@ 11,38 GET m.monto_cobr ;
+	SIZE 1,14 ;
+	DEFAULT 0 ;
+	PICTURE "999,999,999.99" ;
+	WHEN m.factura = "N" ;
+	VALID _5450htw45()
+@ 9,3 SAY "Tipo de Cambio:" ;
+	SIZE 1,15, 0
+@ 8,3 SAY "Moneda........:" ;
+	SIZE 1,15, 0
+@ 8,19 GET m.moneda ;
+	SIZE 1,5 ;
+	DEFAULT 0 ;
+	PICTURE "99999" ;
+	WHEN plAdding .OR. plEditing ;
+	VALID _5450htw47()
+@ 9,19 GET m.tipocambio ;
+	SIZE 1,9 ;
+	DEFAULT 0 ;
+	PICTURE "999999.99" ;
+	WHEN (plAdding .OR. plEditing) .AND. m.moneda <> 1 ;
+	VALID _5450htw4d()
+
+IF NOT WVISIBLE("_5450htw2k")
+	ACTIVATE WINDOW _5450htw2k
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³     MS-DOSREAD contiene cl usulas de SCREEN cobros      ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+READ CYCLE ;
+	SHOW _5450htw4e() ;
+	MODAL COLOR , W+/BG
+
+RELEASE WINDOW _5450htw2k
+
+#REGION 0
+IF m.talkstat = "ON"
+	SET TALK ON
+ENDIF
+IF m.compstat = "ON"
+	SET COMPATIBLE ON
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³            COBROS/MS-DOS C¢digo de limpieza             ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³  COBROS/MS-DOS Procedimientos y funciones de soporte    ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+
+#REGION 1
+FUNCTION NextNumber
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT cabecob
+SET ORDER TO TAG indice1 OF cabecob.cdx DESCENDING
+
+IF SEEK(STR(m.tiporeci, 1))
+   NextCode = cabecob.nroreci + 1
+ELSE
+   NextCode = 1
+ENDIF
+
+SET ORDER TO TAG indice1 OF cabecob.cdx ASCENDING
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (NextCode)
+
+FUNCTION _LoadDetail
+
+SELECT tmpdetacob     &&   Vac¡a la  tabla  temporal  que  contiene  el
+ZAP                   &&   detalle del recibo de cobro.
+
+SELECT cuotas_v
+SET ORDER TO 1
+
+SELECT cabevent
+SET ORDER TO 3
+
+IF SEEK(m.cliente)
+   WAIT WINDOW "POR FAVOR, AGUARDE UN MOMENTO..." NOWAIT
+   SCAN WHILE cliente = m.cliente
+      DO CASE
+         CASE m.tiporeci = 1
+            IF INLIST(tipodocu, 2, 8) THEN
+               IF (monto_fact + monto_ndeb) - (monto_cobr + monto_ncre) <> 0 THEN
+                  SELECT cuotas_v
+                  SEEK STR(cabevent.tipodocu, 1) + STR(cabevent.nrodocu, 7)
+                  SCAN WHILE cabevent.tipodocu = tipodocu .AND. cabevent.nrodocu = nrodocu
+                     IF (importe + monto_ndeb) - (abonado + monto_ncre) <> 0 THEN
+                        INSERT INTO tmpdetacob (tiporeci, nroreci, tipodocu, nrodocu, tipo, nrocuota, fechadocu, importe, abonado, monto_ndeb, monto_ncre, monto) ;
+                           VALUES (0, 0, cuotas_v.tipodocu, cuotas_v.nrodocu, cuotas_v.tipo, cuotas_v.nrocuota, cuotas_v.fecha, cuotas_v.importe, cuotas_v.abonado, cuotas_v.monto_ndeb, cuotas_v.monto_ncre, 0)
+                     ENDIF
+                  ENDSCAN
+               ENDIF
+            ENDIF
+         CASE m.tiporeci = 2
+            IF tipodocu = 6 THEN
+               IF (monto_fact + monto_ndeb) - (monto_cobr + monto_ncre) <> 0 THEN
+                  SELECT cuotas_v
+                  SEEK STR(cabevent.tipodocu, 1) + STR(cabevent.nrodocu, 7)
+                  SCAN WHILE cabevent.tipodocu = tipodocu .AND. cabevent.nrodocu = nrodocu
+                     IF (importe + monto_ndeb) - (abonado + monto_ncre) <> 0 THEN
+                        INSERT INTO tmpdetacob (tiporeci, nroreci, tipodocu, nrodocu, tipo, nrocuota, fechadocu, importe, abonado, monto_ndeb, monto_ncre, monto) ;
+                           VALUES (0, 0, cuotas_v.tipodocu, cuotas_v.nrodocu, cuotas_v.tipo, cuotas_v.nrocuota, cuotas_v.fecha, cuotas_v.importe, cuotas_v.abonado, cuotas_v.monto_ndeb, cuotas_v.monto_ncre, 0)
+                     ENDIF
+                  ENDSCAN
+               ENDIF
+            ENDIF
+      ENDCASE
+      SELECT cabevent
+   ENDSCAN
+   WAIT CLEAR
+ENDIF
+
+SELECT tmpdetacob
+
+IF RECCOUNT() = 0
+   WAIT WINDOW "­ ESTE CLIENTE NO POSEE VENTAS PENDIENTES DE COBRO !"
+   SELECT cabecob
+   RETURN
+ENDIF
+
+*-- Definiciones de ventanas.
+SELECT clientes
+SET ORDER TO TAG 1
+
+SEEK(m.cliente)
+
+IF NOT WEXIST("tmpdetacob")
+   DEFINE WINDOW tmpdetacob ;
+      FROM 01,00 ;
+      TO   23,79 ;
+      TITLE IIF(m.tiporeci = 1, "RECIBO DE COBRO", IIF(m.tiporeci = 2, "C.I. DE COBRO", "")) + " N§: " + ALLTRIM(STR(m.nroreci)) + " - " + LEFT(ALLTRIM(clientes.nombre), 40) ;
+      NOFLOAT ;
+      CLOSE ;
+      NOSHADOW ;
+      ZOOM ;
+      NOMINIMIZE ;
+      SYSTEM ;
+      COLOR SCHEME 15
+ENDIF
+
+*-- Macros de teclado.
+ON KEY LABEL "F3"        DO impcobro.spr
+ON KEY LABEL "SPACEBAR"  DO _clcReceiptTotal
+ON KEY LABEL "CTRL+HOME" GO TOP
+ON KEY LABEL "CTRL+END"  GO BOTTOM
+
+SELECT tmpdetacob
+SET ORDER TO TAG indice2
+GO TOP
+
+BROWSE WINDOW tmpdetacob FIELDS ;
+   calc_f1 = IIF(INLIST(tipodocu, 2, 8), "VCR", IIF(tipodocu = 6, "CCR", "")) :R:03:H = "" ,;
+   nrodocu   :R:07:H = "N§ Doc."      :P = "9999999" ,;
+   nrocuota  :R:05:H = "Cuota"        :P = "99999" ,;
+   fechadocu :R:10:H = "Fecha Vto."   :P = "@D" ,;
+   calc_f2 = importe + monto_ndeb :R:11:H = "Importe" :P = "999,999,999" ,;
+   calc_f3 = abonado + monto_ncre :R:11:H = "Cobrado" :P = "999,999,999" ,;
+   monto     :R:11:H = "Este Cobro" :P = "999,999,999" ,;
+   calc_f4 = (importe + monto_ndeb) - (abonado + monto_ncre + monto) :R:11:H = "Saldo" :P = "999,999,999" ;
+   NOAPPEND NODELETE NOMODIFY
+
+*-- Restablece macros de teclado.
+ON KEY LABEL "F3"
+ON KEY LABEL "SPACEBAR"
+ON KEY LABEL "CTRL+HOME"
+ON KEY LABEL "CTRL+END"
+
+SELECT cabecob
+
+IF WEXIST("tmpdetacob")
+   RELEASE WINDOW tmpdetacob
+ENDIF
+
+FUNCTION _clcReceiptTotal
+
+PRIVATE pnRecord, pnReceiptTotal
+pnRecord = IIF(EOF(), 0, RECNO())
+
+SUM monto TO pnReceiptTotal
+
+IF pnRecord <> 0
+   GOTO RECORD pnRecord
+ENDIF
+
+WAIT WINDOW "IMPORTE TOTAL DEL RECIBO: " + ALLTRIM(TRANSFORM(pnReceiptTotal, "999,999,999"))
+
+
+PROCEDURE TryToSave
+
+SELECT tmpdetacob
+SUM monto TO m.monto_cobr
+SHOW GETS
+
+IF RECCOUNT() = 0 .OR. m.monto_cobr = 0
+   _CUROBJ = OBJNUM(m.tiporeci)
+   SELECT cabecob
+   RETURN
+ENDIF
+
+DO WHILE .T.
+   WAIT WINDOW "¨ DESEA GRABARLO ? [S/N]" TO pcSaveIt
+   IF INLIST(UPPER(pcSaveIt), "S", "N")
+      EXIT DO
+   ENDIF
+ENDDO
+
+IF UPPER(pcSaveIt) = "S"
+   *-- Graba el encabezado del recibo de cobro.
+   INSERT INTO cabecob (tiporeci, nroreci, fechareci, cliente, moneda, tipocambio, monto_cobr, id_local, cobrador) ;
+      VALUES (m.tiporeci, m.nroreci, CTOD(m.fechareci), m.cliente, m.moneda, m.tipocambio, m.monto_cobr, m.id_local, m.cobrador)
+
+   *-- Actualiza el saldo del cliente.
+   SELECT clientes
+   SET ORDER TO TAG indice1 OF clientes.cdx
+
+   IF SEEK(cabecob.cliente)
+      IF cabecob.moneda = 1
+         REPLACE clientes.saldo_actu WITH (clientes.saldo_actu - cabecob.monto_cobr)
+      ELSE
+         REPLACE clientes.saldo_usd  WITH (clientes.saldo_usd  - cabecob.monto_cobr)
+      ENDIF
+   ELSE
+      WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DEL CLIENTE: " + ALLTRIM(STR(cabecob.cliente, 5)) + " !"
+   ENDIF
+
+   *-- Graba el detalle del recibo de pago y actualiza el saldo en el: encabezado y cuota de compra.
+   SELECT tmpdetacob
+   SET ORDER TO TAG indice1
+   GO TOP
+
+   SCAN FOR tmpdetacob.monto > 0
+      *-- Graba el detalle del recibo.
+      INSERT INTO detacob (tiporeci, nroreci, fechadocu, tipodocu, nrodocu, nrocuota, monto, id_local) ;
+         VALUES (cabecob.tiporeci, cabecob.nroreci, tmpdetacob.fechadocu, tmpdetacob.tipodocu, tmpdetacob.nrodocu, tmpdetacob.nrocuota, tmpdetacob.monto, cabecob.id_local)
+
+      *-- Actualiza el saldo del encabezado de la compra.
+      SELECT cabevent
+      SET ORDER TO TAG indice1 OF cabevent.cdx
+
+      IF SEEK(STR(detacob.tipodocu, 1) + STR(detacob.nrodocu, 7))
+         REPLACE cabevent.monto_cobr WITH (cabevent.monto_cobr + detacob.monto)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DE LA COMPRA: " + ALLTRIM(STR(detacob.tipodocu, 1)) + "/" + ALLTRIM(STR(detacob.nrodocu, 7)) + " !"
+      ENDIF
+
+      *-- Actualiza el saldo de la cuota de compra.
+      SELECT cuotas_v
+      SET ORDER TO TAG indice1 OF cuotas_v.cdx
+
+      IF SEEK(STR(detacob.tipodocu, 1) + STR(detacob.nrodocu, 7) + STR(detacob.nrocuota, 3))
+         REPLACE cuotas_v.abonado WITH (cuotas_v.abonado + detacob.monto)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR LA CUOTA N§: " + ALLTRIM(STR(detacob.nrocuota, 3)) + " DE LA VENTA: " + ALLTRIM(STR(detacob.tipodocu, 1)) + "/" + ALLTRIM(STR(detacob.nrodocu, 7)) + " !"
+      ENDIF
+
+      SELECT tmpdetacob
+   ENDSCAN
+   WAIT WINDOW "­ EL COBRO FUE GRABADO !" NOWAIT
+   CLEAR READ
+ELSE
+   CLEAR READ
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW2M           m.tiporeci VALID                   ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   13    ³
+*       ³ Variable:            m.tiporeci                         ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      1                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw2m     &&  m.tiporeci VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF m.tiporeci > 2
+   @ 00,22 SAY REPLICATE(CHR(32), 16) ;
+      SIZE 1,16 ;
+      PICTURE "@" ;
+      COLOR W/N
+   WAIT WINDOW "­ EL TIPO DE DOCUMENTO DE COBRO DEBE SER: 1 à 2 !"
+   RETURN .F.
+ENDIF
+
+IF m.tiporeci <= 0
+   @ 00,22 SAY REPLICATE(CHR(32), 16) ;
+      SIZE 1,16 ;
+      PICTURE "@" ;
+      COLOR W/N
+   DO cbtipodo.spr WITH "m.tiporeci", 0, .F.
+ENDIF
+
+IF m.tiporeci = 0
+   RETURN .F.
+ENDIF
+
+DO CASE
+   CASE m.tiporeci = 1
+      @ 00,22 SAY "RECIBO DE COBRO" ;
+         SIZE 1,16 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nroreci = 0
+*!*      m.nroreci = NextNumber()
+   CASE m.tiporeci = 2
+      @ 00,22 SAY "C.I. DE COBRO" ;
+         SIZE 1,16 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nroreci = NextNumber()
+   OTHERWISE
+      @ 00,22 SAY REPLICATE(CHR(32),16) ;
+         SIZE 1,16 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nroreci = 0
+ENDCASE
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW2N           m.nroreci VALID                    ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   14    ³
+*       ³ Variable:            m.nroreci                          ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      2                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw2n     &&  m.nroreci VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.nroreci <= 0
+   WAIT WINDOW "­ EL N§ DEL DOCUMENTO DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT cabecob
+SET ORDER TO TAG indice1 OF cabecob.cdx
+IF SEEK(STR(m.tiporeci, 1) + STR(m.nroreci, 7))
+   WAIT WINDOW "­ ESTE DOCUMENTO YA HA SIDO CARGADO !"
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+   RETURN .F.
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW2O           m.fechareci VALID                  ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   15    ³
+*       ³ Variable:            m.fechareci                        ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      3                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw2o     &&  m.fechareci VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+PRIVATE pnDia, pnMes, pnAnyo
+
+IF m.fechareci = "00/00/0000" .OR. m.fechareci = "  /  /    "
+   WAIT WINDOW "­ FECHA INVALIDA !"
+   RETURN .F.
+ELSE
+   STORE VAL(SUBSTR(m.fechareci,1,2)) TO pnDia
+   STORE VAL(SUBSTR(m.fechareci,4,2)) TO pnMes
+
+   IF VAL(SUBSTR(m.fechareci,7,4)) < 1000
+      pnAnyo = YEAR(DATE())
+   ELSE
+      pnAnyo = VAL(SUBSTR(m.fechareci,7,4))
+   ENDIF
+
+   m.fechareci = IIF(pnDia > 0 .AND. pnDia < 10, "0"+STR(pnDia,1), STR(pnDia,2)) +  "/"+ IIF(pnMes > 0 .AND. pnMes < 10, "0"+STR(pnMes,1), STR(pnMes,2)) + "/"+ STR(pnAnyo,4)
+
+   IF pnDia  < 1    .OR. pnDia  > 31 .OR.;
+      pnMes  < 1    .OR. pnMes  > 12 .OR.;
+      pnAnyo < 1900 .OR. pnAnyo > 2500
+      WAIT WINDOW "­ FECHA INVALIDA !"
+      RETURN .F.
+   ELSE
+      DO CASE
+         CASE INLIST(pnMes, 1, 3, 5, 7, 8, 10, 12)
+            IF pnDia <= 31
+               RETURN .T.
+            ELSE
+               WAIT WINDOW "­ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+         CASE pnMes = 2
+            IF MOD(pnAnyo,4) # 0
+               IF pnDia <= 28
+                  RETURN .T.
+               ELSE
+                  WAIT WINDOW "­ FECHA INVALIDA !"
+                  RETURN .F.
+               ENDIF
+            ELSE
+               IF MOD(pnAnyo,100) = 0 .AND. MOD(pnAnyo,400) # 0
+                  IF pnDia <= 28
+                     RETURN .T.
+                  ENDIF
+               ELSE
+                  IF pnDia <= 29
+                     RETURN .T.
+                  ELSE
+                     WAIT WINDOW "­ FECHA INVALIDA !"
+                     RETURN .F.
+                  ENDIF
+               ENDIF
+            ENDIF
+         CASE INLIST(pnMes, 4, 6, 9, 11)
+            IF pnDia <= 30
+               RETURN .T.
+            ELSE
+               WAIT WINDOW "­ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+            RETURN .T.
+      ENDCASE
+   ENDIF
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW2P           m.factura VALID                    ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   16    ³
+*       ³ Variable:            m.factura                          ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      4                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw2p     &&  m.factura VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF NOT INLIST(m.factura, "S", "N")
+   WAIT WINDOW "­ CON FACTURA DEBE SER: (S)I o (N)O !"
+   RETURN .F.
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW2Q           m.id_local VALID                   ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   17    ³
+*       ³ Variable:            m.id_local                         ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      5                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw2q     &&  m.id_local VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.local > 5
+   @ 03,50 SAY REPLICATE(CHR(32), 12) ;
+      SIZE 1,12 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "­ EL CODIGO DEL LOCAL DEBE SER: 1, 2, 3, 4 à 5 !"
+   RETURN .F.
+ENDIF
+IF m.local <= 0
+   @ 03,50 SAY REPLICATE(CHR(32), 12) ;
+      SIZE 1,12 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO localpop.spr WITH "m.local", 0, .F.
+   SHOW GETS
+ENDIF
+IF m.local = 0
+   RETURN .F.
+ENDIF
+DO CASE
+   CASE m.local = 1
+      @ 03,50 SAY "-" ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.local = 2
+      @ 03,50 SAY "CASA CENTRAL" ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.local = 3
+      @ 03,50 SAY "SUC. UNO" ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.local = 4
+      @ 03,50 SAY "SUC. DOS" ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.local = 5
+      @ 03,50 SAY "SUC. TRES" ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 03,50 SAY REPLICATE(CHR(32), 12) ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW2R           m.cliente VALID                    ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   18    ³
+*       ³ Variable:            m.cliente                          ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      6                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw2r     &&  m.cliente VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.cliente <= 0
+   PUSH KEY CLEAR
+
+   PRIVATE pnSelect
+   pnSelect = SELECT()
+
+   *-- Procedimiento de inspecci¢n de clientes.
+   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+   DO brwClien.prg
+   ON KEY LABEL "ENTER"
+
+   POP KEY
+
+   SELECT (pnSelect)
+
+   IF LASTKEY() <> K_ESCAPE
+      m.cliente = clientes.codigo
+      SHOW GETS
+   ELSE
+      RETURN .F.
+   ENDIF
+
+ENDIF
+
+IF m.cliente = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT clientes
+SET ORDER TO TAG indice1 OF clientes.cdx
+
+IF SEEK(m.cliente)
+   @ 04,20 SAY PADR(ALLTRIM(clientes.nombre), 42, CHR(32)) ;
+      SIZE 1,42 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ELSE
+   @ 04,20 SAY REPLICATE(CHR(32), 42) ;
+      SIZE 1,42 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   WAIT WINDOW "­ CODIGO DE CLIENTE INEXISTENTE !"
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+   RETURN .F.
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW2S           m.cobrador VALID                   ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   19    ³
+*       ³ Variable:            m.cobrador                         ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      7                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw2s     &&  m.cobrador VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.cobrador <= 0
+   @ 05,20 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO cobr_pop.spr WITH "m.cobrador", 0, .F.
+ENDIF
+
+IF m.cobrador = 0
+   RETURN .F.
+ENDIF
+
+DO SaveWorkArea
+
+SELECT cobrador
+SET ORDER TO TAG indice1 OF cobrador.cdx
+
+IF SEEK(m.cobrador)
+   IF cobrador.vigente
+      @ 05,20 SAY PADR(ALLTRIM(cobrador.nombre), 30, CHR(32)) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,20 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ CODIGO DE COBRADOR NO VIGENTE !"
+      DO RestoreWorkArea
+      RETURN .F.
+   ENDIF
+ELSE
+   @ 05,20 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "­ CODIGO DE COBRADOR INEXISTENTE !"
+   DO cobr_pop.spr WITH "m.cobrador", 0, .F.
+   SHOW GETS
+
+   SELECT cobrador
+   SET ORDER TO TAG indice1 OF cobrador.cdx
+
+   IF SEEK(m.cobrador)
+      IF cobrador.vigente
+         @ 05,20 SAY PADR(ALLTRIM(cobrador.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 05,20 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+         WAIT WINDOW "­ CODIGO DE COBRADOR NO VIGENTE !"
+         DO RestoreWorkArea
+         RETURN .F.
+      ENDIF
+   ELSE
+      @ 05,20 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      DO RestoreWorkArea
+      RETURN .F.
+   ENDIF
+ENDIF
+
+m.comision = cobrador.comision
+SHOW GETS
+
+DO RestoreWorkArea
+
+IF m.factura = "N"
+   RETURN
+ENDIF
+
+*--- FUNCTION REM ---*
+FUNCTION REMARKED
+DO _LoadDetail
+
+SELECT tmpdetacob
+
+IF plAdding
+   SUM monto TO m.monto_cobr
+ELSE
+   IF plEditing
+      SUM monto TO pnMontoCobr
+   ENDIF
+ENDIF
+
+GO TOP
+
+SHOW GETS
+
+IF plEditing
+   IF pnMontoCobr <> m.monto_cobr
+      WAIT WINDOW "­ SE HA IMPUTADO UN IMPORTE DIFERENTE AL DEL RECIBO !"
+      SELECT cabecob
+      RETURN
+   ENDIF
+ENDIF
+
+IF RECCOUNT() = 0 .OR. m.monto_cobr = 0
+   _CUROBJ = OBJNUM(m.tiporeci)
+   SELECT cabecob
+   RETURN
+ENDIF
+
+DO WHILE .T.
+   WAIT WINDOW "¨ DESEA GRABARLO ? [S/N]" TO pcSaveIt
+   IF INLIST(UPPER(pcSaveIt), "S", "N")
+      EXIT DO
+   ENDIF
+ENDDO
+
+IF UPPER(pcSaveIt) = "S"
+   IF plEditing
+      *-- Actualiza el saldo del cliente.
+      SELECT clientes
+      SET ORDER TO TAG indice1 OF clientes.cdx
+
+      IF SEEK(cabecob.cliente)
+         REPLACE clientes.saldo_actu WITH (clientes.saldo_actu + cabecob.monto_cobr)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DEL CLIENTE: " + ALLTRIM(STR(cabecob.cliente, 5)) + " !"
+      ENDIF
+
+      *-- Borra el encabezado del recibo de cobro.
+      SELECT cabecob
+      DELETE
+   ENDIF
+
+   *-- Graba el encabezado del recibo de cobro.
+   INSERT INTO cabecob (tiporeci, nroreci, fechareci, id_local, moneda, tipocambio, factura, cliente, cobrador, comision, monto_cobr, fechaanu, anulado) ;
+      VALUES (m.tiporeci, m.nroreci, CTOD(m.fechareci), control.id_local, m.moneda, m.tipocambio, m.factura, m.cliente, m.cobrador, m.comision, m.monto_cobr, {}, .F.)
+
+   *-- Actualiza el saldo del cliente.
+   SELECT clientes
+   SET ORDER TO TAG indice1 OF clientes.cdx
+
+   IF SEEK(cabecob.cliente)
+      REPLACE clientes.saldo_actu WITH (clientes.saldo_actu - cabecob.monto_cobr)
+   ELSE
+      WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DEL CLIENTE: " + ALLTRIM(STR(cabecob.cliente, 5)) + " !"
+   ENDIF
+
+   *-- Graba el detalle del recibo de cobro y actualiza el saldo en el: encabezado de venta y cuota de venta.
+   SELECT tmpdetacob
+   SET ORDER TO TAG indice1
+   GO TOP
+
+   SCAN FOR tmpdetacob.monto > 0
+      *-- Graba el detalle del recibo.
+      INSERT INTO detacob (tiporeci, nroreci, tipodocu, nrodocu, nrocuota, fechadocu, monto, id_local) ;
+         VALUES (cabecob.tiporeci, cabecob.nroreci, tmpdetacob.tipodocu, tmpdetacob.nrodocu, tmpdetacob.nrocuota, tmpdetacob.fechadocu, tmpdetacob.monto, control.id_local)
+
+      *-- Actualiza el saldo del encabezado de la venta.
+      SELECT cabevent
+      SET ORDER TO TAG indice1 OF cabevent.cdx
+
+      IF SEEK(STR(detacob.tipodocu, 1) + STR(detacob.nrodocu, 7))
+         REPLACE cabevent.monto_cobr WITH (cabevent.monto_cobr + detacob.monto)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DE LA VENTA: " + ALLTRIM(STR(detacob.tipodocu, 1)) + "/" + ALLTRIM(STR(detacob.nrodocu, 7)) + " !"
+      ENDIF
+
+      *-- Actualiza el saldo de la cuota de venta.
+      SELECT cuotas_v
+      SET ORDER TO TAG indice1 OF cuotas_v
+
+      IF SEEK(STR(detacob.tipodocu, 1) + STR(detacob.nrodocu, 7) + STR(detacob.nrocuota, 3))
+         REPLACE cuotas_v.abonado WITH (cuotas_v.abonado + detacob.monto)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR LA CUOTA N§: " + ALLTRIM(STR(detacob.nrocuota, 3)) + " DE LA VENTA: " + ALLTRIM(STR(detacob.tipodocu, 1)) + "/" + ALLTRIM(STR(detacob.nrodocu, 7)) + " !"
+      ENDIF
+
+      SELECT tmpdetacob
+   ENDSCAN
+   WAIT WINDOW "­ EL COBRO FUE GRABADO !" NOWAIT
+   CLEAR READ
+ELSE
+   CLEAR READ
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW44           m.comision VALID                   ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   20    ³
+*       ³ Variable:            m.comision                         ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      8                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw44     &&  m.comision VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.comision < 0
+   WAIT WINDOW "­ EL IMPORTE DE LA COBRANZA DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW45           m.monto_cobr VALID                 ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   21    ³
+*       ³ Variable:            m.monto_cobr                       ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      9                                  ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw45     &&  m.monto_cobr VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.monto_cobr <= 0
+   WAIT WINDOW "­ EL IMPORTE DE LA COBRANZA DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ENDIF
+
+IF LASTKEY() <> 13
+   RETURN
+ENDIF
+
+DO WHILE .T.
+   WAIT WINDOW "¨ DESEA GRABARLO ? [S/N]" TO pcSaveIt
+   IF INLIST(UPPER(pcSaveIt), "S", "N")
+      EXIT DO
+   ENDIF
+ENDDO
+
+IF UPPER(pcSaveIt) = "S"
+   IF plEditing
+      *-- Actualiza el saldo del cliente.
+      SELECT clientes
+      SET ORDER TO TAG indice1 OF clientes.cdx
+
+      IF SEEK(cabecob.cliente)
+         REPLACE clientes.saldo_actu WITH (clientes.saldo_actu + cabecob.monto_cobr)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DEL CLIENTE: " + ALLTRIM(STR(cabecob.cliente, 5)) + " !"
+      ENDIF
+
+      *-- Borra el encabezado del recibo de cobro.
+      SELECT cabecob
+      DELETE
+   ENDIF
+
+   *-- Graba el encabezado del recibo de cobro.
+   INSERT INTO cabecob (tiporeci, nroreci, fechareci, id_local, moneda, tipocambio, factura, cliente, cobrador, comision, monto_cobr, fechaanu, anulado) ;
+      VALUES (m.tiporeci, m.nroreci, CTOD(m.fechareci), control.id_local, m.moneda, m.tipocambio, m.factura, m.cliente, m.cobrador, m.comision, m.monto_cobr, {}, .F.)
+
+   *-- Actualiza el saldo del cliente.
+   SELECT clientes
+   SET ORDER TO TAG indice1 OF clientes.cdx
+
+   IF SEEK(cabecob.cliente)
+      REPLACE clientes.saldo_actu WITH (clientes.saldo_actu - cabecob.monto_cobr)
+   ELSE
+      WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DEL CLIENTE: " + ALLTRIM(STR(cabecob.cliente, 5)) + " !"
+   ENDIF
+
+   WAIT WINDOW "­ EL COBRO FUE GRABADO !" NOWAIT
+   CLEAR READ
+ELSE
+   CLEAR READ
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW47           m.moneda VALID                     ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   24    ³
+*       ³ Variable:            m.moneda                           ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      10                                 ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw47     &&  m.moneda VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.moneda <= 0
+   @ 06,26 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO mone_pop.spr WITH "m.moneda", 0, .F.
+ENDIF
+
+IF m.moneda = 0
+   RETURN .F.
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT monedas
+SET ORDER TO TAG indice1 OF monedas.cdx
+
+IF SEEK(m.moneda)
+   IF monedas.vigente
+      IF m.moneda = 1
+         @ 06,26 SAY PADR(ALLTRIM(monedas.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 06,26 SAY PADR(ALLTRIM(monedas.nombre), 30, CHR(32)) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR G/N
+      ENDIF
+   ELSE
+      @ 06,26 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ CODIGO DE MONEDA NO VIGENTE !"
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ELSE
+   @ 06,26 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "­ CODIGO DE MONEDA INEXISTENTE !"
+   DO mone_pop.spr WITH "m.moneda", 0, .F.
+   SHOW GET m.moneda
+
+   SELECT monedas
+   SET ORDER TO TAG indice1 OF monedas.cdx
+
+   IF SEEK(m.moneda)
+      IF monedas.vigente
+         IF m.moneda = 1
+            @ 06,26 SAY PADR(ALLTRIM(monedas.nombre), 30, CHR(32)) ;
+               SIZE 1,30 ;
+               PICTURE "@!" ;
+               COLOR W/N
+         ELSE
+            @ 06,26 SAY PADR(ALLTRIM(monedas.nombre), 30, CHR(32)) ;
+               SIZE 1,30 ;
+               PICTURE "@!" ;
+               COLOR G/N
+         ENDIF
+      ELSE
+         @ 06,26 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+         WAIT WINDOW "­ CODIGO DE MONEDA NO VIGENTE !"
+
+         SELECT (pnSelect)
+         SET ORDER TO TAG (pcOrder)
+         IF pnRecNo <> 0
+            GOTO RECORD pnRecNo
+         ENDIF
+
+         RETURN .F.
+      ENDIF
+   ELSE
+      @ 06,26 SAY REPLICATE(CHR(32), 30) ;
+         SIZE 1,30 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF m.moneda = 1
+   m.tipocambio = 1
+   SHOW GET m.tipocambio
+ELSE
+   IF EMPTY(m.tipocambio)
+      m.tipocambio = control.tipocambio
+   ENDIF
+ENDIF
+
+IF m.moneda > 1
+   SHOW GET m.moneda
+
+   pcString1 = "­ HA SELECCIONADO COBRAR EN: " + ALLTRIM(monedas.nombre) + " !"
+   pcString2 = PADC("¨ ESTA SEGURO DE CONTINUAR ?  [S/N]", LEN(pcString1), CHR(32))
+
+   DO WHILE .T.
+      WAIT WINDOW pcString1 + CHR(13) + pcString2 TO pcMoneda
+      IF UPPER(pcMoneda) = "S"
+         EXIT DO
+      ENDIF
+      IF UPPER(pcMoneda) = "N"
+         @ 06,26 SAY REPLICATE(CHR(32), 30) ;
+            SIZE 1,30 ;
+            PICTURE "@!" ;
+            COLOR W/N
+         m.moneda = 1
+         SHOW GET m.moneda
+         _CUROBJ = OBJNUM(m.moneda)
+         RETURN
+         EXIT DO
+      ENDIF
+   ENDDO
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+IF m.moneda <> 1
+   RETURN
+ENDIF
+
+*-- Inicia la carga y posterior grabado del detalle del recibo de pago.
+DO _LoadDetail
+
+DO TryToSave
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW4D           m.tipocambio VALID                 ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS,     Record Number:   25    ³
+*       ³ Variable:            m.tipocambio                       ³
+*       ³ Called By:           VALID Clause                       ³
+*       ³ Object Type:         Field                              ³
+*       ³ Snippet Number:      11                                 ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw4d     &&  m.tipocambio VALID
+#REGION 1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.tipocambio < 0
+   WAIT WINDOW "­ EL TIPO DE CAMBIO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+SHOW GETS
+
+*-- Inicia la carga y posterior grabado del detalle del recibo de pago.
+DO _LoadDetail
+
+DO TryToSave
+
+
+********************************************
+* TRASH AREA
+
+FUNCTION REMARKED
+SELECT tmpdetapag
+SUM monto TO m.monto_pago
+SHOW GETS
+
+IF RECCOUNT() = 0 .OR. m.monto_pago = 0
+   _CUROBJ = OBJNUM(m.tiporeci)
+   SELECT cabepag
+   RETURN
+ENDIF
+
+DO WHILE .T.
+   WAIT WINDOW "¨ DESEA GRABARLO ? [S/N]" TO pcSaveIt
+   IF INLIST(UPPER(pcSaveIt), "S", "N")
+      EXIT DO
+   ENDIF
+ENDDO
+
+IF UPPER(pcSaveIt) = "S"
+   *-- Graba el encabezado del recibo de cobro.
+   INSERT INTO cabepag (tiporeci, nroreci, fechareci, proveedor, moneda, tipocambio, monto_pago, id_local) ;
+      VALUES (m.tiporeci, m.nroreci, CTOD(m.fechareci), m.proveedor, m.moneda, m.tipocambio, m.monto_pago, m.id_local)
+
+   *-- Actualiza el saldo del proveedor.
+   SELECT proveedo
+   SET ORDER TO TAG indice1 OF proveedo.cdx
+
+   IF SEEK(cabepag.proveedor)
+      REPLACE proveedo.saldo_actu WITH (proveedo.saldo_actu - cabepag.monto_pago)
+   ELSE
+      WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DEL PROVEEDOR: " + ALLTRIM(STR(cabepag.proveedo, 5)) + " !"
+   ENDIF
+
+   *-- Graba el detalle del recibo de pago y actualiza el saldo en el: encabezado y cuota de compra.
+   SELECT tmpdetapag
+   SET ORDER TO TAG indice1
+   GO TOP
+
+   SCAN FOR tmpdetapag.monto > 0
+      *-- Graba el detalle del recibo.
+      INSERT INTO detapag (tiporeci, nroreci, fechadocu, tipodocu, nrodocu, proveedor, nrocuota, monto, id_local) ;
+         VALUES (cabepag.tiporeci, cabepag.nroreci, tmpdetapag.fechadocu, tmpdetapag.tipodocu, tmpdetapag.nrodocu, cabepag.proveedor, tmpdetapag.nrocuota, tmpdetapag.monto, cabepag.id_local)
+
+      *-- Actualiza el saldo del encabezado de la compra.
+      SELECT cabecomp
+      SET ORDER TO TAG indice1 OF cabecomp.cdx
+
+      IF SEEK(STR(detapag.tipodocu, 1) + STR(detapag.nrodocu, 9) + STR(detapag.proveedor, 5))
+         REPLACE cabecomp.monto_pago WITH (cabecomp.monto_pago + detapag.monto)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR EL SALDO DE LA COMPRA: " + ALLTRIM(STR(detapag.tipodocu, 1)) + "/" + ALLTRIM(STR(detapag.nrodocu, 9)) + " !"
+      ENDIF
+
+      *-- Actualiza el saldo de la cuota de compra.
+      SELECT cuotas_c
+      SET ORDER TO TAG indice1 OF cuotas_c.cdx
+
+      IF SEEK(STR(detapag.tipodocu, 1) + STR(detapag.nrodocu, 9) + STR(detapag.proveedor, 5) + STR(detapag.nrocuota, 3))
+         REPLACE cuotas_c.abonado WITH (cuotas_c.abonado + detapag.monto)
+      ELSE
+         WAIT WINDOW "­ IMPOSIBLE ACTUALIZAR LA CUOTA N§: " + ALLTRIM(STR(detapag.nrocuota, 3)) + " DE LA COMPRA: " + ALLTRIM(STR(detapag.tipodocu, 1)) + "/" + ALLTRIM(STR(detapag.nrodocu, 9)) + " !"
+      ENDIF
+
+      SELECT tmpdetapag
+   ENDSCAN
+   WAIT WINDOW "­ EL PAGO FUE GRABADO !" NOWAIT
+   CLEAR READ
+ELSE
+   CLEAR READ
+ENDIF
+
+*       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+*       ³                                                         ³
+*       ³ _5450HTW4E           Nivel de lectura SHOW              ³
+*       ³                                                         ³
+*       ³ Function Origin:                                        ³
+*       ³                                                         ³
+*       ³                                                         ³
+*       ³ From Platform:       MS-DOS                             ³
+*       ³ From Screen:         COBROS                             ³
+*       ³ Called By:           READ Statement                     ³
+*       ³ Snippet Number:      12                                 ³
+*       ³                                                         ³
+*       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*
+FUNCTION _5450htw4e     && Read Level Show
+PRIVATE currwind
+STORE WOUTPUT() TO currwind
+*
+* C¢digo SHOW de la pantalla: COBROS
+*
+#REGION 1
+DO CASE
+   CASE m.tiporeci = 1
+      @ 00,22 SAY "RECIBO DE COBRO" ;
+         SIZE 1,16 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tiporeci = 2
+      @ 00,22 SAY "C.I. DE COBRO" ;
+         SIZE 1,16 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 00,22 SAY REPLICATE(CHR(32),16) ;
+         SIZE 1,16 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+
+IF control.local = 1
+   @ 03,50 SAY "CASA CENTRAL" ;
+      SIZE 1,12 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ELSE
+   IF control.local = 2
+      @ 03,50 SAY "SUCURSAL" ;
+         SIZE 1,12 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ENDIF
+IF NOT EMPTY(currwind)
+	ACTIVATE WINDOW (currwind) SAME
+ENDIF
