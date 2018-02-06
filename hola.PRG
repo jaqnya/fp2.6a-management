@@ -1,0 +1,283 @@
+DO CASE
+   CASE pnChoice = 1     && Iniciar.
+      DO calculate
+   CASE pnChoice = 2     && Cancelar.         
+     CLEAR READ
+ENDCASE
+
+*--------------------------------------------------------------------------*
+PROCEDURE calculate 
+PRIVATE mcount, mprint, mreport_title
+
+SELECT 0
+temp01 = "tm" + RIGHT(SYS(3), 6) + ".dbf"
+CREATE TABLE &temp01 (nombre C(76))
+USE &temp01 ALIAS tmpErrors EXCLUSIVE
+
+*/ 1. Inicializa el saldo de Clientes */
+SELECT clientes
+@ 3,3 SAY " Inicializa el saldo de Clientes." SIZE 1,34,0 COLOR W+/N
+REPLACE saldo_actu WITH 0, saldo_usd  WITH 0 ALL   && this way is faster
+@ 3,3 SAY " Inicializa el saldo de Clientes." SIZE 1,34,0
+
+*/ 2. Inicializa los valores en Ventas */
+SELECT cabevent
+@ 4,3 SAY " Inicializa los valores en Ventas." SIZE 1,35,0 COLOR W+/N
+REPLACE monto_cobr WITH 0, monto_ndeb WITH 0, monto_ncre WITH 0 ALL   && this way is faster
+@ 4,3 SAY " Inicializa los valores en Ventas." SIZE 1,35,0
+
+*/ 3. Inicializa los valores de las cuotas de Ventas */
+SELECT cuotas_v
+@ 5,3 SAY " Inicializa los valores de las cuotas de Ventas." SIZE 1,49,0 COLOR W+/N	
+REPLACE abonado WITH 0, monto_ndeb WITH 0, monto_ncre WITH 0 ALL   && this way is faster
+@ 5,3 SAY " Inicializa los valores de las cuotas de Ventas." SIZE 1,49,0
+
+*/ 4. Actualiza las Ventas y las cuotas desde Cobros */
+mcount = 1
+SELECT cabevent
+SET ORDER TO 1
+
+SELECT cuotas_v
+SET ORDER TO 1
+
+SELECT detacob
+SET ORDER TO 1
+
+@ 6,3 SAY " Actualiza las Ventas y las cuotas desde Cobros." SIZE 1,49,0 COLOR W+/N
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 4/8: " + ALLTRIM(TRANSFORM(mcount, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+   SELECT cabevent
+   IF SEEK(STR(detacob.tipodocu, 1) + STR(detacob.nrodocu, 7))
+      REPLACE monto_cobr WITH (monto_cobr + detacob.monto)
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se actualiz¢ la Venta: " + ALLTRIM(STR(detacob.tipodocu, 1)) + "/" + ALLTRIM(STR(detacob.nrodocu, 7)) + " desde el Cobro: " + ALLTRIM(STR(detacob.tiporeci, 1)) + "/" + ALLTRIM(STR(detacob.nroreci, 7)))
+   ENDIF
+
+   SELECT cuotas_v
+   IF SEEK(STR(detacob.tipodocu, 1) + STR(detacob.nrodocu, 7) + STR(detacob.nrocuota, 3))
+      REPLACE abonado WITH (abonado + detacob.monto)
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se actualiz¢ la Cuota N§: " + ALLTRIM(STR(detacob.nrocuota, 3)) + " de la Venta: " + ALLTRIM(STR(detacob.tipodocu, 1)) + "/" + ALLTRIM(STR(detacob.nrodocu, 7)))
+   ENDIF
+
+   SELECT detacob
+   mcount = mcount + 1
+ENDSCAN
+
+@ 6,3 SAY " Actualiza las Ventas y las cuotas desde Cobros." SIZE 1,49,0
+
+*/ 5. Actualiza las Ventas y las cuotas desde N.D‚b/Cr‚d */
+mcount = 1
+SELECT cabevent
+SET ORDER TO 1
+
+SELECT cuotas_n
+SET ORDER TO 1
+
+SELECT cuotas_v
+SET ORDER TO 1
+
+SELECT cabenotc
+SET ORDER TO 1
+
+@ 7,3 SAY " Actualiza las Ventas y las cuotas desde N.D‚b./Cr‚d." SIZE 1,54,0 COLOR W+/N
+
+SCAN ALL
+   WAIT WINDOW "PROCESO 5/8: " + ALLTRIM(TRANSFORM(mcount, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+   SELECT cabevent
+   IF SEEK(STR(cabenotc.tipodocu, 1) + STR(cabenotc.nrodocu, 7))   
+      IF INLIST(cabenotc.tiponota, 1, 3) .AND. cabenotc.aplicontra = 2
+         REPLACE monto_ndeb WITH (monto_ndeb + cabenotc.monto_nota)
+      ELSE
+         IF INLIST(cabenotc.tiponota, 2, 4) .AND. cabenotc.aplicontra = 2
+            REPLACE monto_ncre WITH (monto_ncre + cabenotc.monto_nota)
+         ENDIF         
+      ENDIF
+   ELSE
+      IF cabenotc.tipodocu <> 0 .AND. cabenotc.nrodocu <> 0 THEN
+         INSERT INTO tmpErrors (nombre) ;
+            VALUES ("No se actualiz¢ la Venta: " + ALLTRIM(STR(cabenotc.tipodocu, 1)) + "/" + ALLTRIM(STR(cabenotc.nrodocu, 7)) + " desde la Nota de D‚b./Cr‚d.: " + ALLTRIM(STR(cabenotc.tiponota, 1)) + "/" + ALLTRIM(STR(cabenotc.nronota, 7)))
+      ENDIF
+   ENDIF
+
+   IF INLIST(cabenotc.tipodocu, 2, 8)   &&  Si la N.D‚b/Cr‚d. es imputada a una Venta Cr‚dito.
+      SELECT cuotas_n
+      IF SEEK("V" + STR(cabenotc.tiponota, 1) + STR(cabenotc.nronota, 7))
+         SCAN WHILE ("V" + STR(cabenotc.tiponota, 1) + STR(cabenotc.nronota, 7)) = ("V" + STR(cuotas_n.tiponota, 1) + STR(cuotas_n.nronota, 7))
+            SELECT cuotas_v
+            IF SEEK(STR(cabenotc.tipodocu, 1) + STR(cabenotc.nrodocu, 7) + STR(cuotas_n.nrocuota, 3))
+               IF INLIST(cabenotc.tiponota, 1, 3)
+                  REPLACE monto_ndeb WITH (monto_ndeb + cuotas_n.importe)   
+               ELSE
+                  IF INLIST(cabenotc.tiponota, 2, 4)
+                     REPLACE monto_ncre WITH (monto_ncre + cuotas_n.importe)
+                  ENDIF
+               ENDIF
+            ELSE     
+               INSERT INTO tmpErrors (nombre) ;
+                  VALUES ("No se actualiz¢ la Cuota N§: " + ALLTRIM(STR(cuotas_n.nrocuota, 3)) + " de la Venta: " + ALLTRIM(STR(cabenotc.tipodocu, 1)) + "/" + ALLTRIM(STR(cabenotc.nrodocu, 7)))
+            ENDIF
+            SELECT cuotas_n
+         ENDSCAN
+      ELSE
+         IF cabenotc.aplicontra <> 1
+            INSERT INTO tmpErrors (nombre) ;
+               VALUES ("No se encontr¢ la Cuota de la Nota de D‚b./Cr‚d.: " + ALLTRIM(STR(cabenotc.tiponota, 1)) + "/" + ALLTRIM(STR(cabenotc.nronota, 7)))
+         ENDIF
+      ENDIF
+   ENDIF
+   
+   SELECT cabenotc
+   mcount = mcount + 1
+ENDSCAN
+
+@ 7,3 SAY " Actualiza las Ventas y las cuotas desde N.D‚b./Cr‚d." SIZE 1,54,0
+
+*/ 6. Actualiza el saldo de Clientes desde Ventas */
+mcount = 1
+SELECT clientes
+SET ORDER TO 1
+
+SELECT cabevent
+SET ORDER TO 0
+
+@ 8,3 SAY " Actualiza el saldo de Clientes desde Ventas." SIZE 1,46,0 COLOR W+/N
+
+SCAN FOR INLIST(tipodocu, 2, 6, 8) .AND. cliente <> 0
+   WAIT WINDOW "PROCESO 6/8: " + ALLTRIM(TRANSFORM(mcount, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+   SELECT clientes
+   IF SEEK(cabevent.cliente)
+      IF cabevent.moneda = 1   && Guaran¡es
+         REPLACE saldo_actu WITH (saldo_actu + cabevent.monto_fact)
+      ELSE
+         REPLACE saldo_usd  WITH (saldo_usd + cabevent.monto_fact)
+      ENDIF
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se actualizo el Saldo del Cliente N§: "  + ALLTRIM(STR(cabevent.cliente, 5)) + " desde la Venta: " + ALLTRIM(STR(cabevent.tipodocu, 1)) + "/" + ALLTRIM(STR(cabevent.nrodocu, 7)))
+   ENDIF
+   SELECT cabevent
+   mcount = mcount + 1
+ENDSCAN
+
+@ 8,3 SAY " Actualiza el saldo de Clientes desde Ventas." SIZE 1,46,0
+
+*/ 7. Actualiza el saldo de Clientes desde Cobros */
+mcount = 1
+SELECT clientes
+SET ORDER TO 1
+
+SELECT cabecob
+SET ORDER TO 0
+
+@ 9,3 SAY " Actualiza el saldo de Clientes desde Cobros." SIZE 1,46,0 COLOR W+/N
+
+SCAN FOR cabecob.cliente <> 0
+   WAIT WINDOW "PROCESO 7/8: " + ALLTRIM(TRANSFORM(mcount, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+   SELECT clientes
+   IF SEEK(cabecob.cliente)
+      IF cabecob.moneda = 1   && Guaran¡es.
+         REPLACE saldo_actu WITH (saldo_actu - cabecob.monto_cobr)
+      ELSE
+         REPLACE saldo_usd  WITH (saldo_usd  - cabecob.monto_cobr)
+      ENDIF
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se actualiz¢ el Saldo del Cliente N§: "  + ALLTRIM(STR(cabecob.cliente, 5)) + " desde el Cobro: " + ALLTRIM(STR(cabecob.tiporeci, 1)) + "/" + ALLTRIM(STR(cabecob.nroreci, 7)) + " !")
+   ENDIF
+   SELECT cabecob
+   mcount = mcount + 1
+ENDSCAN
+
+@ 9,3 SAY " Actualiza el saldo de Clientes desde Cobros." ;
+   SIZE 1,46, 0 
+
+*/ 8. Actualiza el saldo de Clientes desde N.D‚b./Cr‚d */
+mcount = 1
+SELECT clientes
+SET ORDER TO 1
+
+SELECT cabevent
+SET ORDER TO 1
+
+SELECT cabenotc
+SET ORDER TO 0
+
+@ 10,3 SAY " Actualiza el saldo de Clientes desde N.D‚b./Cr‚d." SIZE 1,51,0 COLOR W+/N
+
+SCAN FOR INLIST(tipodocu, 2, 6) .AND. aplicontra = 2 
+   WAIT WINDOW "PROCESO 8/8: " + ALLTRIM(TRANSFORM(mcount, "9,999,999")) + "/" + ALLTRIM(TRANSFORM(RECCOUNT(), "9,999,999")) NOWAIT
+   SELECT clientes
+   IF SEEK(cabenotc.cliente)
+      SELECT cabevent
+      IF SEEK(STR(cabenotc.tipodocu, 1) + STR(cabenotc.nrodocu, 7))
+         SELECT clientes
+         IF cabevent.moneda = 1   && Guaran¡es
+            REPLACE saldo_actu WITH (saldo_actu - cabenotc.monto_nota)
+         ELSE
+            REPLACE saldo_usd  WITH (saldo_usd - cabenotc.monto_nota)
+         ENDIF
+      ENDIF
+   ELSE
+      INSERT INTO tmpErrors (nombre) ;
+         VALUES ("No se actualiz¢ el Saldo del Cliente N§: "  + ALLTRIM(STR(cabenotc.cliente, 5)) + " desde la Nota de D‚b./Cr‚d.: " + ALLTRIM(STR(cabenotc.tiponota, 1)) + "/" + ALLTRIM(STR(cabenotc.nronota, 7)))
+   ENDIF
+   SELECT cabenotc
+   mcount = mcount + 1
+ENDSCAN
+
+@ 10,3 SAY " Actualiza el saldo de Clientes desde N.D‚b./Cr‚d." SIZE 1,51,0
+
+WAIT CLEAR
+
+SELECT tmpErrors
+
+IF RECCOUNT() > 0
+   *-- MS-DOS Definiciones de ventanas.
+   IF .NOT. WEXIST("tmpErrors")
+      DEFINE WINDOW tmpErrors ;
+         FROM 01,00 ;
+         TO 23,79 ;
+         TITLE "< ERRORES ENCONTRADOS DURANTE EL REPROCESAMIENTO: " + ALLTRIM(STR(RECCOUNT(), 5)) + " >" ;
+         SYSTEM ;
+         CLOSE ;
+         NOFLOAT ;
+         GROW ;
+         MDI ;
+         NOMINIMIZE ;
+         SHADOW ;
+         ZOOM ;
+         COLOR SCHEME 15
+   ENDIF
+
+   BROWSE WINDOW tmpErrors FIELDS ;
+      nombre :R:76:H = "Descripci¢n" ;
+      NODELETE NOAPPEND NOMODIFY
+
+   DO WHILE .T.
+      WAIT WINDOW " ¨ DESEA IMPRIMIR ? [S/N]" TO mprint
+      IF UPPER(mprint) = "S"
+         mreport_title = "REPROCESAMIENTO DE CTAS. CTES. Y SALDOS DE CLIENTES"
+         REPORT FORM l_errors.frx TO PRINTER
+         EXIT DO
+      ENDIF
+      IF UPPER(mprint) = "N"
+         EXIT DO
+      ENDIF
+   ENDDO
+
+ELSE
+   WAIT WINDOW "­ REPROCESAMIENTO CONCLUIDO: NO SE HAN ENCONTRADO PROBLEMAS !" NOWAIT
+ENDIF
+
+*-- MS-DOS Cierre de Bases de Datos.
+IF USED("tmpErrors")
+   SELECT tmpErrors
+   USE
+ENDIF
+
+DELETE FILE &temp01
+DELETE FILE SUBSTR(temp01, 1, ATC(".", temp01)) + "CDX"

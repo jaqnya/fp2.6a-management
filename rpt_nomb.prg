@@ -1,0 +1,13 @@
+CLEAR ALL
+CLEAR
+
+SET DELETED ON
+SET CENTURY ON
+SET DATE    BRITISH
+
+
+USE nombrar IN 0
+
+SELECT nombrar
+REPORT FORM nombrar PREVIEW
+REPORT FORM nombrar TO \\computador2\contabilidad NOCONSOLE

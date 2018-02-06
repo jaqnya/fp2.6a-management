@@ -1,0 +1,13 @@
+CLEAR ALL
+CLOSE ALL
+
+SET DELETED ON
+SET CENTURY ON
+SET DATE BRITISH
+
+new = 1031384
+FOR i = 9000001 TO 9000020
+   DO cambnro WITH 7, i, new
+   DO cambnro WITH 8, i, new
+   new = new  + 1
+NEXT

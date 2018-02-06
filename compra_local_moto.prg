@@ -1,0 +1,5 @@
+SET EXCLUSIVE OFF
+
+
+
+SELECT * FROM maesprod WHERE rubro = 9

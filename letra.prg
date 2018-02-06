@@ -1,0 +1,6 @@
+CLEAR ALL
+CLEAR
+
+USE maesprod SHARED
+REPLACE nombre WITH STRTRAN(nombre, "¥", "N") ALL
+QUIT

@@ -1,0 +1,2905 @@
+*:**************************************************************************
+*:
+*: Archivo de Procedimiento: MKVENTAS.PRG
+*:
+*:                  Sistema: Profesional de Gesti¢n Comercial y Financiera.
+*:              Sub-Sistema: Agrega o Modifica una Venta.         
+*:                  Versi¢n: 1.0
+*:                    Autor: Jos‚ Avilio Acu¤a Acosta.
+*:        Derechos de Autor: (c) 2004, Alben S.R.L.             
+*:      Ultima Modificaci¢n: 13/05/2004
+*:
+*:**************************************************************************
+PARAMETER pcWhatToDo
+PUSH KEY CLEAR
+
+*-- Variables de la tabla.
+PRIVATE m.tipodocu, m.nrodocu, m.lstprecio, m.fechadocu, m.serie, m.nroot, m.moneda, m.tipocambio, m.nroremi, m.fecharemi, m.cliente, m.vendedor, m.comision_1, m.porcdesc, m.importdesc, m.impreso, m.fechaanu, m.anulado, m.monto_fact, m.monto_cobr, m.monto_ndeb, m.monto_ncre, m.comision_2, m.comision_3, m.es_servicio
+
+*-- Variables para c lculos del programa.
+PRIVATE plAdding, plEditing, plDeleting, pnGravada, pnExenta, pnImpuesto, msubtotal, pcString1, pcString2, pcMoneda, pnDescGrav, pnDescExen, pnSubTota1, lnombre
+STORE .F. TO lnombre
+                                                                                    
+IF pcWhatToDo = "Add"
+   SELECT cabevent
+   SCATTER MEMVAR MEMO BLANK
+   
+ELSE
+   IF pcWhatToDo = "Edit"
+      	IF cabevent.anulado
+      	   WAIT WINDOW "­ ESTA VENTA SE ENCUENTRA ANULADA, IMPOSIBLE MODIFICARLA !"
+      	   POP KEY
+      	   RETURN
+      	ELSE
+      	   IF cabevent.monto_cobr <> 0 .OR. ;
+      	      cabevent.monto_ndeb <> 0 .OR. ;
+      	      cabevent.monto_ncre <> 0
+      	      WAIT WINDOW "­ VENTA CON MOVIMIENTO(S) ASOCIADO(S), IMPOSIBLE MODIFICARLA !"
+      	      POP KEY 
+      	      RETURN
+      	   ENDIF
+      	ENDIF
+
+        WAIT "LOS REGISTROS DE ESTA TABLA NO PUEDEN SER MODIFICADOS !" WINDOW NOWAIT
+        POP KEY 
+        RETURN
+        
+        SELECT cabevent
+      	SCATTER MEMVAR MEMO
+   ENDIF
+ENDIF
+
+*-- Inicializaci¢n de variables.
+STORE 0 TO pnGravada, pnExenta, pnImpuesto, msubtotal
+STORE .F. TO m.es_servicio
+
+IF pcWhatToDo = "Add"
+   plAdding    = .T.
+   plEditing   = .F.
+   plDeleting  = .F.
+   m.fechadocu = DTOC(DATE()) 
+   m.lstprecio = 1
+   m.serie     = SUBSTR(control.serieot, 1, 1)
+   m.moneda    = 1
+
+   SELECT tmpdetvent
+   ZAP
+ELSE
+   IF pcWhatToDo = "Edit"
+      plAdding    = .F.
+      plEditing   = .T.
+      plDeleting  = .F.
+      m.fechadocu = DTOC(m.fechadocu) 
+   ENDIF
+ENDIF  
+
+SELECT cabevent
+
+DO _fmtInvoice
+
+IF pcWhatToDo = "Edit"
+   DO _RefreshInvoice
+ENDIF
+
+@ 02,15 GET m.tipodocu ;
+   SIZE 1,1 ;
+   DEFAULT 0 ;
+   PICTURE "9" ;
+   WHEN plAdding ;
+   VALID _vldTipoDocu() ;
+   COLOR SCHEME 1
+
+@ 02,47 GET m.nrodocu ;
+   SIZE 1,7 ;
+   DEFAULT 0 ;
+   PICTURE "9999999" ;
+   WHEN plAdding ;
+   VALID _vldNroDocu() ;
+   COLOR SCHEME 1
+
+@ 02,77 GET m.lstprecio ;
+   SIZE 1,1 ;
+   DEFAULT 1 ;
+   PICTURE "9" ;
+   WHEN plAdding .OR. plEditing ;
+   VALID _vldLstPrecio() ;
+   COLOR SCHEME 1
+
+@ 03,15 GET m.fechadocu ;
+   SIZE 1,10 ;
+   DEFAULT DTOC(DATE()) ;
+   PICTURE "99/99/9999" ;
+   WHEN plAdding .OR. plEditing ;
+   VALID _vldFechaDocu() ;
+   COLOR SCHEME 1
+
+@ 03,47 GET m.serie ;
+   SIZE 1,1 ;
+   DEFAULT "" ;
+   PICTURE "@A!" ;
+   WHEN plAdding ;   
+   COLOR SCHEME 1
+
+@ 03,49 GET m.nroot ;
+   SIZE 1,7 ;
+   DEFAULT 0 ;
+   PICTURE "9999999" ;
+   WHEN plAdding ;   
+   VALID _vldNroOt() ;
+   COLOR SCHEME 1
+
+@ 05,15 GET m.cliente  ;
+   SIZE 1,5 ;
+   DEFAULT 0 ;
+   PICTURE "99999" ;
+   WHEN (plAdding .OR. plEditing) .AND. EMPTY(m.nroot) ;
+   VALID _vldCliente() ;
+   COLOR SCHEME 1
+   
+@ 06,15 GET m.moneda ;
+   SIZE 1,4 ;
+   DEFAULT 0 ;
+   PICTURE "9999" ;
+   WHEN (plAdding .OR. plEditing) .AND. EMPTY(m.nroot) ;
+   VALID _vldMoneda() ;
+   COLOR SCHEME 1
+   
+@ 06,68 GET m.tipocambio ;
+   SIZE 1,09 ;
+   DEFAULT 0 ;
+   PICTURE "999999.99" ;
+   WHEN (plAdding .OR. plEditing) .AND. m.moneda <> 1 ;
+   VALID _vldTipoCambio() ;
+   COLOR SCHEME 1
+
+@ 07,15 GET m.vendedor ;
+   SIZE 1,3 ;
+   DEFAULT 0 ;
+   PICTURE "999" ;
+   WHEN (plAdding .OR. plEditing) .AND. EMPTY(m.nroot) ;
+   VALID _vldVendedor() ;
+   COLOR SCHEME 1
+   
+*@ 07,68 GET m.comision_1 ;       // desactivado por orden de 
+*   SIZE 1,6 ;                    // FELIPE ALVAREZ
+*   DEFAULT 0 ;                   // motivo: confidencialidad
+*   PICTURE "999.99" ;
+*   WHEN .F. ;
+*   VALID _vldcomision_1() ;
+*   COLOR SCHEME 1
+
+@ 19,65 SAY msubtotal ;
+   SIZE 1,14 ;
+   PICTURE "999,999,999.99" ;
+   COLOR N/W
+
+@ 20,43 GET m.porcdesc ;
+   SIZE 1,8 ;
+   DEFAULT 0 ;
+   PICTURE "999.9999" ;
+   WHEN (plAdding .OR. plEditing) ;
+   VALID _vldPorcDesc() ;
+   COLOR SCHEME 1   
+
+@ 20,65 GET m.importdesc ;
+   SIZE 1,14 ;
+   DEFAULT 0 ;
+   PICTURE "999,999,999.99" ;
+   WHEN (plAdding .OR. plEditing) .AND. m.porcdesc = 0 ; 
+   VALID _vldImportDesc() ;
+   COLOR SCHEME 1   
+
+@ 21,65 SAY pnImpuesto ;
+   SIZE 1,14 ;
+   PICTURE "999,999,999.99" ;
+   COLOR N/W     
+
+@ 22,65 SAY m.monto_fact ;
+   SIZE 1,14 ;
+   PICTURE "999,999,999.99" ;
+   COLOR B/W
+
+READ CYCLE ;
+   MODAL ;
+   VALID _vldReadCycle() ;
+   COLOR , W+/BG 
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldReadCycle
+*!
+*!  Llamado por: MKSELL.PRG      
+*!
+*!  Descripci¢n: Valida la terminaci¢n del comando READ.
+*!
+*!*********************************************************************
+FUNCTION _vldReadCycle
+IF LASTKEY() = 27 
+   IF LOWER(SYS(18)) = "porcdesc" .OR. LOWER(SYS(18)) = "importdesc"
+      _CUROBJ = OBJNUM(m.porcdesc)      
+      RETURN .F.
+   ENDIF
+ENDIF
+
+**-------------------------------------------------------------------**
+**                            ENCABEZADO                             **
+**-------------------------------------------------------------------**
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldTipoDocu
+*!
+*!  Llamado por: MKSELL.PRG      
+*!
+*!  Descripci¢n: Validaci¢n del campo tipo de documento.
+*!
+*!*********************************************************************
+FUNCTION _vldTipoDocu
+IF INLIST(LASTKEY(), 5, 19, 28, 127)
+   RETURN .F.
+ENDIF
+
+IF glLegal
+   IF m.tipodocu > 4 
+      @ 02,18 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ EL TIPO DE DOCUMENTO DEBE SER DEL 1 AL 4 !"
+      RETURN .F.
+   ENDIF   
+ELSE
+   IF m.tipodocu > 8 
+      @ 02,18 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,21 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ EL TIPO DE DOCUMENTO DEBE SER DEL 1 AL 8 !"
+      RETURN .F.
+   ENDIF   
+ENDIF
+
+IF m.tipodocu <= 0
+   @ 02,18 SAY REPLICATE(CHR(32), 21) ;
+      SIZE 1,21 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO tipodoc2.spr WITH "m.tipodocu", 0, .F.
+ENDIF
+
+*IF INLIST(m.tipodocu, 0, 1, 2)
+*   WAIT WINDOW "EL TIPO DE DOCUMENTO DEBE SER DISTINTO DE 0, 1, 2 !"
+*   RETURN 0
+*ENDIF
+
+*IF m.tipodocu = 0
+*   RETURN .F.
+*ENDIF
+
+
+DO CASE
+   CASE m.tipodocu = 1
+      @ 02,18 SAY "VENTA CONTADO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   CASE m.tipodocu = 2
+      @ 02,18 SAY "VENTA CREDITO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   CASE m.tipodocu = 3
+      @ 02,18 SAY "VENTA I.V.A. INCLUIDO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   CASE m.tipodocu = 4
+      @ 02,18 SAY "VENTA TRIBUTO UNICO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   CASE m.tipodocu = 5
+      @ 02,18 SAY "C.I. VENTA CONTADO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   CASE m.tipodocu = 6
+      @ 02,18 SAY "C.I. VENTA CREDITO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   CASE m.tipodocu = 7
+      @ 02,18 SAY "CONTADO I.V.A. INCLUIDO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   CASE m.tipodocu = 8
+      @ 02,18 SAY "CREDITO I.V.A. INCLUIDO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = NextNumber()
+   OTHERWISE
+      @ 02,18 SAY REPLICATE(CHR(32), 21) ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      m.nrodocu = 0
+ENDCASE
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldNroDocu
+*!
+*!  Llamado por: MKSELL.PRG                 
+*!
+*!  Descripci¢n: Validaci¢n del campo n£mero de documento.    
+*!
+*!*********************************************************************
+FUNCTION _vldNroDocu
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN 
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.nrodocu <= 0
+   WAIT WINDOW "­ EL N§ DEL DOCUMENTO DEBE SER MAYOR QUE CERO !"
+   RETURN .F.
+ENDIF
+
+SELECT cabevent
+SET ORDER TO TAG indice1 OF cabevent.cdx
+
+IF SEEK(STR(m.tipodocu, 1) + STR(m.nrodocu, 7))
+   WAIT WINDOW "­ ESTA VENTA YA HA SIDO CARGADA !"
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+   RETURN .F.
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: NextNumber 
+*!
+*!  Llamado por: MKSELL.PRG                  
+*!
+*!  Descripci¢n: Obtiene el pr¢ximo n£mero  de  comprobante  de  venta,
+*!               disponible,  teniendo en cuenta el tipo  de boleta.
+*!
+*!*********************************************************************
+FUNCTION NextNumber
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT cabevent
+SET ORDER TO TAG indice1 OF cabevent.cdx DESCENDING
+
+IF SEEK(STR(m.tipodocu, 1))
+   NextCode = cabevent.nrodocu + 1
+ELSE
+   NextCode = 1
+ENDIF
+
+SET ORDER TO TAG indice1 OF cabevent.cdx ASCENDING
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (NextCode)
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldFechaDocu
+*!
+*!  Llamado por: MKSELL.PRG                  
+*!
+*!  Descripci¢n: Validaci¢n del campo fecha de documento.
+*!
+*!*********************************************************************
+FUNCTION _vldFechaDocu
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN 
+ENDIF
+
+PRIVATE pnDia, pnMes, pnAnyo
+
+IF m.fechadocu = "00/00/0000" .OR. m.fechadocu = "  /  /    "
+   WAIT WINDOW "­ FECHA INVALIDA !"
+   RETURN .F.
+ELSE
+   STORE VAL(SUBSTR(m.fechadocu,1,2)) TO pnDia
+   STORE VAL(SUBSTR(m.fechadocu,4,2)) TO pnMes
+
+   IF VAL(SUBSTR(m.fechadocu,7,4)) < 1000
+      pnAnyo = YEAR(DATE())
+   ELSE
+      pnAnyo = VAL(SUBSTR(m.fechadocu,7,4))
+   ENDIF
+
+   m.fechadocu = IIF(pnDia > 0 .AND. pnDia < 10, "0"+STR(pnDia,1), STR(pnDia,2)) +  "/"+ IIF(pnMes > 0 .AND. pnMes < 10, "0"+STR(pnMes,1), STR(pnMes,2)) + "/"+ STR(pnAnyo,4)
+
+   IF pnDia  < 1    .OR. pnDia  > 31 .OR.;
+      pnMes  < 1    .OR. pnMes  > 12 .OR.;
+      pnAnyo < 1900 .OR. pnAnyo > 2500
+      WAIT WINDOW "­ FECHA INVALIDA !"
+      RETURN .F.
+   ELSE
+      DO CASE
+         CASE INLIST(pnMes, 1, 3, 5, 7, 8, 10, 12)
+            IF !(pnDia <= 31)
+               WAIT WINDOW "­ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF 
+         CASE pnMes = 2
+            IF MOD(pnAnyo,4) # 0
+               IF !(pnDia <= 28)
+                  WAIT WINDOW "­ FECHA INVALIDA !"
+                  RETURN .F.
+               ENDIF
+            ELSE
+               IF MOD(pnAnyo,100) = 0 .AND. MOD(pnAnyo,400) # 0
+                  IF pnDia <= 28
+                    *RETURN .T.
+                  ENDIF
+               ELSE
+                  IF pnDia <= 29
+                    *RETURN .T.
+                  ELSE
+                     WAIT WINDOW "­ FECHA INVALIDA !"
+                     RETURN .F.
+                  ENDIF
+               ENDIF 
+            ENDIF
+         CASE INLIST(pnMes, 4, 6, 9, 11)
+            IF pnDia <= 30
+              *RETURN .T.
+            ELSE
+               WAIT WINDOW "­ FECHA INVALIDA !"
+               RETURN .F.
+            ENDIF
+           *RETURN .T.
+      ENDCASE
+   ENDIF
+ENDIF
+
+IF !EMPTY(m.nroot) .AND. pcWhatToDo = "Edit"
+   SHOW GET m.fechadocu
+   DO _brwLoadDetail
+ENDIF
+
+
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldLstPrecio
+*!
+*!  Llamado por: MKSELL.PRG                  
+*!
+*!  Descripci¢n: Validaci¢n del liste de precio.
+*!
+*!*********************************************************************
+FUNCTION _vldLstPrecio
+IF INLIST(LASTKEY(), 5, 19, 27, 127) .AND. plAdding
+   RETURN 
+ELSE
+   IF INLIST(LASTKEY(), 5, 19, 28, 127) .AND. plEditing
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF m.lstprecio <= 0
+   WAIT WINDOW "­ LA LISTA DE PRECIOS DEBE SER 1, 2, 3, 4 à 5 !"
+   RETURN .F.
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldCliente
+*!
+*!  Llamado por: MKSELL.PRG                  
+*!
+*!  Descripci¢n: Validaci¢n del campo cliente.
+*!
+*!*********************************************************************
+FUNCTION _vldCliente
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN 
+ENDIF
+
+IF m.cliente <= 0
+   @ 05,22 SAY REPLICATE(CHR(32), 56) ;
+      SIZE 1,56 ;
+      PICTURE "@!" ;
+      COLOR W/N
+
+   PUSH KEY CLEAR
+
+   *-- Procedimiento de inspecci¢n de art¡culos.
+   ON KEY LABEL "ENTER" KEYBOARD "{CTRL+W}"
+   DO brwClien.prg
+   ON KEY LABEL "ENTER" 
+
+   POP KEY
+
+   IF LASTKEY() <> K_ESCAPE
+      m.cliente = clientes.codigo    
+   ELSE 
+      RETURN .F.
+   ENDIF
+
+ENDIF
+
+IF m.cliente = 0
+   RETURN .F.
+ENDIF
+
+DO SaveWorkArea
+
+*-- Imprime el nombre del cliente selecionado.
+IF EMPTY(m.nroot)
+   SELECT clientes
+   IF SEEK(m.cliente)
+      @ 05,22 SAY PADR(ALLTRIM(clientes.nombre), 56, CHR(32)) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,22 SAY REPLICATE(CHR(32), 56) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   SELECT ot             
+   IF SEEK(m.serie + STR(m.nroot, 7))
+      @ 05,22 SAY PADR(ALLTRIM(ot.nombreot), 56, CHR(32)) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,22 SAY REPLICATE(CHR(32), 56) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ENDIF
+SELECT cabevent
+
+*@ 06,15 SAY m.moneda ;
+*   SIZE 1,4 ;
+*   PICTURE "9999" ;
+*   COLOR N/W
+
+*-- Imprime la nombre de la moneda seleccionada.
+*SELECT monedas
+*IF SEEK(m.moneda)
+*   @ 06,22 SAY PADR(ALLTRIM(monedas.nombre), 28, CHR(32)) ;
+*      SIZE 1,28 ;
+*      PICTURE "@!" ;
+*      COLOR W/N
+*ELSE
+*   @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+*      SIZE 1,28 ;
+*      PICTURE "@!" ;
+*      COLOR W/N
+*ENDIF
+
+DO RestoreWorkArea
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldMoneda
+*!
+*!  Llamado por: MKSELL.PRG                 
+*!
+*!  Descripci¢n: Validaci¢n del campo moneda. 
+*!
+*!*********************************************************************
+FUNCTION _vldMoneda
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN 
+ENDIF
+
+IF m.moneda <= 0
+   @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+      SIZE 1,28 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO mone_pop.spr WITH "m.moneda", 0, .F.
+ENDIF
+
+IF m.moneda = 0
+   RETURN .F.
+ENDIF
+
+DO SaveWorkArea
+
+SELECT monedas
+SET ORDER TO TAG indice1 OF monedas.cdx
+
+IF SEEK(m.moneda)
+   IF monedas.vigente
+      @ 06,22 SAY PADR(ALLTRIM(monedas.nombre), 28, CHR(32)) ;
+         SIZE 1,28 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+         SIZE 1,28 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ CODIGO DE MONEDA NO VIGENTE !"
+      DO RestoreWorkArea
+      RETURN .F.
+   ENDIF
+ELSE
+   @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+      SIZE 1,28 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "­ CODIGO DE MONEDA INEXISTENTE !"
+   DO mone_pop.spr WITH "m.moneda", 0, .F.
+   SHOW GET m.moneda
+
+   SELECT monedas
+   SET ORDER TO TAG indice1 OF monedas.cdx
+ 
+   IF SEEK(m.moneda)
+      IF monedas.vigente
+         @ 06,22 SAY PADR(ALLTRIM(monedas.nombre), 28, CHR(32)) ;
+            SIZE 1,28 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+            SIZE 1,28 ;
+            PICTURE "@!" ;
+            COLOR W/N
+         WAIT WINDOW "­ CODIGO DE MONEDA NO VIGENTE !"
+         DO RestoreWorkArea
+         RETURN .F.
+      ENDIF
+   ELSE
+      @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+         SIZE 1,28 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      DO RestoreWorkArea
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF m.moneda = 1
+   m.tipocambio = 1
+   SHOW GET m.tipocambio
+ELSE   
+   IF EMPTY(m.tipocambio)
+      m.tipocambio = control.tipocambio
+   ENDIF
+ENDIF
+
+IF m.moneda > 1
+   SHOW GET m.moneda  
+
+   pcString1 = "­ HA SELECCIONADO FACTURAR EN: " + ALLTRIM(monedas.nombre) + " !"
+   pcString2 = PADC("¨ ESTA SEGURO DE CONTINUAR ?  [S/N]", LEN(pcString1), CHR(32))
+
+   DO WHILE .T.
+      WAIT WINDOW pcString1 + CHR(13) + pcString2 TO pcMoneda
+      IF UPPER(pcMoneda) = "S"
+         EXIT DO 
+      ENDIF
+      IF UPPER(pcMoneda) = "N"
+         @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+            SIZE 1,28 ;
+            PICTURE "@!" ;
+            COLOR W/N
+         m.moneda = 1
+         SHOW GET m.moneda
+         _CUROBJ = OBJNUM(m.moneda)         
+         EXIT DO
+      ENDIF
+   ENDDO
+ENDIF
+
+DO RestoreWorkArea
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldTipoCambio
+*!
+*!  Llamado por: MKSELL.PRG             
+*!
+*!  Descripci¢n: Validaci¢n del campo tipo de cambio.         
+*!
+*!*********************************************************************
+FUNCTION _vldTipoCambio
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.tipocambio < 0
+   WAIT WINDOW "­ EL TIPO DE CAMBIO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldVendedor
+*!
+*!  Llamado por: MKSELL.PRG                 
+*!
+*!  Descripci¢n: Validaci¢n del campo vendedor.               
+*!
+*!*********************************************************************
+FUNCTION _vldVendedor
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.vendedor <= 0
+   @ 07,22 SAY REPLICATE(CHR(32), 28) ;
+      SIZE 1,28 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO vend_pop.spr WITH "m.vendedor", 0, .F.
+ENDIF
+
+IF m.vendedor = 0
+   RETURN .F.
+ENDIF
+
+DO SaveWorkArea
+
+SELECT vendedor
+SET ORDER TO TAG indice1 OF vendedor.cdx
+
+IF SEEK(m.vendedor)
+   IF vendedor.vigente
+      @ 07,22 SAY PADR(ALLTRIM(vendedor.nombre), 28, CHR(32)) ;
+         SIZE 1,28 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 07,22 SAY REPLICATE(CHR(32), 28) ;
+         SIZE 1,28 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      WAIT WINDOW "­ CODIGO DE VENDEDOR NO VIGENTE !"
+      DO RestoreWorkArea
+      RETURN .F.
+   ENDIF
+ELSE
+   @ 07,22 SAY REPLICATE(CHR(32), 28) ;
+      SIZE 1,28 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "­ CODIGO DE VENDEDOR INEXISTENTE !"
+   DO vend_pop.spr WITH "m.vendedor", 0, .F.
+   SHOW GETS
+
+   SELECT vendedor
+   SET ORDER TO TAG indice1 OF vendedor.cdx
+
+   IF SEEK(m.vendedor)
+      IF vendedor.vigente
+         @ 07,22 SAY PADR(ALLTRIM(vendedor.nombre), 28, CHR(32)) ;
+            SIZE 1,28 ;
+            PICTURE "@!" ;
+            COLOR W/N
+      ELSE
+         @ 07,22 SAY REPLICATE(CHR(32), 28) ;
+            SIZE 1,28 ;
+            PICTURE "@!" ;
+            COLOR W/N
+         WAIT WINDOW "­ CODIGO DE VENDEDOR NO VIGENTE !"
+         DO RestoreWorkArea
+         RETURN .F.
+      ENDIF
+   ELSE
+      @ 07,22 SAY REPLICATE(CHR(32), 28) ;
+         SIZE 1,28 ;
+         PICTURE "@!" ;
+         COLOR W/N
+      DO RestoreWorkArea
+      RETURN .F.
+   ENDIF
+ENDIF
+
+m.comision_1 = vendedor.comision1
+m.comision_2 = vendedor.comision2
+m.comision_3 = vendedor.comision3
+SHOW GETS
+
+DO RestoreWorkArea
+
+IF EMPTY(m.nroot) .OR. pcWhatToDo = "Edit"
+   DO _brwLoadDetail
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldcomision_1
+*!
+*!  Llamado por: MKSELL.PRG                 
+*!
+*!  Descripci¢n: Validaci¢n del campo comisi¢n de vendedor.  
+*!
+*!*********************************************************************
+FUNCTION _vldcomision_1
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN
+ENDIF
+
+IF m.comision_1 < 0
+   WAIT WINDOW "­ LA COMISION DEL VENDEDOR DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ENDIF
+
+**------------------------------------------------------------------------**
+**                                 DETALLE                                **
+**------------------------------------------------------------------------**
+
+*!**************************************************************************
+*!
+*!  PROCEDIMIENTO: _brwLoadDetail 
+*!
+*!    DESCRIPCION: Abre una ventana en modo hoja de datos para cargar el
+*!                 detalle del comprobante de venta.
+*!
+*!**************************************************************************
+PROCEDURE _brwLoadDetail
+
+PRIVATE pnSelect, pcOrder, pnRecNo, pnDecimals
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0,  RECNO())
+
+*-- Especifica el n£mero de lugares decimales desplegado en las expresiones num‚ricas.
+IF m.moneda <> 1
+   pnDecimals = 2
+ELSE
+   pnDecimals = 0
+ENDIF
+
+SELECT tmpdetvent
+SET ORDER TO 0
+
+IF RECCOUNT() = 0
+   INSERT INTO tmpdetvent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+      VALUES (0, 0, "", 0, 0, 0, .F., 0, 0, 0, "")
+ENDIF
+
+ON KEY LABEL "F8" DO _DeleteLine
+
+DO WHILE LASTKEY() <> 27
+*  @ 19,12 CLEAR TO 21,41
+   
+   @ 09,01 CLEAR TO 17,40   && Descripci¢n.
+   @ 09,42 CLEAR TO 17,51   && Cantidad.
+   @ 09,53 CLEAR TO 17,67   && Precio Unit.
+   @ 09,69 CLEAR TO 17,78   && Importe.
+
+   GO BOTTOM
+
+   BROWSE WINDOW tmpdetvent FIELDS ;
+      articulo                                   :14:H = "C¢digo" :P = "@!" :V = _vldCodigo() :F ,;
+      calc_f1 = SUBSTR(maesprod.nombre, 1, 38) :R:38:H = "Descripci¢n" :W = .F. ,;
+      cantidad                                   :08:H = "Cantidad" :P = "99999.99" :V = vld_cantidad() :F ,;
+      precio                                     :13:H = "Precio Unit." :P = "@K 99999999.9999" :W = es_servicio()  :V = vld_precio() :F ,;
+      calc_f2 = TRANSFORM(ROUND(precio * cantidad, pnDecimals), IIF(m.moneda <> 1, "9999,999.99", "999,999,999")) :11:H = " Sub-Total" :W = _whenSubTotal() :V = _vldAddNewLine() :F ,;
+      mecanico                                   :03:H = "Mec" :P = "999" :W = _whenMecanico() :V = _vldbrwMecanico() :F ,;
+      calc_f3 = SUBSTR(mecanico.nombre, 1, 30) :R:30:H = "Nombre del Mec nico" :W = .F. ,;
+      descr_trab                                 :40:H = "Descripci¢n de Trabajo" :P = "@!" :W = es_servicio() :V = _vldAddNewLine() :F ;
+      NODELETE NOAPPEND 
+
+ENDDO
+
+*  BROWSE WINDOW tmpdetvent FIELDS ;
+*     articulo                                   :14:H = "C¢digo" :P = "@!" :V = _vldCodigo() :F ,;
+*     calc_f1 = SUBSTR(maesprod.nombre, 1, 38) :R:38:H = "Descripci¢n" :W = .F. ,;
+*     cantidad                                   :08:H = "Cantidad" :P = "99999.99" :V = vld_cantidad() :F ,;
+*     precio                                     :13:H = "Precio Unit." :P = "@K 99999999.9999" :W = es_servicio() :V = vld_precio() :F ,;
+*     calc_f2 = TRANSFORM(ROUND(precio * cantidad, pnDecimals), IIF(m.moneda <> 1, "9999,999.99", "999,999,999")) :11:H = " Sub-Total" :W = _whenSubTotal() :V = _vldAddNewLine() :F ,;
+*     mecanico                                   :03:H = "Mec" :P = "999" :W = _whenMecanico() :V = _vldbrwMecanico() :F ,;
+*     calc_f3 = SUBSTR(mecanico.nombre, 1, 30) :R:30:H = "Nombre del Mec nico" :W = .F. ;
+*     descr_trab                                 :40:H = "Descripci¢n de Trabajo" :P = "@!" :W = es_servicio() :V = _vldAddNewLine() :F ;
+*     NODELETE NOAPPEND 
+
+
+
+ON KEY LABEL "F8"
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+DO _PrintDetail
+DO calc_pie_factura
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldCodigo     
+*!
+*!  Llamado por: _brwLoadDetail
+*!
+*!  Descripci¢n: Validaci¢n   del   campo   c¢digo  en  el detalle  del   
+*!               comprobante de venta.
+*!
+*!*********************************************************************
+FUNCTION _vldCodigo
+
+IF INLIST(LASTKEY(), 19, 127)
+   RETURN 0
+ENDIF
+
+IF INLIST(LASTKEY(), K_DOWN, K_F8)
+   RETURN 
+ENDIF  
+
+IF EMPTY(articulo)
+   PUSH KEY CLEAR
+
+*!*	   *-- Procedimiento de inspecci¢n de art¡culos.
+*!*	   ON KEY LABEL "CTRL+INS" KEYBOARD "{CTRL+W}"
+*!*	   DO brwMaesp.prg
+*!*	   ON KEY LABEL "CTRL+INS" 
+
+   m.articulo = ""
+   DO brwmaesp WITH "m.articulo"
+
+   POP KEY
+
+   IF LASTKEY() <> 27
+      REPLACE tmpdetvent.articulo WITH m.articulo
+   ELSE 
+      RETURN .F.
+   ENDIF
+ENDIF
+
+PRIVATE pcSetExact
+
+IF SET("EXACT") = "OFF"
+*  SET EXACT ON 
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+SELECT maesprod
+SET ORDER TO TAG indice1 OF maesprod.cdx
+
+IF .NOT. SEEK(tmpdetvent.articulo)
+   WAIT WINDOW "­ CODIGO DE ARTICULO INEXISTENTE !"
+
+   IF pcSetExact = "OFF"
+*     SET EXACT OFF
+   ENDIF
+
+   RETURN 0
+ELSE
+   mcount = 0
+
+   IF !INLIST(tmpdetvent.articulo, "99001", "99002", "99003", "99010", "99011", "99012", "99013", "99014", "99015", "99016", "99020", "99021", "99022", "10001")
+      mcount = cuenta_codigo(tmpdetvent.articulo)
+   ENDIF
+   
+   IF mcount > 1 THEN
+      =MsgBox("ESTE PRODUCTO YA HA SIDO CARGADO EN ESTA FACTURA", "", 0, "MESSAGE", "C")
+      RETURN 0
+   ENDIF
+ENDIF
+
+REPLACE tmpdetvent.articulo WITH maesprod.codigo
+
+IF .NOT. INLIST(m.tipodocu, 5, 6)
+   REPLACE tmpdetvent.impuesto  WITH maesprod.impuesto
+   REPLACE tmpdetvent.pimpuesto WITH maesprod.pimpuesto
+ELSE
+   REPLACE tmpdetvent.impuesto  WITH .F.
+   REPLACE tmpdetvent.pimpuesto WITH 0
+ENDIF
+
+SELECT servicio
+SET ORDER TO indice1 OF servicio.cdx
+SET RELATION OFF INTO maesprod
+
+IF .NOT. SEEK(tmpdetvent.articulo)
+   SELECT tmpdetvent
+   IF m.moneda = 1 THEN
+      DO CASE
+         CASE m.lstprecio = 1
+            IF INLIST(m.tipodocu, 3, 7, 8) THEN
+               REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag1 * (1 + maesprod.pimpuesto / 100), 0)
+            ELSE
+               REPLACE tmpdetvent.precio WITH maesprod.pventag1
+            ENDIF
+         CASE m.lstprecio = 2
+            IF INLIST(m.tipodocu, 3, 7, 8) THEN
+               IF maesprod.pventag2 = 0 THEN
+                  REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag1 * (1 + maesprod.pimpuesto / 100), 0)
+               ELSE
+                  REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag2 * (1 + maesprod.pimpuesto / 100), 0)
+               ENDIF
+            ELSE
+               IF maesprod.pventag2 = 0 THEN
+                  REPLACE tmpdetvent.precio WITH maesprod.pventag1
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventag2
+               ENDIF
+            ENDIF
+         CASE m.lstprecio = 3
+            IF INLIST(m.tipodocu, 3, 7, 8) THEN
+               IF maesprod.pventag3 = 0 THEN
+                  IF maesprod.pventag2 = 0 THEN
+                     REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag1 * (1 + maesprod.pimpuesto / 100), 0)
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag2 * (1 + maesprod.pimpuesto / 100), 0)
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag3 * (1 + maesprod.pimpuesto / 100), 0)
+               ENDIF
+            ELSE
+               IF maesprod.pventag3 = 0 THEN         
+                  IF maesprod.pventag2 = 0 THEN
+                     REPLACE tmpdetvent.precio WITH maesprod.pventag1
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH maesprod.pventag2
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventag3
+               ENDIF
+            ENDIF
+         CASE m.lstprecio = 4
+            IF INLIST(m.tipodocu, 3, 7, 8) THEN
+               IF maesprod.pventag4 = 0 THEN
+                  IF maesprod.pventag3 = 0  THEN            
+                     IF maesprod.pventag2 = 0 THEN
+                        REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag1 * (1 + maesprod.pimpuesto / 100), 0)
+                     ELSE
+                        REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag2 * (1 + maesprod.pimpuesto / 100), 0)
+                     ENDIF
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag3 * (1 + maesprod.pimpuesto / 100), 0)
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag4 * (1 + maesprod.pimpuesto / 100), 0)
+               ENDIF
+            ELSE
+               IF maesprod.pventag4 = 0 THEN
+                  IF maesprod.pventag3 = 0 THEN             
+                     IF maesprod.pventag2 = 0 THEN
+                        REPLACE tmpdetvent.precio WITH maesprod.pventag1
+                     ELSE
+                        REPLACE tmpdetvent.precio WITH maesprod.pventag2
+                     ENDIF
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH maesprod.pventag3
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventag4
+               ENDIF
+            ENDIF
+         CASE m.lstprecio = 5
+            IF INLIST(m.tipodocu, 3, 7, 8) THEN
+               IF maesprod.pventag5 = 0 THEN
+                  IF maesprod.pventag4 = 0 THEN
+                     IF maesprod.pventag3 = 0 THEN           
+                        IF maesprod.pventag2 = 0 THEN
+                           REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag1 * (1 + maesprod.pimpuesto / 100), 0)
+                        ELSE
+                           REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag2 * (1 + maesprod.pimpuesto / 100), 0)
+                        ENDIF
+                     ELSE
+                        REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag3 * (1 + maesprod.pimpuesto / 100), 0)
+                     ENDIF
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag4 * (1 + maesprod.pimpuesto / 100), 0)
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag5 * (1 + maesprod.pimpuesto / 100), 0)
+               ENDIF
+            ELSE
+               IF maesprod.pventag5 = 0
+                  IF maesprod.pventag4 = 0
+                     IF maesprod.pventag3 = 0                  
+                        IF maesprod.pventag2 = 0
+                           REPLACE tmpdetvent.precio WITH maesprod.pventag1
+                        ELSE
+                           REPLACE tmpdetvent.precio WITH maesprod.pventag2
+                        ENDIF
+                     ELSE
+                        REPLACE tmpdetvent.precio WITH maesprod.pventag3
+                     ENDIF
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH maesprod.pventag4
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventag5
+               ENDIF
+            ENDIF
+      ENDCASE      
+   ELSE 
+      IF EMPTY(tmpdetvent.precio)
+         DO CASE
+            CASE m.lstprecio = 1
+               REPLACE tmpdetvent.precio WITH maesprod.pventad1
+            CASE m.lstprecio = 2
+               IF maesprod.pventad2 = 0
+                  REPLACE tmpdetvent.precio WITH maesprod.pventad1
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventad2
+               ENDIF
+            CASE m.lstprecio = 3
+               IF maesprod.pventad3 = 0                  
+                  IF maesprod.pventad2 = 0
+                     REPLACE tmpdetvent.precio WITH maesprod.pventad1
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH maesprod.pventad2
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventad3
+               ENDIF
+            CASE m.lstprecio = 4
+               IF maesprod.pventad4 = 0
+                 IF maesprod.pventad3 = 0                  
+                    IF maesprod.pventad2 = 0
+                        REPLACE tmpdetvent.precio WITH maesprod.pventad1
+                     ELSE
+                        REPLACE tmpdetvent.precio WITH maesprod.pventad2
+                     ENDIF
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH maesprod.pventad3
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventad4
+               ENDIF
+            CASE m.lstprecio = 5
+               IF maesprod.pventad5 = 0
+                  IF maesprod.pventad4 = 0
+                     IF maesprod.pventad3 = 0                  
+                        IF maesprod.pventad2 = 0
+                           REPLACE tmpdetvent.precio WITH maesprod.pventad1
+                        ELSE
+                           REPLACE tmpdetvent.precio WITH maesprod.pventad2
+                        ENDIF
+                     ELSE
+                        REPLACE tmpdetvent.precio WITH maesprod.pventad3
+                     ENDIF
+                  ELSE
+                     REPLACE tmpdetvent.precio WITH maesprod.pventad4
+                  ENDIF
+               ELSE
+                  REPLACE tmpdetvent.precio WITH maesprod.pventad5
+               ENDIF
+         ENDCASE      
+      ENDIF
+   ENDIF
+ELSE
+   SELECT tmpdetvent
+   IF maesprod.pventag1 <> 0
+      IF INLIST(m.tipodocu, 3, 7, 8) THEN
+         REPLACE tmpdetvent.precio WITH ROUND(maesprod.pventag1 * (1 + maesprod.pimpuesto / 100), 0)
+      ELSE
+         REPLACE tmpdetvent.precio WITH maesprod.pventag1
+      ENDIF
+   ENDIF
+ENDIF
+
+SELECT servicio
+SET RELATION TO servicio.articulo INTO maesprod ADDITIVE
+
+IF pcSetExact = "OFF"
+*  SET EXACT OFF
+ENDIF
+
+SELECT tmpdetvent
+
+mcount = 0
+
+IF plEditing THEN
+   mcount = cant_vendida(tmpdetvent.articulo)
+ENDIF
+
+mstock_actual  = mcount + calc_stock(articulo)
+mcontrol_stock = control_stock(articulo)
+
+IF mcontrol_stock THEN   && controla stock
+   IF mstock_actual <= 0 THEN
+      =msgbox("ESTE PRODUCTO ESTA AGOTADO › NO SE PUEDE FACTURAR", "", 0, "MESSAGE", "L")
+      RETURN 0
+   ELSE
+      IF cantidad > mstock_actual THEN
+         =msgbox("LA CANTIDAD INGRESADA SUPERA EL STOCK › ------------------------------------- › UD. DISPONE DE " + ALLTRIM(STR(mstock_actual, 11, 2)) + " UNIDAD(ES)" , "", 0, "MESSAGE", "L")
+         RETURN 0
+      ENDIF
+   ENDIF
+ENDIF
+
+m.es_servicio = es_servicio()
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldCantidad   
+*!
+*!  Llamado por: _brwLoadDetail
+*!
+*!  Descripci¢n: Validaci¢n   del   campo cantidad  en  el detalle  del   
+*!               comprobante de venta.
+*!
+*!*********************************************************************
+FUNCTION _vldCantidad
+  
+IF cantidad <= 0
+   WAIT WINDOW "­ LA CANTIDAD DEBE SER MAYOR QUE CERO !"
+   IF INLIST(LASTKEY(), 5, 19, 127)
+      RETURN 
+   ELSE
+      RETURN .F.
+   ENDIF
+ENDIF 
+
+IF !m.es_serviciocio()
+   IF tmpdetvent.precio <= 0
+      WAIT WINDOW "­ EL PRECIO UNITARIO DE VENTA DEBE SER MAYOR QUE CERO !"
+      RETURN .F.
+   ENDIF
+ENDIF
+
+IF tmpdetvent.pimpuesto < 0 .OR. tmpdetvent.pimpuesto > control.pimpuesto
+   WAIT WINDOW "­ PORCENTAJE DE IMPUESTO INVALIDO !"
+   RETURN .F.
+ENDIF
+
+PRIVATE mcount
+mcount = 0
+
+IF plEditing THEN
+   mcount = cant_vendida(tmpdetvent.articulo)
+ENDIF
+
+mstock_actual = (mcount + maesprod.stock_actu) - maesprod.stock_ot
+
+IF !maesprod.stock_excl THEN   && controla stock
+   IF mstock_actual <= 0 THEN
+      =MsgBox("ESTE PRODUCTO ESTA AGOTADO › NO SE PUEDE FACTURAR", "", 0, "MESSAGE", "L")
+      RETURN 0
+   ELSE
+      IF cantidad > mstock_actual THEN
+         =MsgBox("LA CANTIDAD INGRESADA SUPERA EL STOCK › ------------------------------------- › UD. DISPONE DE " + ALLTRIM(STR(mstock_actual, 11, 2)) + " UNIDAD(ES)" , "", 0, "MESSAGE", "L")
+         RETURN 0
+      ENDIF
+   ENDIF
+ENDIF
+      
+DO calc_pie_factura
+
+*--------------------------------------------------------------------------*
+FUNCTION vld_precio
+IF precio <= 0 THEN
+   =msgbox("EL PRECIO DEBE SER MAYOR QUE CERO", "", 0, "MESSAGE", "L")
+   RETURN 0
+ENDIF         
+
+DO calc_pie_factura
+
+*!**************************************************************************
+*!
+*!  PROCEDIMIENTO: _vldAddNewLine 
+*!
+*!    DESCRIPCION: Agrega  una  nueva  l¡nea  al  detalle  del  comprobante, 
+*!                 siempre y cuando al £ltima tecla pulsada haya sido ENTER.
+*!
+*!**************************************************************************
+PROCEDURE _vldAddNewLine 
+
+IF LASTKEY() = 13  
+   IF RECNO() = RECCOUNT()
+      KEYBOARD "{CTRL+W}"      
+      INSERT INTO tmpdetvent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+         VALUES (0, 0, "", 0, 0, 0, .F., 0, 0, 0, "")
+   ENDIF
+ENDIF
+
+DO calc_pie_factura
+
+*!**************************************************************************
+*!
+*!  PROCEDIMIENTO: _DeleteLine 
+*!
+*!    DESCRIPCION: Borra una nueva l¡nea de detalle del comprobante de 
+*!                 venta
+*!
+*!**************************************************************************
+PROCEDURE _DeleteLine    
+
+PRIVATE pnSelect, pcOrder
+pnSelect = SELECT()
+pcOrder  = ORDER()
+
+SELECT tmpdetvent
+DELETE 
+PACK
+
+IF RECCOUNT() = 0
+   INSERT INTO tmpdetvent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+      VALUES (0, 0, "", 0, 0, 0, .F., 0, 0, 0, "")
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+
+DO calc_pie_factura
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _PrintDetail
+*!
+*!  Llamado por: _ShowDetail                 
+*!
+*!  Descripci¢n: Imprime  el  detalle  de  art¡culos del comprobante de         
+*!               venta.
+*!
+*!*********************************************************************
+FUNCTION _PrintDetail
+
+DO SaveWorkArea
+
+@ 19,12 CLEAR TO 21,41
+
+@ 09,01 CLEAR TO 17,40     && Descripci¢n.
+@ 09,42 CLEAR TO 17,51     && Cantidad.
+@ 09,53 CLEAR TO 17,67     && Precio Unit.
+@ 09,69 CLEAR TO 17,78     && Importe.
+
+#DEFINE pnRow    8
+#DEFINE pnColumn 2
+
+SELECT tmpdetvent
+GO TOP
+
+SCAN WHILE RECNO() <= 9 .AND. .NOT. (EMPTY(articulo) .OR. EMPTY(cantidad) .OR. EMPTY(precio))
+   @ pnRow + RECNO(), pnColumn      SAY IIF(EMPTY(tmpdetvent.descr_trab), SUBSTR(maesprod.nombre, 1, 39), SUBSTR(tmpdetvent.descr_trab, 1, 39)) COLOR N/W
+   @ pnRow + RECNO(), pnColumn + 40 SAY cantidad                       PICTURE "999,999.99"      COLOR N/W
+   @ pnRow + RECNO(), pnColumn + 51 SAY precio                         PICTURE "99,999,999.9999" COLOR N/W
+   @ pnRow + RECNO(), pnColumn + 67 SAY ROUND(precio * cantidad, 0)    PICTURE "99,999,999"      COLOR N/W
+ENDSCAN
+
+DO RestoreWorkArea
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _whenPrecioUnit
+*!
+*!  Llamado por: _brwLoadDetail
+*!
+*!  Descripci¢n: When del campo precio unitario.            
+*!
+*!*********************************************************************
+FUNCTION _whenPrecioUnit
+PRIVATE pnSelect, pcOrder, pnRecNo, pcSetExact, plFound
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF SET("EXACT") = "OFF"
+*  SET EXACT ON 
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+SELECT servicio
+SET ORDER TO indice1 OF servicio.cdx
+SET RELATION OFF INTO maesprod
+
+IF SEEK(tmpdetvent.articulo)
+   plFound = .T.
+ELSE
+   plFound = .F.
+ENDIF
+
+SET RELATION TO servicio.articulo INTO maesprod
+
+IF pcSetExact = "OFF"
+*  SET EXACT OFF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (plFound)
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _whenSubTotal
+*!
+*!  Llamado por: _brwLoadDetail
+*!
+*!  Descripci¢n: When del campo sub-total.            
+*!
+*!*********************************************************************
+FUNCTION _whenSubTotal
+PRIVATE pnSelect, pcOrder, pnRecNo, pcSetExact, plFound
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF SET("EXACT") = "OFF"
+*  SET EXACT ON 
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+SELECT servicio
+SET ORDER TO 1
+SET RELATION OFF INTO maesprod
+
+IF SEEK(tmpdetvent.articulo) &&.AND. maesprod.pventag1 <> 0
+   plFound = .F.
+ELSE
+   plFound = .T.
+ENDIF
+
+SET RELATION TO servicio.articulo INTO maesprod
+
+IF pcSetExact = "OFF"
+*  SET EXACT OFF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+SELECT tmpdetvent
+RETURN (plFound)
+
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _whenService
+*!
+*!  Llamado por: _brwLoadDetail
+*!
+*!  Descripci¢n: When del campo precio unitario.            
+*!
+*!*********************************************************************
+FUNCTION _whenService
+PRIVATE pnSelect, pcOrder, pnRecNo, pcSetExact, plFound
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF SET("EXACT") = "OFF"
+*  SET EXACT ON 
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+SELECT servicio
+SET ORDER TO indice1 OF servicio.cdx
+SET RELATION OFF INTO maesprod
+
+IF SEEK(tmpdetvent.articulo) .AND. maesprod.pventag1 = 0
+   plFound = .T.
+ELSE
+   plFound = .F.
+ENDIF
+
+SET RELATION TO servicio.articulo INTO maesprod
+
+IF pcSetExact = "OFF"
+*  SET EXACT OFF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+IF (m.moneda <> 1)
+   plFound = .T.
+ENDIF
+
+RETURN (plFound)
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _whenService
+*!
+*!  Llamado por: _brwLoadDetail
+*!
+*!  Descripci¢n: When del campo precio unitario.            
+*!
+*!*********************************************************************
+FUNCTION _whenMecanico 
+PRIVATE pnSelect, pcOrder, pnRecNo, pcSetExact, plFound
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF SET("EXACT") = "OFF"
+*  SET EXACT ON 
+   pcSetExact = "OFF"
+ELSE
+   pcSetExact = "ON"
+ENDIF
+
+SELECT servicio
+SET ORDER TO indice1 OF servicio.cdx
+SET RELATION OFF INTO maesprod
+
+IF SEEK(tmpdetvent.articulo)
+   plFound = .T.
+ELSE
+   plFound = .F.
+ENDIF
+
+SET RELATION TO servicio.articulo INTO maesprod
+
+IF pcSetExact = "OFF"
+*  SET EXACT OFF
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (plFound)
+
+**-------------------------------------------------------------------**
+**                                PIE                                **
+**-------------------------------------------------------------------**
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldPorcDesc   
+*!
+*!  Llamado por: MKSELL.PRG    
+*!
+*!  Descripci¢n: Valida el campo de descuento en porcentaje.
+*!
+*!*********************************************************************
+FUNCTION _vldPorcDesc
+PRIVATE pnQtyCuotas, pnInterval, pnEntrInicial, m.consignaci, paQtyCuota
+
+paQtyCuota    = "" 
+pcCondCompra  = ""
+pnEntrInicial = 0
+pnQtyCuotas   = 0
+pnInterval    = 0
+m.consignaci  = "N"
+
+PRIVATE plK_ESCAPE
+plK_ESCAPE = .F.
+
+IF m.porcdesc < 0
+   WAIT WINDOW "­ EL PORCENTAJE DEL DESCUENTO DEBE SER MAYOR O IGUAL QUE CERO !"
+   RETURN .F.
+ELSE
+   IF m.porcdesc > 100
+      WAIT WINDOW "­ EL PORCENTAJE DEL DESCUENTO DEBE SER MENOR O IGUAL QUE CIEN !"
+      RETURN .F.
+   ELSE
+      IF m.porcdesc > 0
+         IF msubtotal = 0
+            WAIT WINDOW "­ EL SUB-TOTAL DE LA FACTURA DEBE SER MAYOR QUE CERO !"
+            RETURN .F.
+         ENDIF
+         DO calc_pie_factura
+         IF LASTKEY() # K_PGDN .OR. LASTKEY() # K_ENTER
+            _CUROBJ = OBJNUM(m.porcdesc)
+         ENDIF
+      ELSE
+         _CUROBJ = OBJNUM(m.importdesc)
+      ENDIF
+   ENDIF
+ENDIF
+
+IF LASTKEY() = K_PGUP
+   SHOW GET m.porcdesc
+   DO _brwLoadDetail
+   _CUROBJ= OBJNUM(m.porcdesc)
+   RETURN .F.
+ENDIF
+
+IF INLIST(LASTKEY(), K_UP, K_PGUP, K_LEFT)
+   RETURN .F.
+ELSE   
+   IF LASTKEY() = K_ENTER .AND. .NOT. EMPTY(m.porcdesc)
+
+         DO _PrintDetail
+         DO calc_pie_factura
+         DO cuotvent.spr WITH m.tipodocu
+
+*--- C¢digo de Prueba
+DO WHILE RECCOUNT("tmpdetmot") > 0
+   SELECT cabevent
+   SET ORDER TO TAG indice1 OF cabevent.cdx
+   
+   SEEK STR(m.tipodocu, 1) + STR(m.nrodocu, 7)
+   
+   DO WHILE FOUND()
+      m.nrodocu = m.nrodocu + 1
+      SEEK STR(m.tipodocu, 1) + STR(m.nrodocu, 7)
+   ENDDO
+
+   SELECT tmpdetvent
+   ZAP
+   
+   SELECT tmpdetmot
+   GO TOP
+   
+*  SCAN WHILE RECCOUNT("tmpdetvent") < 13
+   SCAN WHILE RECCOUNT("tmpdetvent") < IIF(INLIST(m.tipodocu, 7, 8), 11, 13)
+      INSERT INTO tmpdetvent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+         VALUES (0, 0, tmpdetmot.articulo, tmpdetmot.cantidad, tmpdetmot.precio, tmpdetmot.pdescuento, tmpdetmot.impuesto, tmpdetmot.pimpuesto, tmpdetmot.mecanico, tmpdetmot.comision_m, tmpdetmot.descr_trab)
+      DELETE
+   ENDSCAN
+
+   PACK
+
+   SHOW GETS
+   DO _PrintDetail
+   DO calc_pie_factura
+
+   IF INLIST(m.tipodocu, 1, 3, 4, 5, 7)
+      DO cuotvent.spr WITH m.tipodocu
+   ELSE
+      IF INLIST(m.tipodocu, 2, 6, 8)
+         DO _Cuotas WITH pnQtyCuotas, pnInterval
+         DO _SaveInvoice
+      ELSE
+         WAIT WINDOW "­ ERROR, NO SE PUDO IDENTIFICAR EL TIPO DE DOCUMENTO !"
+      ENDIF
+   ENDIF
+ENDDO
+
+DO infot
+
+*-- Fin de C¢digo de Prueba
+
+      IF .NOT. plAdding .AND. .NOT. plEditing
+         CLEAR READ
+         WAIT WINDOW "­ LA COMPRA FUE GRABADA !" TIMEOUT 0.75
+      ELSE
+         _CUROBJ = OBJNUM(m.porcdesc)
+      ENDIF
+   ENDIF
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldImportDesc 
+*!
+*!  Llamado por: MKSELL.PRG
+*!
+*!  Descripci¢n: Valida el campo de descuento en monto.
+*!
+*!*********************************************************************
+FUNCTION _vldImportDesc
+PRIVATE pnQtyCuotas, pnInterval, pnEntrInicial, m.consignaci, paQtyCuota
+
+paQtyCuota    = "" 
+pcCondCompra  = ""
+pnEntrInicial = 0
+pnQtyCuotas   = 0
+pnInterval    = 0
+m.consignaci  = "N"
+
+IF m.importdesc < 0
+   WAIT WINDOW "­ EL DESCUENTO DEBE SER CERO, MENOR O IGUAL AL VALOR DE LA FACTURA !"
+   RETURN .F.
+ELSE
+   IF m.importdesc > msubtotal
+      WAIT WINDOW "­ EL DESCUENTO DEBE SER CERO, MENOR O IGUAL AL VALOR DE LA FACTURA !"
+      RETURN .F.
+   ELSE
+      ******************
+      IF m.importdesc > 0
+        WAIT WINDOW str(ROUND(m.importdesc * 100 / msubtotal, 4), 10, 4)
+      ENDIF
+      ****************
+      
+
+      IF m.importdesc > 0
+         DO calc_pie_factura
+         IF LASTKEY() # 3 .OR. LASTKEY() # 13
+            _CUROBJ = OBJNUM(m.porcdesc)
+         ENDIF
+      ELSE
+         DO calc_pie_factura
+         _CUROBJ = OBJNUM(m.porcdesc)
+      ENDIF
+   ENDIF
+   
+   IF LASTKEY() = 19
+      _CUROBJ = OBJNUM(m.porcdesc)
+   ENDIF
+
+   IF INLIST(LASTKEY(), 5, 18)
+      RETURN .F.
+   ELSE   
+      IF LASTKEY() = 13
+         IF msubtotal = 0
+            WAIT WINDOW "­ EL SUB-TOTAL DE LA FACTURA DEBE SER MAYOR QUE CERO !"
+            _CUROBJ = OBJNUM(m.porcdesc)
+            RETURN
+         ENDIF
+   
+         DO _PrintDetail
+         DO calc_pie_factura
+         DO cuotvent.spr WITH m.tipodocu
+
+*--- C¢digo de Prueba
+
+DO WHILE RECCOUNT("tmpdetmot") > 0
+   m.importdesc = 0
+   SELECT cabevent
+   SET ORDER TO TAG indice1 OF cabevent.cdx
+   
+   SEEK STR(m.tipodocu, 1) + STR(m.nrodocu, 7)
+   
+   DO WHILE FOUND()
+      m.nrodocu = m.nrodocu + 1
+      SEEK STR(m.tipodocu, 1) + STR(m.nrodocu, 7)
+   ENDDO
+
+   SELECT tmpdetvent
+   ZAP
+   
+   SELECT tmpdetmot
+   GO TOP
+   
+*  SCAN WHILE RECCOUNT("tmpdetvent") < 13
+   SCAN WHILE RECCOUNT("tmpdetvent") < IIF(INLIST(m.tipodocu, 7, 8), 11, 13)
+      INSERT INTO tmpdetvent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+         VALUES (0, 0, tmpdetmot.articulo, tmpdetmot.cantidad, tmpdetmot.precio, tmpdetmot.pdescuento, tmpdetmot.impuesto, tmpdetmot.pimpuesto, tmpdetmot.mecanico, tmpdetmot.comision_m, tmpdetmot.descr_trab)
+      DELETE
+   ENDSCAN
+
+   PACK
+
+   SHOW GETS
+   DO _PrintDetail
+   DO calc_pie_factura
+
+   IF INLIST(m.tipodocu, 1, 3, 4, 5, 7)
+      DO cuotvent.spr WITH m.tipodocu
+   ELSE
+      IF INLIST(m.tipodocu, 2, 6, 8)
+         DO _Cuotas WITH pnQtyCuotas, pnInterval
+         DO _SaveInvoice
+      ELSE
+         WAIT WINDOW "­ ERROR, NO SE PUDO IDENTIFICAR EL TIPO DE DOCUMENTO !"
+      ENDIF
+   ENDIF
+ENDDO
+
+DO infot
+
+*-- Fin de C¢digo de Prueba
+
+         IF .NOT. plAdding .AND. .NOT. plEditing
+            CLEAR READ
+            WAIT WINDOW "­ LA VENTA FUE GRABADA !" TIMEOUT 0.75
+         ELSE
+            _CUROBJ = OBJNUM(m.importdesc)
+         ENDIF
+      ENDIF
+   ENDIF
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _RefreshInvoice
+*!
+*!  Llamado por: VENTAS.PRG                  
+*!
+*!  Descripci¢n: Actualiza  la  visualizaci¢n  del  formato,  cabecera, 
+*!               detalle, pie y cuota de la factura.
+*!
+*!*********************************************************************
+FUNCTION _RefreshInvoice
+
+DO _ShowHeader
+DO _ShowDetail
+DO calc_pie_factura
+
+IF cabevent.anulado
+   WAIT WINDOW "­ FACTURA ANULADA !" NOWAIT
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _ShowHeader
+*!
+*!  Llamado por: _RefreshInvoice
+*!
+*!  Descripci¢n: Visualiza el encabezado de la venta.
+*!
+*!*********************************************************************
+FUNCTION _ShowHeader 
+
+@ 02,15 SAY m.tipodocu ;
+   SIZE 1,1 ;
+   PICTURE "9" ;
+   COLOR N/W
+
+*-- Imprime la etiqueta del tipo de documento.
+DO CASE
+   CASE m.tipodocu = 1
+      @ 02,18 SAY "VENTA CONTADO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 2
+      @ 02,18 SAY "VENTA CREDITO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 3
+      @ 02,18 SAY "VENTA I.V.A. INCLUIDO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 4
+      @ 02,18 SAY "VENTA TRIBUTO UNICO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 5
+      @ 02,18 SAY "C.I. VENTA CONTADO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 6
+      @ 02,18 SAY "C.I. VENTA CREDITO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 7
+      @ 02,18 SAY "CONTADO I.V.A. INCLUIDO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   CASE m.tipodocu = 8
+      @ 02,18 SAY "CREDITO I.V.A. INCLUIDO" ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   OTHERWISE
+      @ 02,18 SAY REPLICATE(CHR(32), 23) ;
+         SIZE 1,23 ;
+         PICTURE "@!" ;
+         COLOR W/N
+ENDCASE
+
+@ 02,47 SAY m.nrodocu ;
+   SIZE 1,7 ;
+   PICTURE "9999999" ;
+   COLOR N/W
+
+@ 02,77 SAY m.lstprecio ;
+   SIZE 1,1 ;
+   PICTURE "9" ;
+   COLOR N/W
+
+@ 03,15 SAY m.fechadocu ;
+   SIZE 1,10 ;
+   PICTURE "@D" ;
+   COLOR N/W
+
+@ 03,47 SAY m.serie ;
+   SIZE 1,1 ;
+   PICTURE "@A!" ;
+   COLOR N/W
+
+@ 03,49 SAY m.nroot ;
+   SIZE 1,7 ;
+   PICTURE "9999999" ;
+   COLOR N/W
+
+@ 05,15 SAY m.cliente  ;
+   SIZE 1,5 ;
+   PICTURE "99999" ;
+   COLOR N/W
+
+*-- Imprime el nombre del cliente selecionado.
+IF EMPTY(m.nroot)
+   SELECT clientes
+   IF SEEK(m.cliente)
+      @ 05,22 SAY PADR(ALLTRIM(clientes.nombre), 56, CHR(32)) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,22 SAY REPLICATE(CHR(32), 56) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ELSE
+   SELECT ot             
+   IF SEEK(m.serie + STR(m.nroot, 7))
+      @ 05,22 SAY PADR(ALLTRIM(ot.nombreot), 56, CHR(32)) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 05,22 SAY REPLICATE(CHR(32), 56) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ENDIF
+SELECT cabevent
+
+*-- Imprime el nombre del cliente selecionado.
+SELECT cabeven2
+IF SEEK(STR(cabevent.tipodocu, 1) + STR(cabevent.nrodocu, 7))
+   IF .NOT. EMPTY(nombre)
+      @ 05,22 SAY PADR(ALLTRIM(cabeven2.nombre), 56, CHR(32)) ;
+         SIZE 1,56 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ENDIF
+ENDIF
+SELECT cabevent
+
+@ 06,15 SAY m.moneda ;
+   SIZE 1,4 ;
+   PICTURE "9999" ;
+   COLOR N/W
+
+*-- Imprime la nombre de la moneda seleccionada.
+SELECT monedas
+IF SEEK(m.moneda)
+   @ 06,22 SAY PADR(ALLTRIM(monedas.nombre), 28, CHR(32)) ;
+      SIZE 1,28 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ELSE
+   @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+      SIZE 1,28 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+SELECT cabevent
+
+@ 06,68 SAY m.tipocambio ;
+   SIZE 1,09 ;
+   PICTURE "999999.99" ;
+   COLOR N/W
+
+@ 07,15 SAY m.vendedor ;
+   SIZE 1,3 ;
+   PICTURE "999" ;
+   COLOR N/W
+
+*-- Imprime el nombre del vendedor seleccionado.
+SELECT vendedor
+IF SEEK(m.vendedor)
+   @ 07,22 SAY PADR(ALLTRIM(vendedor.nombre), 30, CHR(32)) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ELSE
+   @ 07,22 SAY REPLICATE(CHR(32), 30) ;
+      SIZE 1,30 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ENDIF
+SELECT cabevent
+
+*@ 07,68 SAY m.comision_1 ;   // desactivado por orden de
+*   SIZE 1,6 ;                // FELIPE ALVAREZ
+*   PICTURE "999.99" ;        // motivo: confidencialidad
+*   COLOR N/W
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldMecanico
+*!
+*!  Llamado por: MKMOVIOT.PRG                
+*!
+*!  Descripci¢n: Validaci¢n del campo mecanicos.        
+*!
+*!*********************************************************************
+FUNCTION _vldMecanico
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN 
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF m.mecanico <= 0
+   @ 04,19 SAY REPLICATE(CHR(32), 26) ;
+      SIZE 1,26 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   DO meca_pop.spr WITH "m.mecanico", 0, .F., ""
+ENDIF
+
+IF m.mecanico = 0
+   RETURN .F.
+ENDIF
+
+SELECT mecanico
+SET ORDER TO TAG indice1 OF mecanico.cdx
+
+IF SEEK(m.mecanico)
+   @ 04,19 SAY PADR(ALLTRIM(mecanico.nombre), 26, CHR(32)) ;
+      SIZE 1,26 ;
+      PICTURE "@!" ;
+      COLOR W/N
+ELSE
+   @ 04,19 SAY REPLICATE(CHR(32), 26) ;
+      SIZE 1,26 ;
+      PICTURE "@!" ;
+      COLOR W/N
+   WAIT WINDOW "­ CODIGO DE MECANICO INEXISTENTE !"   
+   DO meca_pop.spr WITH "m.mecanico", 0, .F., ""
+   SHOW GETS
+
+   SELECT mecanico
+   SET ORDER TO TAG indice1 OF mecanico.cdx
+
+   IF SEEK(m.mecanico)
+      @ 04,19 SAY PADR(ALLTRIM(unidad.nombre), 26, CHR(32)) ;
+         SIZE 1,26 ;
+         PICTURE "@!" ;
+         COLOR W/N
+   ELSE
+      @ 04,19 SAY REPLICATE(CHR(32), 26) ;
+         SIZE 1,26 ;
+         PICTURE "@!" ;
+         COLOR W/N
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+
+      RETURN .F.
+   ENDIF   
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldbrwMecanico
+*!
+*!  Llamado por: MKMOVIOT.PRG                
+*!
+*!  Descripci¢n: Validaci¢n del campo mecanicos.        
+*!
+*!*********************************************************************
+FUNCTION _vldbrwMecanico
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN 
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo
+
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+IF tmpdetvent.mecanico <= 0
+   DO meca_pop.spr WITH "tmpdetvent.mecanico", 0, .T., tmpdetvent.articulo
+ENDIF
+
+IF tmpdetvent.mecanico = 0
+   RETURN .F.
+ENDIF
+
+SELECT mecanico
+SET ORDER TO TAG indice1 OF mecanico.cdx
+
+IF .NOT. SEEK(tmpdetvent.mecanico)
+   WAIT WINDOW "­ CODIGO DE MECANICO INEXISTENTE !"   
+
+   SELECT (pnSelect)
+   SET ORDER TO TAG (pcOrder)
+   IF pnRecNo <> 0
+      GOTO RECORD pnRecNo
+   ENDIF
+
+   RETURN .F.
+ELSE
+   PRIVATE pcSetExact, pnMecanico, plFound
+
+   IF SET("EXACT") = "OFF"
+*     SET EXACT ON 
+      pcSetExact = "OFF"
+   ELSE
+      pcSetExact = "ON"
+   ENDIF
+
+   pnMecanico = tmpdetvent.mecanico
+   plFound    = .F.
+
+   SELECT mecancfg
+   SET ORDER TO indice1 OF mecancfg.cdx
+   SET RELATION OFF INTO maesprod
+   SET RELATION OFF INTO servicio
+
+   IF SEEK(tmpdetvent.mecanico)
+      SCAN WHILE mecancfg.mecanico = pnMecanico
+         IF mecancfg.articulo = tmpdetvent.articulo
+            plFound = .T.
+            EXIT
+         ENDIF
+      ENDSCAN
+   ENDIF            
+   
+   SELECT mecancfg
+   SET RELATION TO mecancfg.articulo INTO maesprod ADDITIVE
+   SET RELATION TO mecancfg.articulo INTO servicio 
+
+   IF pcSetExact = "OFF"
+*     SET EXACT OFF
+   ENDIF
+   
+   IF .NOT. plFound
+      WAIT WINDOW "EL MECANICO SELECCIONADO NO POSEE ESTA CONFIGURACION DE MANO DE OBRA !"
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+      
+      RETURN .F.
+   ENDIF
+      
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+IF LASTKEY() = 13 .AND. maesprod.pventag1 <> 0
+   DO _vldAddNewLine 
+ENDIF
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _vldNroOt  
+*!
+*!  Llamado por: MKSELL.PRG                 
+*!
+*!  Descripci¢n: Validaci¢n del campo n£mero de documento.    
+*!
+*!*********************************************************************
+FUNCTION _vldNroOt   
+IF INLIST(LASTKEY(), 5, 19, 27, 127)
+   RETURN 
+ENDIF
+
+IF m.nroot = 0
+   RETURN 
+ELSE
+   IF m.nroot < 0
+      WAIT WINDOW "­ EL N§ DE LA ORDEN DE TRABAJO DEBE SER MAYOR O IGUAL QUE CERO !"
+      RETURN .F.
+   ELSE
+      IF m.nroot > 0
+         IF EMPTY(m.serie)
+            WAIT WINDOW "­ LA SERIE NO PUEDE QUEDAR EN BLANCO !"
+            _CUROBJ = OBJNUM(m.serie)
+            RETURN
+         ENDIF
+      ENDIF
+   ENDIF
+ENDIF
+
+PRIVATE pnSelect, pcOrder, pnRecNo, plReturnedValue
+pnSelect = SELECT()
+pcOrder  = ORDER()
+pnRecNo  = IIF(EOF(), 0, RECNO())
+
+SELECT tmpdetmot     &&   Vac¡a la  tabla  temporal  que  contiene  el
+ZAP                  &&   detalle de art¡culos del documento.
+SET ORDER TO 0
+
+SELECT tmpdetvent    &&   Vac¡a la  tabla  temporal  que  contiene  el
+ZAP                  &&   detalle de art¡culos del documento.
+
+SELECT ot
+SET ORDER TO TAG indice1 OF ot.cdx
+
+IF SEEK(m.serie + STR(m.nroot, 7))
+   IF .NOT. ot.estadoot = 6     &&   Facturado.
+      SELECT cabemot
+      SET ORDER TO TAG indice1 OF cabemot.cdx
+
+      IF SEEK(STR(2, 1) + ot.serie + STR(ot.nroot, 7))
+         SELECT detamot
+         SET ORDER TO TAG indice1 OF detamot.cdx
+  
+         IF SEEK(STR(2, 1) + cabemot.serie + STR(cabemot.nrobole, 7))
+*           lnombre = .T.
+            SCAN WHILE STR(cabemot.tipobole, 1) + cabemot.serie + STR(cabemot.nrobole, 7) = STR(detamot.tipobole, 1) + detamot.serie + STR(detamot.nrobole, 7)
+*//            INSERT INTO tmpdetmot (tipobole, serie, nrobole, articulo, cantidad, precio, impuesto, pimpuesto, mecanico, descr_trab) ;
+*//               VALUES (detamot.tipobole, detamot.serie, detamot.nrobole, detamot.articulo, detamot.cantidad, detamot.precio, IIF(INLIST(m.tipodocu, 5, 6), .F., detamot.impuesto), IIF(INLIST(m.tipodocu, 5, 6), 0, detamot.pimpuesto), detamot.mecanico, detamot.descr_trab)
+               x = IIF(INLIST(m.tipodocu, 3, 7, 8), ROUND(detamot.precio * (1 + detamot.pimpuesto / 100), IIF(m.moneda = 1, 0, 2)), detamot.precio)
+               INSERT INTO tmpdetmot (tipobole, serie, nrobole, articulo, cantidad, precio, impuesto, pimpuesto, mecanico, descr_trab) ;
+                  VALUES (detamot.tipobole, detamot.serie, detamot.nrobole, detamot.articulo, detamot.cantidad, x, IIF(INLIST(m.tipodocu, 5, 6), .F., detamot.impuesto), IIF(INLIST(m.tipodocu, 5, 6), 0, detamot.pimpuesto), detamot.mecanico, detamot.descr_trab)
+            ENDSCAN
+         ENDIF
+      
+         SELECT tmpdetmot
+         GO TOP
+
+         IF MsgBox("¨ INCLUIR EL DETALLE DE LA OT EN UNA SOLO FACTURA ?", "", 4, "MESSAGE", "C") = 6 THEN
+            SCAN ALL
+               INSERT INTO tmpdetvent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+                  VALUES (0, 0, tmpdetmot.articulo, tmpdetmot.cantidad, tmpdetmot.precio, tmpdetmot.pdescuento, tmpdetmot.impuesto, tmpdetmot.pimpuesto, tmpdetmot.mecanico, tmpdetmot.comision_m, tmpdetmot.descr_trab)
+               DELETE
+            ENDSCAN
+            lnombre = .T.
+         ELSE
+   *        SCAN WHILE RECCOUNT("tmpdetvent") < 13
+            SCAN WHILE RECCOUNT("tmpdetvent") < IIF(INLIST(m.tipodocu, 7, 8), 11, 13)
+               INSERT INTO tmpdetvent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+                  VALUES (0, 0, tmpdetmot.articulo, tmpdetmot.cantidad, tmpdetmot.precio, tmpdetmot.pdescuento, tmpdetmot.impuesto, tmpdetmot.pimpuesto, tmpdetmot.mecanico, tmpdetmot.comision_m, tmpdetmot.descr_trab)
+               DELETE
+            ENDSCAN
+         ENDIF
+
+         PACK
+         
+         ******
+         WAIT WINDOW IIF(lnombre, "IMPRIMIR", "NO IMPRIMIR")
+         ******
+      
+         m.cliente    = ot.cliente
+         m.vendedor   = cabemot.vendedor
+         m.comision_1 = cabemot.comision_1
+         m.comision_2 = cabemot.comision_2
+         m.comision_3 = cabemot.comision_3
+                  
+         SHOW GET m.cliente
+         SHOW GET m.vendedor
+         SHOW GET m.comision_1
+      
+         *-- Imprime el nombre del cliente desde la orden de trabajo.
+         @ 05,22 SAY PADR(ALLTRIM(ot.nombreot), 56, CHR(32)) ;
+            SIZE 1,56 ;
+            PICTURE "@!" ;
+            COLOR W/N
+       
+         *-- Imprime el nombre de la moneda.
+         SELECT monedas
+         SET ORDER TO TAG indice1 OF monedas.cdx
+
+         IF SEEK(m.moneda)
+            @ 06,22 SAY PADR(ALLTRIM(monedas.nombre), 28, CHR(32)) ;
+               SIZE 1,28 ;
+               PICTURE "@!" ;
+               COLOR W/N
+         ELSE
+            @ 06,22 SAY REPLICATE(CHR(32), 28) ;
+               SIZE 1,28 ;
+               PICTURE "@!" ;
+               COLOR W/N
+         ENDIF
+   
+         *-- Imprime el nombre del vendedor.
+         SELECT vendedor
+         SET ORDER TO TAG indice1 OF vendedor.cdx
+
+         IF SEEK(m.vendedor)
+            @ 07,22 SAY PADR(ALLTRIM(vendedor.nombre), 30, CHR(32)) ;
+               SIZE 1,30 ;
+               PICTURE "@!" ;
+               COLOR W/N
+         ELSE
+            @ 07,22 SAY REPLICATE(CHR(32), 30) ;
+               SIZE 1,30 ;
+               PICTURE "@!" ;
+               COLOR W/N
+         ENDIF
+
+         DO _ShowHeader
+         DO _PrintDetail
+         DO calc_pie_factura
+
+         plReturnedValue = .T.
+      ELSE
+         WAIT WINDOW "­ LA ORDEN DE TRABAJO EXISTE, PERO NO POSEE MOVIMIENTO !"
+         plReturnedValue = .F.
+      ENDIF
+   ELSE
+      WAIT WINDOW "­ ORDEN DE TRABAJO ANTERIORMENTE FACTURADA !"
+      plReturnedValue = .F.
+   ENDIF
+ELSE
+   WAIT WINDOW "­ ORDEN DE TRABAJO INEXISTENTE !"
+   plReturnedValue = .F.
+ENDIF
+
+SELECT (pnSelect)
+SET ORDER TO TAG (pcOrder)
+IF pnRecNo <> 0
+   GOTO RECORD pnRecNo
+ENDIF
+
+RETURN (plReturnedValue)
+
+*********************************************************************************************************
+*********************************************************************************************************
+*!*********************************************************************
+*!
+*!      Funci¢n: _Cuotas
+*!
+*!  Llamado por: CUOTVENT.SPR                 
+*!
+*!  Descripci¢n: Calcula el importe de la(s) cuota(s) de venta.
+*!
+*!*********************************************************************
+FUNCTION _Cuotas
+PARAMETER pnQtyCuotas, pnInterval
+
+IF pnEntrInicial > 0
+   DIMENSION paQtyCuota[pnQtyCuotas + 1]
+ELSE
+   DIMENSION paQtyCuota[pnQtyCuotas]
+ENDIF
+
+FOR pnCounter = 1 TO (pnQtyCuotas + IIF(pnEntrInicial = 0, 0, 1))
+   IF pnEntrInicial > 0 .AND. pnCounter = 1
+      paQtyCuota[pnCounter] = STR(pnCounter, 3) + " ³ " + DTOC(CTOD(m.fechadocu)) + " ³ " + TRANSFORM(pnEntrInicial, "999,999,999")
+   ELSE
+      IF pnCounter = (pnQtyCuotas + IIF(pnEntrInicial = 0, 0, 1))
+         paQtyCuota[pnCounter] = STR(pnCounter, 3) + " ³ " + DTOC(CTOD(m.fechadocu) + (pnInterval * (pnCounter + IIF(pnEntrInicial = 0, 0, -1)))) + " ³ " + TRANSFORM(m.monto_fact - pnEntrInicial - (INT((m.monto_fact - pnEntrInicial) / pnQtyCuotas) * ;
+         (pnQtyCuotas - 1)), "999,999,999")
+      ELSE
+         paQtyCuota[pnCounter] = STR(pnCounter, 3) + " ³ " + DTOC(CTOD(m.fechadocu) + (pnInterval * (pnCounter + IIF(pnEntrInicial = 0, 0, -1)))) + " ³ " + TRANSFORM(INT((m.monto_fact - pnEntrInicial) / pnQtyCuotas), "999,999,999")
+      ENDIF
+   ENDIF
+ENDFOR
+
+pnCount = ALEN(paQtyCuota, 1)
+
+FOR pnCounter = 1 TO pnCount
+   IF VAL(STRTRAN(SUBSTR(paQtyCuota[pnCounter], 20, 11), ",", "")) = 0
+      pnCount = pnCount - 1
+   ENDIF
+ENDFOR
+
+DIMENSION paQtyCuota[pnCount]
+
+*!*********************************************************************
+*!
+*!      Funci¢n: _SaveInvoice
+*!
+*!  Llamado por: CUOTVENT.SPR                 
+*!
+*!  Descripci¢n: Graba el comprobante de venta.
+*!
+*!        Pasos: 1. Grabar encabezado.
+*!               2. Actualizar el saldo del cliente,  si es una venta a 
+*!                  cr‚dito.                                     
+*!               3. Grabar el detalle y actualizar la existencia de las 
+*!                  mercader¡as.
+*!               4. Grabar la(s) cuota(s), si es una venta a cr‚dito.
+*!  
+*!*********************************************************************
+FUNCTION _SaveInvoice
+
+IF plEditing
+   DO _DeleteInvoice
+ENDIF
+
+*
+*  Graba el comprobante de venta contado (tipodocu = 1, 3, 4).
+*
+
+IF INLIST(m.tipodocu, 1, 3, 4, 5, 7)
+   *-- Graba el encabecezado.
+   SELECT cabevent
+
+   INSERT INTO cabevent (tipodocu, nrodocu, lstprecio, fechadocu, ;
+   serie, nroot, moneda, tipocambio, nroremi, fecharemi, cliente, ;
+   vendedor, comision_1, comision_2, comision_3, porcdesc, importdesc, descuento, impreso, fechaanu, ;
+   anulado, monto_fact, monto_cobr, monto_ndeb, monto_ncre) ;
+      VALUES (m.tipodocu, m.nrodocu, m.lstprecio, CTOD(m.fechadocu), ;
+      m.serie, m.nroot, m.moneda, m.tipocambio, m.nroremi, m.fecharemi, ;
+      m.cliente, m.vendedor, m.comision_1, m.comision_2, m.comision_3, m.porcdesc, m.importdesc, m.descuento, ;
+      m.impreso, m.fechaanu, m.anulado, m.monto_fact, m.monto_cobr, ;
+      m.monto_ndeb, m.monto_ncre) 
+   
+   *-- Graba el detalle y actualiza el stock de art¡culos.
+   SELECT tmpdetvent
+   GO TOP
+
+   SCAN ALL
+      IF NOT (EMPTY(tmpdetvent.articulo) .OR. ;
+              EMPTY(tmpdetvent.cantidad) .OR. ;
+              EMPTY(tmpdetvent.precio))
+
+         INSERT INTO detavent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+            VALUES (m.tipodocu, m.nrodocu, tmpdetvent.articulo, tmpdetvent.cantidad, IIF(INLIST(m.tipodocu, 3, 7, 8), ROUND(tmpdetvent.precio / (1 + tmpdetvent.pimpuesto / 100), 4), tmpdetvent.precio), tmpdetvent.pdescuento, tmpdetvent.impuesto, tmpdetvent.pimpuesto, tmpdetvent.mecanico, tmpdetvent.comision_m, tmpdetvent.descr_trab)
+         
+         *-- Actualiza la existencia de mercader¡as.
+         SELECT maesprod
+         SET ORDER TO TAG indice1 OF maesprod.cdx
+
+         IF SEEK(detavent.articulo)
+            REPLACE stock_actu WITH (stock_actu - detavent.cantidad)
+         ENDIF
+         
+         SELECT tmpdetvent
+      ENDIF
+   ENDSCAN
+   
+   *-- Graba el cambia el estado y graba el nro. de la factura en la ot.
+   IF .NOT. EMPTY(cabevent.nroot)
+      SELECT ot
+   
+      REPLACE ot.estadoot WITH 6 ,;
+              ot.tipodocu WITH cabevent.tipodocu ,;
+              ot.nrodocu  WITH cabevent.nrodocu ,;
+              ot.fentrega WITH cabevent.fechadocu
+   ENDIF
+   
+   SELECT cabevent
+
+ENDIF
+
+*
+*  Graba el comprobante de venta a cr‚dito (tipodocu = 2).
+*
+
+IF INLIST(m.tipodocu, 2, 6, 8)
+   
+   PRIVATE pnMonto_Fact
+   pnMonto_Fact = 0
+   
+   FOR pnCounter = 1 TO ALEN(paQtyCuota)
+      pnMonto_Fact = pnMonto_Fact + VAL(STRTRAN(SUBSTR(paQtyCuota[pnCounter], 20, 11), ",", ""))
+   ENDFOR
+
+   IF pnMonto_Fact <> m.monto_fact
+      WAIT WINDOW "­ LA SUMA DE LAS CUOTAS ES DIFERENTE AL TOTAL DE LA VENTA !" 
+      _CUROBJ = OBJNUM(lstQtyCuotas)
+      RETURN
+   ENDIF
+
+   *-- Graba el encabecezado.
+   SELECT cabevent
+
+   INSERT INTO cabevent (tipodocu, nrodocu, lstprecio, fechadocu, ;
+   serie, nroot, moneda, tipocambio, nroremi, fecharemi, cliente, ;
+   vendedor, comision_1, comision_2, comision_3, porcdesc, importdesc, descuento, impreso, fechaanu, ;
+   anulado, monto_fact, monto_cobr, monto_ndeb, monto_ncre) ;
+      VALUES (m.tipodocu, m.nrodocu, m.lstprecio, CTOD(m.fechadocu), ;
+      m.serie, m.nroot, m.moneda, m.tipocambio, m.nroremi, m.fecharemi, ;
+      m.cliente, m.vendedor, m.comision_1, m.comision_2, m.comision_3, m.porcdesc, m.importdesc, m.descuento, ;
+      m.impreso, m.fechaanu, m.anulado, m.monto_fact, m.monto_cobr, ;
+      m.monto_ndeb, m.monto_ncre) 
+
+   *-- Actualiza el saldo del cliente.
+   SELECT clientes
+   IF SEEK(cabevent.cliente)
+      IF cabevent.moneda == 1   && Guaranies.
+         REPLACE saldo_actu WITH saldo_actu + cabevent.monto_fact
+      ELSE
+         REPLACE saldo_usd  WITH saldo_usd  + cabevent.monto_fact         
+      ENDIF
+   ENDIF
+
+   *-- Graba el detalle y actualiza la existencia de mercader¡as.
+   SELECT tmpdetvent
+   GO TOP
+
+   SCAN ALL
+      IF NOT (EMPTY(tmpdetvent.articulo) .OR. ;
+              EMPTY(tmpdetvent.cantidad) .OR. ;
+              EMPTY(tmpdetvent.precio))
+
+         INSERT INTO detavent (tipodocu, nrodocu, articulo, cantidad, precio, pdescuento, impuesto, pimpuesto, mecanico, comision_m, descr_trab) ;
+            VALUES (m.tipodocu, m.nrodocu, tmpdetvent.articulo, tmpdetvent.cantidad, IIF(INLIST(m.tipodocu, 3, 7, 8), ROUND(tmpdetvent.precio / (1 + tmpdetvent.pimpuesto / 100), 4), tmpdetvent.precio), tmpdetvent.pdescuento, tmpdetvent.impuesto, tmpdetvent.pimpuesto, tmpdetvent.mecanico, tmpdetvent.comision_m, tmpdetvent.descr_trab)
+
+
+         *-- Actualiza la existencia de mercader¡as.         
+         SELECT maesprod
+         SET ORDER TO TAG indice1 OF maesprod.cdx
+
+         IF SEEK(detavent.articulo)
+            REPLACE stock_actu WITH (stock_actu - detavent.cantidad)
+         ENDIF
+         
+         SELECT tmpdetvent
+      ENDIF
+   ENDSCAN
+
+   *-- Graba la(s) cuota(s) del comprobante de venta.
+   SELECT cuotas_c
+   FOR pnCounter = 1 TO ALEN(paQtyCuota, 1)
+      INSERT INTO cuotas_v (tipodocu, nrodocu, tipo, nrocuota, fecha, importe, abonado, monto_ndeb, monto_ncre) ;
+         VALUES (m.tipodocu, m.nrodocu, 2, VAL(SUBSTR(paQtyCuota[pnCounter], 1, 3)), CTOD(SUBSTR(paQtyCuota[pnCounter], 7, 10)), VAL(STRTRAN(SUBSTR(paQtyCuota[pnCounter], 20, 11), ",", "")), 0, 0, 0)
+   ENDFOR
+
+   *-- Graba el cambia el estado y graba el nro. de la factura en la ot.
+   IF .NOT. EMPTY(cabevent.nroot)
+      SELECT ot
+   
+      REPLACE ot.estadoot WITH 6 ,;
+              ot.tipodocu WITH cabevent.tipodocu ,;
+              ot.nrodocu  WITH cabevent.nrodocu ,;
+              ot.fentrega WITH cabevent.fechadocu
+   ENDIF
+
+   SELECT cabevent
+
+ENDIF
+
+*--------------------------------------------------------------------------*
+FUNCTION cuenta_codigo
+PARAMETER marticulo
+
+   PRIVATE nSelect, nIndex, nRecNo, nCount
+   nSelect = SELECT()
+   nCount  = 0
+   
+   SELECT tmpdetvent
+   nRecNo = IIF(EOF(), 0, RECNO())
+      
+   SCAN ALL
+      IF articulo = marticulo THEN
+         nCount = nCount + 1
+      ENDIF
+   ENDSCAN
+   
+   IF nRecNo <> 0 THEN
+      GOTO RECORD nRecNo
+   ENDIF
+
+   IF !EMPTY(ALIAS(nSelect)) THEN
+      SELECT (nSelect)
+   ENDIF
+   
+   RETURN (nCount)
+*ENDFUNC
+
+*--------------------------------------------------------------------------*
+FUNCTION cant_vendida
+PARAMETER marticulo
+
+   PRIVATE nSelect, nIndex, nRecNo, nCount
+   nSelect = SELECT()
+   nCount  = 0
+   
+   SELECT detavent
+   nIndex = VAL(SYS(21))
+   nRecNo = IIF(EOF(), 0, RECNO())
+   SET ORDER TO 1
+   
+   SEEK STR(m.tipodocu, 1) + STR(m.nrodocu, 7)
+   
+   SCAN WHILE tipodocu = m.tipodocu .AND. nrodocu = m.nrodocu
+      IF articulo = marticulo THEN
+         nCount = nCount + cantidad
+      ENDIF
+   ENDSCAN
+   
+   SET ORDER TO nIndex
+   IF nRecNo <> 0 THEN
+      GOTO RECORD nRecNo
+   ENDIF
+
+   IF !EMPTY(ALIAS(nSelect)) THEN
+      SELECT (nSelect)
+   ENDIF
+
+   RETURN (nCount)
+*ENDFUNC
+
+*--------------------------------------------------------------------------*
+FUNCTION vld_cantidad
+  
+IF cantidad <= 0 THEN
+   =msgbox("LA CANTIDAD DEBE SER MAYOR QUE CERO", "", 0, "MESSAGE", "C")
+   IF INLIST(LASTKEY(), 5, 19, 127) THEN
+      RETURN
+   ELSE
+      RETURN 0
+   ENDIF
+ENDIF
+
+IF !es_servicio()
+   IF precio <= 0 THEN
+      =msgbox("EL PRECIO UNITARIO DE VENTA DEBE SER MAYOR QUE CERO", "", 0, "MESSAGE", "C")
+      RETURN 0
+   ENDIF
+ENDIF
+
+mcount = 0
+
+IF plEditing THEN
+   mcount = cant_vendida(tmpdetvent.articulo)
+ENDIF
+
+mstock_actual  = mcount + calc_stock(articulo)
+mcontrol_stock = control_stock(articulo)
+
+IF mcontrol_stock THEN   && controla stock
+   IF mstock_actual <= 0 THEN
+      =msgbox("ESTE PRODUCTO ESTA AGOTADO › NO SE PUEDE FACTURAR", "", 0, "MESSAGE", "L")
+      RETURN 0
+   ELSE
+      IF cantidad > mstock_actual THEN
+         =msgbox("LA CANTIDAD INGRESADA SUPERA EL STOCK › ------------------------------------- › UD. DISPONE DE " + ALLTRIM(STR(mstock_actual, 11, 2)) + " UNIDAD(ES)" , "", 0, "MESSAGE", "L")
+         RETURN 0
+      ENDIF
+   ENDIF
+ENDIF
+      
+DO calc_pie_factura
+
+*--------------------------------------------------------------------------*
+FUNCTION es_servicio
+   PRIVATE nSelect, nIndex, nRecNo, cSetExact, lReturn
+   nSelect = SELECT()
+   
+   IF SET("EXACT") = "OFF"
+*     SET EXACT ON 
+      cSetExact = "OFF"
+   ELSE
+      cSetExact = "ON"
+   ENDIF
+
+   SELECT servicio
+   nIndex = VAL(SYS(21))
+   nRecNo = IIF(EOF(), 0, RECNO())
+   SET ORDER TO 1
+   SET RELATION OFF INTO maesprod
+   
+   IF SEEK(tmpdetvent.articulo) .AND. maesprod.pventag1 = 0 THEN
+      lReturn = .T.
+   ELSE
+      lReturn = .F.
+   ENDIF
+   
+   SET RELATION TO articulo INTO maesprod
+   
+   IF cSetExact = "OFF"
+*     SET EXACT OFF
+   ENDIF
+   
+   SET ORDER TO nIndex
+   IF nRecNo <> 0 THEN
+      GOTO RECORD nRecNo
+   ENDIF
+   
+   IF !EMPTY(ALIAS(nSelect)) THEN
+      SELECT (nSelect)
+   ENDIF
+   
+   IF m.moneda <> 1 THEN
+      lReturn = .T.
+   ENDIF
+
+*   wait window iif(lreturn, "ES MANO DE OBRA", "no es mano de obra") + ALIAS() + STR(RECCOUNT()) nowait
+   
+   RETURN (lReturn)
+*ENDFUNC
+
+*--------------------------------------------------------------------------*
+FUNCTION calc_stock
+PARAMETER marticulo
+
+   PRIVATE nSelect, nIndex, nRecNo, nReturn
+   nSelect = SELECT()
+   nReturn = 0
+   
+   SELECT maesprod
+   nIndex = VAL(SYS(21))
+   nRecNo = IIF(EOF(), 0, RECNO())
+   SET ORDER TO 1
+   
+   IF SEEK(marticulo) THEN
+      nReturn = stock_actu - stock_ot
+   ENDIF
+   
+   SET ORDER TO nIndex
+   IF nRecNo <> 0 THEN
+      GOTO RECORD nRecNo
+   ENDIF
+
+   IF !EMPTY(ALIAS(nSelect)) THEN
+      SELECT (nSelect)
+   ENDIF
+
+   RETURN (nReturn)
+*ENDFUNC
+
+*--------------------------------------------------------------------------*
+FUNCTION control_stock
+PARAMETER marticulo
+
+   PRIVATE nSelect, nIndex, nRecNo, lReturn
+   nSelect = SELECT()
+   lReturn = .T.
+   
+   SELECT maesprod
+   nIndex = VAL(SYS(21))
+   nRecNo = IIF(EOF(), 0, RECNO())
+   SET ORDER TO 1
+   
+   IF SEEK(marticulo) THEN
+      IF stock_excl THEN
+         lReturn = .F.
+      ENDIF
+   ENDIF
+
+   SET ORDER TO nIndex
+   IF nRecNo <> 0 THEN
+      GOTO RECORD nRecNo
+   ENDIF
+
+   IF !EMPTY(ALIAS(nSelect)) THEN
+      SELECT (nSelect)
+   ENDIF
+
+   RETURN (lReturn)
+*ENDFUNC
+
+
+
+*--------------------------------------------------------------------------*
+PROCEDURE infot
+
+IF lnombre THEN
+   IF !EMPTY(m.nroot) THEN
+      PRIVATE pnSelect, pcOrder, pnRecNo, plAdding, plEditing
+      pnSelect  = SELECT()
+      pcOrder   = ORDER()
+      pnRecNo   = IIF(EOF(), 0, RECNO())
+
+      SELECT ot
+      SET ORDER TO 1
+      IF SEEK(cabevent.serie + STR(cabevent.nroot, 7)) THEN
+         m.nombre = nombreot
+      ENDIF
+
+      ******
+      SELECT cabeven2
+      SET ORDER TO 1
+      IF SEEK(STR(cabevent.tipodocu, 1) + STR(cabevent.nrodocu, 7)) THEN
+         DELETE
+      ENDIF
+      
+      INSERT INTO cabeven2 (tipodocu, nrodocu, nombre) VALUES (cabevent.tipodocu, cabevent.nrodocu, m.nombre)
+      ******
+      SELECT cabeven2
+      SET ORDER TO TAG indice1 OF cabeven2.cdx
+
+      IF SEEK(STR(cabevent.tipodocu, 1) + STR(cabevent.nrodocu, 7))
+         plAdding  = .F.
+         plEditing = .T.
+         SCATTER MEMVAR MEMO
+      ELSE
+         plAdding  = .T.
+         plEditing = .F.
+         SCATTER MEMVAR MEMO BLANK
+      ENDIF
+
+      DO cabeven2.spr
+      WAIT WINDOW "EL SISTEMA VA A IMPRIMIR"
+      DO print_movot
+
+      SELECT (pnSelect)
+      SET ORDER TO TAG (pcOrder)
+      IF pnRecNo <> 0
+         GOTO RECORD pnRecNo
+      ENDIF
+   ENDIF      
+ENDIF
+
+*--------------------------------------------------------------------------*
+PROCEDURE print_movot
+
+SELECT cabeven2
+SET ORDER TO 1
+SEEK STR(cabevent.tipodocu, 1) + STR(cabevent.nrodocu, 7)
+
+SELECT ot
+SET ORDER TO 1
+SEEK cabevent.serie + STR(cabevent.nroot, 7)
+
+SELECT cabemot
+SET ORDER TO 1
+SEEK "2" + cabevent.serie + STR(cabevent.nroot, 7)
+
+SELECT maquinas
+SET ORDER TO 1
+SEEK ot.maquina
+
+SELECT marcas2
+SET ORDER TO 1
+SEEK ot.marca
+
+SELECT modelos
+SET ORDER TO 1
+SEEK ot.modelo
+
+m.maquina   = ALLTRIM(maquinas.nombre) + " " + ALLTRIM(marcas2.nombre) + " " + ALLTRIM(modelos.nombre) + " " + ALLTRIM(ot.accesorio)
+m.orden     = cabevent.serie + " " + ALLTRIM(STR(cabevent.nroot))
+m.motor     = ot.motor
+m.documento = IIF(INLIST(cabevent.tipodocu, 1, 3, 4, 5, 7), "FACTURA CONTADO No. ", "FACTURA CREDITO No. ") + ALLTRIM(STR(cabevent.nrodocu, 7))
+m.nombre    = ALLTRIM(cabeven2.nombre)
+m.ruc       = ALLTRIM(cabeven2.documento)
+
+m.numletra   = "SON GUARANIES: " + ALLTRIM(numletra(m.monto_fact)) + "." + REPLICATE("-", 160)
+m.num_letra  = LEFT(m.numletra, 78)
+m.num_letra2 = SUBSTR(m.numletra, 79)
+
+
+m.comentario = ALLTRIM(cabemot.obs1) + " " + ALLTRIM(cabemot.obs2) + " " + ALLTRIM(cabemot.obs3)
+m.obs1       = LEFT(m.comentario, 72)
+m.obs2       = SUBSTR(m.comentario, 73)
+
+SELECT tmpdetvent
+REPORT FORM infmovo2 TO PRINTER NOCONSOLE
+REPORT FORM infmovo2 TO PRINTER NOCONSOLE

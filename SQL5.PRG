@@ -1,0 +1,20 @@
+SELECT;
+   b.cliente AS id_cliente,;
+   d.nombre AS cliente,;
+   a.tipodocu,;
+   a.nrodocu,;
+   (a.importe + a.monto_ndeb) - (a.abonado + a.monto_ncre) AS saldo,;
+   c.simbolo,;
+   a.fecha AS fecha_vto,;
+   b.fechadocu AS fecha_emi;
+FROM;
+   cuotas_v a,;
+   cabevent b,;
+   monedas c,;
+   clientes d;
+WHERE;
+   a.tipodocu = b.tipodocu AND;
+   a.nrodocu = b.nrodocu AND;
+   b.moneda = c.codigo AND;
+   b.cliente = d.codigo AND;
+   (a.importe + a.monto_ndeb) - (a.abonado + a.monto_ncre) > 0

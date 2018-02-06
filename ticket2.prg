@@ -1,0 +1,11 @@
+CLEAR all
+USE proveedo IN 0 SHARED
+
+SET DEVICE TO FILE tmpx86.txt
+SCAN all
+   // nombre
+ENDSCAN
+
+SET DEVICE TO SCREEN
+MODIFY COMMAND tmpx86.txt
+DELETE FILE tmpx86.txt
