@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18              L_12.SPR                 15:17:10 Ё
+*       Ё 07/05/18              L_12.SPR                 16:18:06 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrhny")
-	DEFINE WINDOW _58o0wrhny ;
+IF NOT WEXIST("_58o0yxurg")
+	DEFINE WINDOW _58o0yxurg ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-65)/2)+64 ;
 		TITLE " STOCK VALORIZADO " ;
@@ -57,10 +57,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrhny")
-	ACTIVATE WINDOW _58o0wrhny SAME
+IF WVISIBLE("_58o0yxurg")
+	ACTIVATE WINDOW _58o0yxurg SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrhny NOSHOW
+	ACTIVATE WINDOW _58o0yxurg NOSHOW
 ENDIF
 @ 14,0 TO 14,62
 @ 9,2 SAY "PROCEDENCIA:" ;
@@ -91,61 +91,61 @@ ENDIF
 	SIZE 1,4 ;
 	DEFAULT " " ;
 	PICTURE "@K 9999" ;
-	VALID _58o0wrho0()
+	VALID _58o0yxuri()
 @ 4,15 GET mrubro ;
 	SIZE 1,4 ;
 	DEFAULT " " ;
 	PICTURE "@K 9999" ;
-	VALID _58o0wrho3()
+	VALID _58o0yxurj()
 @ 5,15 GET msubrubro ;
 	SIZE 1,4 ;
 	DEFAULT " " ;
 	PICTURE "@K 9999" ;
-	VALID _58o0wrho5()
+	VALID _58o0yxurk()
 @ 6,15 GET mmarca ;
 	SIZE 1,4 ;
 	DEFAULT " " ;
 	PICTURE "@K 9999" ;
-	VALID _58o0wrho7()
+	VALID _58o0yxurl()
 @ 8,15 GET munidad ;
 	SIZE 1,4 ;
 	DEFAULT " " ;
 	PICTURE "@K 9999" ;
-	VALID _58o0wrhoa()
+	VALID _58o0yxurm()
 @ 9,15 GET mprocedencia ;
 	SIZE 1,4 ;
 	DEFAULT " " ;
 	PICTURE "@K 9999" ;
-	VALID _58o0wrhoc()
+	VALID _58o0yxurn()
 @ 10,15 GET mproveedor ;
 	SIZE 1,4 ;
 	DEFAULT " " ;
 	PICTURE "@K 9999" ;
-	VALID _58o0wrhoe()
+	VALID _58o0yxuro()
 @ 12,39 GET mconexistencia ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!K" ;
-	VALID _58o0wrhoh()
+	VALID _58o0yxurp()
 @ 13,39 GET mvigente ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!K" ;
-	VALID _58o0wrhoi()
+	VALID _58o0yxurq()
 @ 15,17 GET cmgChoice ;
 	PICTURE "@*HN \!\<Iniciar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _58o0wrhoj()
+	VALID _58o0yxurr()
 
-IF NOT WVISIBLE("_58o0wrhny")
-	ACTIVATE WINDOW _58o0wrhny
+IF NOT WVISIBLE("_58o0yxurg")
+	ACTIVATE WINDOW _58o0yxurg
 ENDIF
 
 READ CYCLE ;
-	SHOW _58o0wrhok()
+	SHOW _58o0yxurs()
 
-RELEASE WINDOW _58o0wrhny
+RELEASE WINDOW _58o0yxurg
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -674,7 +674,7 @@ DELETE FILE SUBSTR(temp01, 1, ATC(".", temp01)) + "CDX"
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHO0           mfamilia VALID                     Ё
+*       Ё _58O0YXURI           mfamilia VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -687,7 +687,7 @@ DELETE FILE SUBSTR(temp01, 1, ATC(".", temp01)) + "CDX"
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrho0     &&  mfamilia VALID
+FUNCTION _58o0yxuri     &&  mfamilia VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -779,7 +779,7 @@ mfamilia = LEFT(ALLTRIM(STR(mfamilia)) + SPACE(4), 4)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHO3           mrubro VALID                       Ё
+*       Ё _58O0YXURJ           mrubro VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -792,7 +792,7 @@ mfamilia = LEFT(ALLTRIM(STR(mfamilia)) + SPACE(4), 4)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrho3     &&  mrubro VALID
+FUNCTION _58o0yxurj     &&  mrubro VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -884,7 +884,7 @@ mrubro = LEFT(ALLTRIM(STR(mrubro)) + SPACE(4), 4)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHO5           msubrubro VALID                    Ё
+*       Ё _58O0YXURK           msubrubro VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -897,7 +897,7 @@ mrubro = LEFT(ALLTRIM(STR(mrubro)) + SPACE(4), 4)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrho5     &&  msubrubro VALID
+FUNCTION _58o0yxurk     &&  msubrubro VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -989,7 +989,7 @@ msubrubro = LEFT(ALLTRIM(STR(msubrubro)) + SPACE(4), 4)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHO7           mmarca VALID                       Ё
+*       Ё _58O0YXURL           mmarca VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1002,7 +1002,7 @@ msubrubro = LEFT(ALLTRIM(STR(msubrubro)) + SPACE(4), 4)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrho7     &&  mmarca VALID
+FUNCTION _58o0yxurl     &&  mmarca VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1093,7 +1093,7 @@ mmarca = LEFT(ALLTRIM(STR(mmarca)) + SPACE(4), 4)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHOA           munidad VALID                      Ё
+*       Ё _58O0YXURM           munidad VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1106,7 +1106,7 @@ mmarca = LEFT(ALLTRIM(STR(mmarca)) + SPACE(4), 4)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhoa     &&  munidad VALID
+FUNCTION _58o0yxurm     &&  munidad VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1198,7 +1198,7 @@ munidad = LEFT(ALLTRIM(STR(munidad)) + SPACE(4), 4)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHOC           mprocedencia VALID                 Ё
+*       Ё _58O0YXURN           mprocedencia VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1211,7 +1211,7 @@ munidad = LEFT(ALLTRIM(STR(munidad)) + SPACE(4), 4)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhoc     &&  mprocedencia VALID
+FUNCTION _58o0yxurn     &&  mprocedencia VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1303,7 +1303,7 @@ mprocedencia = LEFT(ALLTRIM(STR(mprocedencia)) + SPACE(4), 4)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHOE           mproveedor VALID                   Ё
+*       Ё _58O0YXURO           mproveedor VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1316,7 +1316,7 @@ mprocedencia = LEFT(ALLTRIM(STR(mprocedencia)) + SPACE(4), 4)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhoe     &&  mproveedor VALID
+FUNCTION _58o0yxuro     &&  mproveedor VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1408,7 +1408,7 @@ mproveedor = LEFT(ALLTRIM(STR(mproveedor)) + SPACE(4), 4)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHOH           mconexistencia VALID               Ё
+*       Ё _58O0YXURP           mconexistencia VALID               Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1421,7 +1421,7 @@ mproveedor = LEFT(ALLTRIM(STR(mproveedor)) + SPACE(4), 4)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhoh     &&  mconexistencia VALID
+FUNCTION _58o0yxurp     &&  mconexistencia VALID
 #REGION 1
 IF .NOT. INLIST(mconexistencia, "S", "N")
    WAIT WINDOW "LA OPCION CON EXISTENCIA = 0, DEBE SER: (S)I o (N)O !"
@@ -1430,7 +1430,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHOI           mvigente VALID                     Ё
+*       Ё _58O0YXURQ           mvigente VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1443,7 +1443,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhoi     &&  mvigente VALID
+FUNCTION _58o0yxurq     &&  mvigente VALID
 #REGION 1
 IF .NOT. INLIST(mvigente, "S", "N", "T")
    WAIT WINDOW "LA OPCION ARTICULOS VIGENTES, DEBE SER (S)I, (N)O, (T)ODOS !"
@@ -1452,7 +1452,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHOJ           cmgChoice VALID                    Ё
+*       Ё _58O0YXURR           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1465,7 +1465,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhoj     &&  cmgChoice VALID
+FUNCTION _58o0yxurr     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    DO Process
@@ -1477,7 +1477,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHOK           Nivel de lectura SHOW              Ё
+*       Ё _58O0YXURS           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1489,7 +1489,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhok     && Read Level Show
+FUNCTION _58o0yxurs     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

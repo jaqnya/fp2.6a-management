@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18              L_10.SPR                 15:17:09 Ё
+*       Ё 07/05/18              L_10.SPR                 16:18:06 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrhfc")
-	DEFINE WINDOW _58o0wrhfc ;
+IF NOT WEXIST("_58o0yxuo5")
+	DEFINE WINDOW _58o0yxuo5 ;
 		FROM INT((SROW()-15)/2),INT((SCOL()-77)/2) ;
 		TO INT((SROW()-15)/2)+14,INT((SCOL()-77)/2)+76 ;
 		TITLE " ESTADISTICO DE VENTAS Y COMPRAS POR MARCA Y ARTICULO " ;
@@ -92,10 +92,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrhfc")
-	ACTIVATE WINDOW _58o0wrhfc SAME
+IF WVISIBLE("_58o0yxuo5")
+	ACTIVATE WINDOW _58o0yxuo5 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrhfc NOSHOW
+	ACTIVATE WINDOW _58o0yxuo5 NOSHOW
 ENDIF
 @ 10,0 TO 10,74
 @ 1,3 SAY "OPCION....:" ;
@@ -116,25 +116,25 @@ ENDIF
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _58o0wrhff()
+	VALID _58o0yxuo9()
 @ 3,15 GET mopcion2 ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
 	WHEN mopcion = "M" ;
-	VALID _58o0wrhfh()
+	VALID _58o0yxuoa()
 @ 5,15 GET mmarca ;
 	SIZE 1,4 ;
 	DEFAULT 0 ;
 	PICTURE "@K 9999" ;
 	WHEN mopcion = "M" ;
-	VALID _58o0wrhfi()
+	VALID _58o0yxuob()
 @ 7,15 GET marti1 ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@K" ;
 	WHEN mopcion = "U" ;
-	VALID _58o0wrhfk()
+	VALID _58o0yxuod()
 @ 9,15 GET mano ;
 	SIZE 1,4 ;
 	DEFAULT 0 ;
@@ -143,10 +143,10 @@ ENDIF
 	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
 	SIZE 1,12,10 ;
 	DEFAULT 1 ;
-	VALID _58o0wrhfl()
+	VALID _58o0yxuof()
 
-IF NOT WVISIBLE("_58o0wrhfc")
-	ACTIVATE WINDOW _58o0wrhfc
+IF NOT WVISIBLE("_58o0yxuo5")
+	ACTIVATE WINDOW _58o0yxuo5
 ENDIF
 
 
@@ -160,7 +160,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrhfc
+RELEASE WINDOW _58o0yxuo5
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -173,7 +173,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHFF           mopcion VALID                      Ё
+*       Ё _58O0YXUO9           mopcion VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -186,7 +186,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhff     &&  mopcion VALID
+FUNCTION _58o0yxuo9     &&  mopcion VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -222,7 +222,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHFH           mopcion2 VALID                     Ё
+*       Ё _58O0YXUOA           mopcion2 VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -235,7 +235,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhfh     &&  mopcion2 VALID
+FUNCTION _58o0yxuoa     &&  mopcion2 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN
@@ -248,7 +248,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHFI           mmarca VALID                       Ё
+*       Ё _58O0YXUOB           mmarca VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -261,7 +261,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhfi     &&  mmarca VALID
+FUNCTION _58o0yxuob     &&  mmarca VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -357,7 +357,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHFK           marti1 VALID                       Ё
+*       Ё _58O0YXUOD           marti1 VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -370,7 +370,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhfk     &&  marti1 VALID
+FUNCTION _58o0yxuod     &&  marti1 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 19, 27, 127)
    RETURN
@@ -461,7 +461,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHFL           cmgChoice VALID                    Ё
+*       Ё _58O0YXUOF           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -474,7 +474,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhfl     &&  cmgChoice VALID
+FUNCTION _58o0yxuof     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    IF mopcion = "M"

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            AJUSTES2.SPR               15:17:21 Ё
+*       Ё 07/05/18            AJUSTES2.SPR               16:18:12 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrpyz")
-	DEFINE WINDOW _58o0wrpyz ;
+IF NOT WEXIST("_58o0yxztk")
+	DEFINE WINDOW _58o0yxztk ;
 		FROM 1, 0 ;
 		TO 6,79 ;
 		TITLE " Consultar Nota de Env║o o Ajuste de Inventario " ;
@@ -57,10 +57,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrpyz")
-	ACTIVATE WINDOW _58o0wrpyz SAME
+IF WVISIBLE("_58o0yxztk")
+	ACTIVATE WINDOW _58o0yxztk SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrpyz NOSHOW
+	ACTIVATE WINDOW _58o0yxztk NOSHOW
 ENDIF
 @ 1,4 SAY "Documento:" ;
 	SIZE 1,10, 0
@@ -91,8 +91,8 @@ ENDIF
 	PICTURE "99" ;
 	WHEN plAdding .OR. plEditing
 
-IF NOT WVISIBLE("_58o0wrpyz")
-	ACTIVATE WINDOW _58o0wrpyz
+IF NOT WVISIBLE("_58o0yxztk")
+	ACTIVATE WINDOW _58o0yxztk
 ENDIF
 
 
@@ -104,7 +104,7 @@ ENDIF
 *
 
 READ ;
-	SHOW _58o0wrpz2() ;
+	SHOW _58o0yxztm() ;
 	MODAL COLOR , W+/BG
 
 
@@ -119,7 +119,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRPZ2           Nivel de lectura SHOW              Ё
+*       Ё _58O0YXZTM           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -131,7 +131,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrpz2     && Read Level Show
+FUNCTION _58o0yxztm     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

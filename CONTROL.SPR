@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             CONTROL.SPR               15:17:06 Ё
+*       Ё 07/05/18             CONTROL.SPR               16:18:04 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wreb3")
-	DEFINE WINDOW _58o0wreb3 ;
+IF NOT WEXIST("_58o0yxthw")
+	DEFINE WINDOW _58o0yxthw ;
 		FROM INT((SROW()-8)/2),INT((SCOL()-42)/2) ;
 		TO INT((SROW()-8)/2)+7,INT((SCOL()-42)/2)+41 ;
 		TITLE " Coeficiente del D╒lar " ;
@@ -68,10 +68,10 @@ SCATTER MEMVAR MEMO
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wreb3")
-	ACTIVATE WINDOW _58o0wreb3 SAME
+IF WVISIBLE("_58o0yxthw")
+	ACTIVATE WINDOW _58o0yxthw SAME
 ELSE
-	ACTIVATE WINDOW _58o0wreb3 NOSHOW
+	ACTIVATE WINDOW _58o0yxthw NOSHOW
 ENDIF
 @ 3,0 TO 3,39
 @ 1,1 SAY "Tipo de Cambio COMPRADOR:" ;
@@ -88,20 +88,20 @@ ENDIF
 	SIZE 1,8 ;
 	DEFAULT 0 ;
 	PICTURE "99999.99" ;
-	VALID _58o0wrecp()
+	VALID _58o0yxtjh()
 @ 2,30 GET m.tipocambio ;
 	SIZE 1,8 ;
 	DEFAULT 0 ;
 	PICTURE "99999.99" ;
-	VALID _58o0wrecq()
+	VALID _58o0yxtji()
 @ 4,4 GET pnChoice ;
 	PICTURE "@*HN \!\<Grabar;\?\<Cancelar" ;
 	SIZE 1,12,7 ;
 	DEFAULT 1 ;
-	VALID _58o0wrecr()
+	VALID _58o0yxtjj()
 
-IF NOT WVISIBLE("_58o0wreb3")
-	ACTIVATE WINDOW _58o0wreb3
+IF NOT WVISIBLE("_58o0yxthw")
+	ACTIVATE WINDOW _58o0yxthw
 ENDIF
 
 
@@ -115,7 +115,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wreb3
+RELEASE WINDOW _58o0yxthw
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -128,7 +128,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRECP           m.tipocambi1 VALID                 Ё
+*       Ё _58O0YXTJH           m.tipocambi1 VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -141,7 +141,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrecp     &&  m.tipocambi1 VALID
+FUNCTION _58o0yxtjh     &&  m.tipocambi1 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -154,7 +154,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRECQ           m.tipocambio VALID                 Ё
+*       Ё _58O0YXTJI           m.tipocambio VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -167,7 +167,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrecq     &&  m.tipocambio VALID
+FUNCTION _58o0yxtji     &&  m.tipocambio VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -180,7 +180,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRECR           pnChoice VALID                     Ё
+*       Ё _58O0YXTJJ           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -193,7 +193,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrecr     &&  pnChoice VALID
+FUNCTION _58o0yxtjj     &&  pnChoice VALID
 #REGION 1
 DO CASE
    CASE pnChoice = 1

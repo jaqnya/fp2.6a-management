@@ -43,7 +43,7 @@ CREATE TABLE (dbf_file) (;
    id_product C(15),;
    cod_origen C(15),;
    cod_altern C(15),;
-   ubicacion C(10),;
+   ubicacion C(37),;
    producto C(50),;
    cantidad N(9,2),;
    precio N(9),;
@@ -204,7 +204,7 @@ CREATE TABLE (dbf_file2) (;
    id_product C(15),;
    cod_origen C(15),;
    cod_altern C(15),;
-   ubicacion C(10),;
+   ubicacion C(37),;
    producto C(50),;
    cantidad N(9,2),;
    precio N(9),;
@@ -289,8 +289,11 @@ USE
 DELETE FILE (dbf_file + ".dbf")
 
 SELECT (dbf_file2)
-REPORT FORM rpt_ped3 TO PRINTER NOCONSOLE
+*REPORT FORM rpt_ped3 TO PRINTER NOCONSOLE   && En esta version la ubicacion aparece en una columna individual.
 *REPORT FORM rpt_ped3 PREVIEW 
+REPORT FORM rpt_ped4 TO PRINTER NOCONSOLE   && En esta version la ubicacion ocupa una fila completa y se fue removida como columna.
+*REPORT FORM rpt_ped4 PREVIEW   && En esta version la ubicacion ocupa una fila completa y se fue removida como columna.
+
 USE
 DELETE FILE (dbf_file2 + ".dbf")
 DELETE FILE (dbf_file2 + ".cdx")

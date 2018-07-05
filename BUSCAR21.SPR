@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            BUSCAR21.SPR               15:17:17 Ё
+*       Ё 07/05/18            BUSCAR21.SPR               16:18:10 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrnc9")
-	DEFINE WINDOW _58o0wrnc9 ;
+IF NOT WEXIST("_58o0yxxws")
+	DEFINE WINDOW _58o0yxxws ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-39)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-39)/2)+38 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,21 +67,21 @@ PRIVATE m.chasis
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrnc9")
-	ACTIVATE WINDOW _58o0wrnc9 SAME
+IF WVISIBLE("_58o0yxxws")
+	ACTIVATE WINDOW _58o0yxxws SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrnc9 NOSHOW
+	ACTIVATE WINDOW _58o0yxxws NOSHOW
 ENDIF
 @ 0,10 GET m.chasis ;
 	SIZE 1,25 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _58o0wrncb()
+	VALID _58o0yxxwu()
 @ 0,2 SAY "CAJA #:" ;
 	SIZE 1,7, 0
 
-IF NOT WVISIBLE("_58o0wrnc9")
-	ACTIVATE WINDOW _58o0wrnc9
+IF NOT WVISIBLE("_58o0yxxws")
+	ACTIVATE WINDOW _58o0yxxws
 ENDIF
 
 
@@ -95,7 +95,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrnc9
+RELEASE WINDOW _58o0yxxws
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -108,7 +108,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRNCB           m.chasis VALID                     Ё
+*       Ё _58O0YXXWU           m.chasis VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -121,7 +121,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrncb     &&  m.chasis VALID
+FUNCTION _58o0yxxwu     &&  m.chasis VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

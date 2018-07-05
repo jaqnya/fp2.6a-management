@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18              L_04.SPR                 15:17:08 Ё
+*       Ё 07/05/18              L_04.SPR                 16:18:05 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrgco")
-	DEFINE WINDOW _58o0wrgco ;
+IF NOT WEXIST("_58o0yxu5q")
+	DEFINE WINDOW _58o0yxu5q ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-64)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-64)/2)+63 ;
 		TITLE " Ventas Pendientes de Cobro " ;
@@ -76,10 +76,10 @@ SELECT clientes
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrgco")
-	ACTIVATE WINDOW _58o0wrgco SAME
+IF WVISIBLE("_58o0yxu5q")
+	ACTIVATE WINDOW _58o0yxu5q SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrgco NOSHOW
+	ACTIVATE WINDOW _58o0yxu5q NOSHOW
 ENDIF
 @ 14,0 TO 14,61
 @ 3,26 SAY "1 - POR RANGO DE FECHAS." ;
@@ -104,46 +104,46 @@ ENDIF
 	SIZE 1,5 ;
 	DEFAULT 0 ;
 	PICTURE "99999" ;
-	VALID _58o0wrgcq()
+	VALID _58o0yxu5t()
 @ 3,12 GET m.criteria ;
 	SIZE 1,1 ;
 	DEFAULT 0 ;
 	PICTURE "9" ;
-	VALID _58o0wrgcs()
+	VALID _58o0yxu5v()
 @ 5,12 GET m.fecha01 ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _58o0wrgct() ;
-	VALID _58o0wrgcu()
+	WHEN _58o0yxu5w() ;
+	VALID _58o0yxu5x()
 @ 6,12 GET m.fecha02 ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _58o0wrgcv() ;
-	VALID _58o0wrgcw()
+	WHEN _58o0yxu5y() ;
+	VALID _58o0yxu5z()
 @ 8,12 GET m.formato ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _58o0wrgcx()
+	VALID _58o0yxu60()
 @ 10,12 GET m.destino ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _58o0wrgcy()
+	VALID _58o0yxu61()
 @ 12,12 GET m.ruta ;
 	SIZE 1,5 ;
 	DEFAULT 0 ;
 	PICTURE "99999" ;
 	WHEN m.cliente = -1	 ;
-	VALID _58o0wrgcz()
+	VALID _58o0yxu62()
 @ 15,16 GET cmgChoice ;
 	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _58o0wrgd0()
+	VALID _58o0yxu63()
 
-IF NOT WVISIBLE("_58o0wrgco")
-	ACTIVATE WINDOW _58o0wrgco
+IF NOT WVISIBLE("_58o0yxu5q")
+	ACTIVATE WINDOW _58o0yxu5q
 ENDIF
 
 
@@ -155,10 +155,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _58o0wrgd1() ;
+	SHOW _58o0yxu64() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrgco
+RELEASE WINDOW _58o0yxu5q
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -447,7 +447,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCQ           m.cliente VALID                    Ё
+*       Ё _58O0YXU5T           m.cliente VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -460,7 +460,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcq     &&  m.cliente VALID
+FUNCTION _58o0yxu5t     &&  m.cliente VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -545,7 +545,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCS           m.criteria VALID                   Ё
+*       Ё _58O0YXU5V           m.criteria VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -558,7 +558,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcs     &&  m.criteria VALID
+FUNCTION _58o0yxu5v     &&  m.criteria VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -571,7 +571,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCT           m.fecha01 WHEN                     Ё
+*       Ё _58O0YXU5W           m.fecha01 WHEN                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -584,7 +584,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgct     &&  m.fecha01 WHEN
+FUNCTION _58o0yxu5w     &&  m.fecha01 WHEN
 #REGION 1
 IF m.criteria = 1
    SET CONFIRM ON
@@ -595,7 +595,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCU           m.fecha01 VALID                    Ё
+*       Ё _58O0YXU5X           m.fecha01 VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -608,14 +608,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcu     &&  m.fecha01 VALID
+FUNCTION _58o0yxu5x     &&  m.fecha01 VALID
 #REGION 1
 SET CONFIRM OFF
 SET NOTIFY  OFF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCV           m.fecha02 WHEN                     Ё
+*       Ё _58O0YXU5Y           m.fecha02 WHEN                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -628,7 +628,7 @@ SET NOTIFY  OFF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcv     &&  m.fecha02 WHEN
+FUNCTION _58o0yxu5y     &&  m.fecha02 WHEN
 #REGION 1
 IF m.criteria = 1
    SET CONFIRM ON
@@ -639,7 +639,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCW           m.fecha02 VALID                    Ё
+*       Ё _58O0YXU5Z           m.fecha02 VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -652,14 +652,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcw     &&  m.fecha02 VALID
+FUNCTION _58o0yxu5z     &&  m.fecha02 VALID
 #REGION 1
 SET CONFIRM OFF
 SET NOTIFY  OFF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCX           m.formato VALID                    Ё
+*       Ё _58O0YXU60           m.formato VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -672,7 +672,7 @@ SET NOTIFY  OFF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcx     &&  m.formato VALID
+FUNCTION _58o0yxu60     &&  m.formato VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -707,7 +707,7 @@ ENDCASE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCY           m.destino VALID                    Ё
+*       Ё _58O0YXU61           m.destino VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -720,7 +720,7 @@ ENDCASE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcy     &&  m.destino VALID
+FUNCTION _58o0yxu61     &&  m.destino VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -755,7 +755,7 @@ ENDCASE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGCZ           m.ruta VALID                       Ё
+*       Ё _58O0YXU62           m.ruta VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -768,7 +768,7 @@ ENDCASE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgcz     &&  m.ruta VALID
+FUNCTION _58o0yxu62     &&  m.ruta VALID
 #REGION 1
 IF m.ruta = 0 THEN
    IF .NOT. WEXIST("brwruta")
@@ -812,7 +812,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGD0           cmgChoice VALID                    Ё
+*       Ё _58O0YXU63           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -825,7 +825,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgd0     &&  cmgChoice VALID
+FUNCTION _58o0yxu63     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    DO _Report_L_04
@@ -838,7 +838,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRGD1           Nivel de lectura SHOW              Ё
+*       Ё _58O0YXU64           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -850,7 +850,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrgd1     && Read Level Show
+FUNCTION _58o0yxu64     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

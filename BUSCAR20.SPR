@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            BUSCAR20.SPR               15:17:17 Ё
+*       Ё 07/05/18            BUSCAR20.SPR               16:18:10 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrnal")
-	DEFINE WINDOW _58o0wrnal ;
+IF NOT WEXIST("_58o0yxxv2")
+	DEFINE WINDOW _58o0yxxv2 ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-38)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-38)/2)+37 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,21 +67,21 @@ PRIVATE m.motor
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrnal")
-	ACTIVATE WINDOW _58o0wrnal SAME
+IF WVISIBLE("_58o0yxxv2")
+	ACTIVATE WINDOW _58o0yxxv2 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrnal NOSHOW
+	ACTIVATE WINDOW _58o0yxxv2 NOSHOW
 ENDIF
 @ 0,9 GET m.motor ;
 	SIZE 1,25 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _58o0wrnao()
+	VALID _58o0yxxv4()
 @ 0,2 SAY "MOTOR:" ;
 	SIZE 1,6, 0
 
-IF NOT WVISIBLE("_58o0wrnal")
-	ACTIVATE WINDOW _58o0wrnal
+IF NOT WVISIBLE("_58o0yxxv2")
+	ACTIVATE WINDOW _58o0yxxv2
 ENDIF
 
 
@@ -95,7 +95,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrnal
+RELEASE WINDOW _58o0yxxv2
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -108,7 +108,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRNAO           m.motor VALID                      Ё
+*       Ё _58O0YXXV4           m.motor VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -121,7 +121,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrnao     &&  m.motor VALID
+FUNCTION _58o0yxxv4     &&  m.motor VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

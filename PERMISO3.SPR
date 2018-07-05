@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            PERMISO3.SPR               15:17:04 Ё
+*       Ё 07/05/18            PERMISO3.SPR               16:18:04 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrd0e")
-	DEFINE WINDOW _58o0wrd0e ;
+IF NOT WEXIST("_58o0yxsxx")
+	DEFINE WINDOW _58o0yxsxx ;
 		FROM INT((SROW()-6)/2),INT((SCOL()-33)/2) ;
 		TO INT((SROW()-6)/2)+5,INT((SCOL()-33)/2)+32 ;
 		TITLE " Solicitud de Contrase╓a " ;
@@ -81,10 +81,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrd0e")
-	ACTIVATE WINDOW _58o0wrd0e SAME
+IF WVISIBLE("_58o0yxsxx")
+	ACTIVATE WINDOW _58o0yxsxx SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrd0e NOSHOW
+	ACTIVATE WINDOW _58o0yxsxx NOSHOW
 ENDIF
 @ 2,2 SAY "Contrase╓a:" ;
 	SIZE 1,11, 0
@@ -94,16 +94,16 @@ ENDIF
 	SIZE 1,4 ;
 	DEFAULT 0 ;
 	PICTURE "9999" ;
-	VALID _58o0wrd2j()
+	VALID _58o0yxsy0()
 @ 2,14 GET m.clave ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@!" ;
 	WHEN NOT EMPTY(m.codigo) ;
-	VALID _58o0wrd2k()
+	VALID _58o0yxsy1()
 
-IF NOT WVISIBLE("_58o0wrd0e")
-	ACTIVATE WINDOW _58o0wrd0e
+IF NOT WVISIBLE("_58o0yxsxx")
+	ACTIVATE WINDOW _58o0yxsxx
 ENDIF
 
 
@@ -117,7 +117,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR  , BG/BG
 
-RELEASE WINDOW _58o0wrd0e
+RELEASE WINDOW _58o0yxsxx
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -130,7 +130,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRD2J           m.codigo VALID                     Ё
+*       Ё _58O0YXSY0           m.codigo VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -143,7 +143,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrd2j     &&  m.codigo VALID
+FUNCTION _58o0yxsy0     &&  m.codigo VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27)
    RETURN
@@ -165,7 +165,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRD2K           m.clave VALID                      Ё
+*       Ё _58O0YXSY1           m.clave VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -178,7 +178,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrd2k     &&  m.clave VALID
+FUNCTION _58o0yxsy1     &&  m.clave VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27)
    RETURN

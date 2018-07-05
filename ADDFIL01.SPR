@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            ADDFIL01.SPR               15:17:28 Ё
+*       Ё 07/05/18            ADDFIL01.SPR               16:18:16 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrvvn")
-	DEFINE WINDOW _58o0wrvvn ;
+IF NOT WEXIST("_58o0yy2u3")
+	DEFINE WINDOW _58o0yy2u3 ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-67)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-67)/2)+66 ;
 		FLOAT ;
@@ -95,16 +95,16 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrvvn")
-	ACTIVATE WINDOW _58o0wrvvn SAME
+IF WVISIBLE("_58o0yy2u3")
+	ACTIVATE WINDOW _58o0yy2u3 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrvvn NOSHOW
+	ACTIVATE WINDOW _58o0yy2u3 NOSHOW
 ENDIF
 @ 2,25 GET m.mover ;
 	PICTURE "@*VN \<Mover;   \<Quitar;\\Quitar Todo;\!\<Aceptar" ;
 	SIZE 1,15,1 ;
 	DEFAULT 1 ;
-	VALID _58o0wrvvq()
+	VALID _58o0yy2u6()
 @ 0,2 SAY "Lista de Selecci╒n:" ;
 	SIZE 1,19, 0
 @ 0,43 SAY "Seleccionados:" ;
@@ -115,7 +115,7 @@ ENDIF
 	RANGE 2, m.allcnt ;
 	SIZE 10,22 ;
 	DEFAULT 1 ;
-	VALID _58o0wrvvr() ;
+	VALID _58o0yy2u7() ;
 	COLOR SCHEME 6
 @ 1,42 GET m.item ;
  	PICTURE "@&N" ;
@@ -123,18 +123,18 @@ ENDIF
 	RANGE 2, itemcnt ;
 	SIZE 10,22 ;
 	DEFAULT 1 ;
-	VALID _58o0wrvvs() ;
+	VALID _58o0yy2u8() ;
 	COLOR SCHEME 6
 
-IF NOT WVISIBLE("_58o0wrvvn")
-	ACTIVATE WINDOW _58o0wrvvn
+IF NOT WVISIBLE("_58o0yy2u3")
+	ACTIVATE WINDOW _58o0yy2u3
 ENDIF
 
 READ CYCLE ;
-	ACTIVATE _58o0wrvvt() ;
-	SHOW _58o0wrvvu()
+	ACTIVATE _58o0yy2u9() ;
+	SHOW _58o0yy2ua()
 
-RELEASE WINDOW _58o0wrvvn
+RELEASE WINDOW _58o0yy2u3
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -183,7 +183,7 @@ RETURN .F.
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRVVQ           m.mover VALID                      Ё
+*       Ё _58O0YY2U6           m.mover VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -196,7 +196,7 @@ RETURN .F.
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrvvq     &&  m.mover VALID
+FUNCTION _58o0yy2u6     &&  m.mover VALID
 #REGION 1
 DO CASE
    CASE m.mover = 1
@@ -239,7 +239,7 @@ ENDCASE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRVVR           m.allitem VALID                    Ё
+*       Ё _58O0YY2U7           m.allitem VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -252,7 +252,7 @@ ENDCASE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrvvr     &&  m.allitem VALID
+FUNCTION _58o0yy2u7     &&  m.allitem VALID
 #REGION 1
 IF alreadyin(allitems[m.allitem, 2])
    WAIT WINDOW "Entrada duplicada" NOWAIT
@@ -276,7 +276,7 @@ SHOW GET m.item
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRVVS           m.item VALID                       Ё
+*       Ё _58O0YY2U8           m.item VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -289,7 +289,7 @@ SHOW GET m.item
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrvvs     &&  m.item VALID
+FUNCTION _58o0yy2u8     &&  m.item VALID
 #REGION 1
 = ADEL(items, m.item)
 m.itemcnt = m.itemcnt - 1
@@ -304,7 +304,7 @@ SHOW GET m.item
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRVVT           Nivel de lectura ACTIVATE          Ё
+*       Ё _58O0YY2U9           Nivel de lectura ACTIVATE          Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -316,7 +316,7 @@ SHOW GET m.item
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrvvt     && Read Level Activate
+FUNCTION _58o0yy2u9     && Read Level Activate
 *
 * C╒digo ACTIVATE de la pantalla: ADDFIL01
 *
@@ -333,7 +333,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRVVU           Nivel de lectura SHOW              Ё
+*       Ё _58O0YY2UA           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -345,7 +345,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrvvu     && Read Level Show
+FUNCTION _58o0yy2ua     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

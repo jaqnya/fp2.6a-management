@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            CLIENTES.SPR               15:17:10 Ё
+*       Ё 07/05/18            CLIENTES.SPR               16:18:06 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrhy7")
-	DEFINE WINDOW _58o0wrhy7 ;
+IF NOT WEXIST("_58o0yxuxo")
+	DEFINE WINDOW _58o0yxuxo ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-65)/2)+64 ;
 		TITLE " LISTADOS E INFORMES " ;
@@ -95,21 +95,21 @@ paClientes[06, 01] = " 6. Cuadro Anual de Nuevos Clientes y Ventas Brutas."
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrhy7")
-	ACTIVATE WINDOW _58o0wrhy7 SAME
+IF WVISIBLE("_58o0yxuxo")
+	ACTIVATE WINDOW _58o0yxuxo SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrhy7 NOSHOW
+	ACTIVATE WINDOW _58o0yxuxo NOSHOW
 ENDIF
 @ 0,0 GET lstClientes ;
  	PICTURE "@&T" ;
 	FROM paClientes ;
 	SIZE 11,63 ;
 	DEFAULT 1 ;
-	VALID _58o0wrhya() ;
+	VALID _58o0yxuxr() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0wrhy7")
-	ACTIVATE WINDOW _58o0wrhy7
+IF NOT WVISIBLE("_58o0yxuxo")
+	ACTIVATE WINDOW _58o0yxuxo
 ENDIF
 
 
@@ -123,7 +123,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrhy7
+RELEASE WINDOW _58o0yxuxo
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -136,7 +136,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRHYA           lstClientes VALID                  Ё
+*       Ё _58O0YXUXR           lstClientes VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -149,7 +149,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrhya     &&  lstClientes VALID
+FUNCTION _58o0yxuxr     &&  lstClientes VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            GENCODIG.SPR               15:17:29 Ё
+*       Ё 07/05/18            GENCODIG.SPR               16:18:17 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -64,8 +64,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrwox")
-	DEFINE WINDOW _58o0wrwox ;
+IF NOT WEXIST("_58o0yy39v")
+	DEFINE WINDOW _58o0yy39v ;
 		FROM INT((SROW()-17)/2),INT((SCOL()-43)/2) ;
 		TO INT((SROW()-17)/2)+16,INT((SCOL()-43)/2)+42 ;
 		TITLE "[ CODIGOS DISPONIBLES ]" ;
@@ -123,10 +123,10 @@ lstCodigos = 2
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrwox")
-	ACTIVATE WINDOW _58o0wrwox SAME
+IF WVISIBLE("_58o0yy39v")
+	ACTIVATE WINDOW _58o0yy39v SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrwox NOSHOW
+	ACTIVATE WINDOW _58o0yy39v NOSHOW
 ENDIF
 @ 2,3 GET lstCodigos ;
  	PICTURE "@&T" ;
@@ -134,7 +134,7 @@ ENDIF
 	RANGE 2 ;
 	SIZE 10,35 ;
 	DEFAULT 1 ;
-	VALID _58o0wrwp1() ;
+	VALID _58o0yy3a0() ;
 	COLOR SCHEME 2
 @ 1,2 TO 12,38 DOUBLE
 @ 14,11 SAY "ы" ;
@@ -153,8 +153,8 @@ ENDIF
 	SIZE 1,14, 0 ;
 	COLOR B/W     
 
-IF NOT WVISIBLE("_58o0wrwox")
-	ACTIVATE WINDOW _58o0wrwox
+IF NOT WVISIBLE("_58o0yy39v")
+	ACTIVATE WINDOW _58o0yy39v
 ENDIF
 
 
@@ -168,7 +168,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrwox
+RELEASE WINDOW _58o0yy39v
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -236,7 +236,7 @@ RETURN LEFT(ALLTRIM(STR(NextCode)) + SPACE(15), 15)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRWP1           lstCodigos VALID                   Ё
+*       Ё _58O0YY3A0           lstCodigos VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -249,7 +249,7 @@ RETURN LEFT(ALLTRIM(STR(NextCode)) + SPACE(15), 15)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrwp1     &&  lstCodigos VALID
+FUNCTION _58o0yy3a0     &&  lstCodigos VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal

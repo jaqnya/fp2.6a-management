@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            BUSCAR17.SPR               15:17:17 Ё
+*       Ё 07/05/18            BUSCAR17.SPR               16:18:10 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrn5w")
-	DEFINE WINDOW _58o0wrn5w ;
+IF NOT WEXIST("_58o0yxxqb")
+	DEFINE WINDOW _58o0yxxqb ;
 		FROM INT((SROW()-4)/2),INT((SCOL()-50)/2) ;
 		TO INT((SROW()-4)/2)+3,INT((SCOL()-50)/2)+49 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,10 +67,10 @@ PRIVATE m.marca, m.modelo
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrn5w")
-	ACTIVATE WINDOW _58o0wrn5w SAME
+IF WVISIBLE("_58o0yxxqb")
+	ACTIVATE WINDOW _58o0yxxqb SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrn5w NOSHOW
+	ACTIVATE WINDOW _58o0yxxqb NOSHOW
 ENDIF
 @ 0,2 SAY "MARCA.:" ;
 	SIZE 1,7, 0
@@ -80,15 +80,15 @@ ENDIF
 	SIZE 1,4 ;
 	DEFAULT 0 ;
 	PICTURE "9999" ;
-	VALID _58o0wrn5y()
+	VALID _58o0yxxqd()
 @ 1,10 GET m.modelo ;
 	SIZE 1,4 ;
 	DEFAULT 0 ;
 	PICTURE "9999" ;
-	VALID _58o0wrn61()
+	VALID _58o0yxxqf()
 
-IF NOT WVISIBLE("_58o0wrn5w")
-	ACTIVATE WINDOW _58o0wrn5w
+IF NOT WVISIBLE("_58o0yxxqb")
+	ACTIVATE WINDOW _58o0yxxqb
 ENDIF
 
 
@@ -102,7 +102,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrn5w
+RELEASE WINDOW _58o0yxxqb
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -115,7 +115,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRN5Y           m.marca VALID                      Ё
+*       Ё _58O0YXXQD           m.marca VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -128,7 +128,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrn5y     &&  m.marca VALID
+FUNCTION _58o0yxxqd     &&  m.marca VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -217,7 +217,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRN61           m.modelo VALID                     Ё
+*       Ё _58O0YXXQF           m.modelo VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -230,7 +230,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrn61     &&  m.modelo VALID
+FUNCTION _58o0yxxqf     &&  m.modelo VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

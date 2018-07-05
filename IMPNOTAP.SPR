@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            IMPNOTAP.SPR               15:17:23 Ё
+*       Ё 07/05/18            IMPNOTAP.SPR               16:18:15 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrs1x")
-	DEFINE WINDOW _58o0wrs1x ;
+IF NOT WEXIST("_58o0yy1e6")
+	DEFINE WINDOW _58o0yy1e6 ;
 		FROM INT((SROW()-15)/2),INT((SCOL()-43)/2) ;
 		TO INT((SROW()-15)/2)+14,INT((SCOL()-43)/2)+42 ;
 		FLOAT ;
@@ -110,10 +110,10 @@ m.monto = m.monto_nota - pnImputado
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrs1x")
-	ACTIVATE WINDOW _58o0wrs1x SAME
+IF WVISIBLE("_58o0yy1e6")
+	ACTIVATE WINDOW _58o0yy1e6 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrs1x NOSHOW
+	ACTIVATE WINDOW _58o0yy1e6 NOSHOW
 ENDIF
 @ 4,3 SAY "Importe de la Cuota:" ;
 	SIZE 1,20, 0
@@ -161,14 +161,14 @@ ENDIF
 	SIZE 1,14 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999.99" ;
-	VALID _58o0wrs22()
+	VALID _58o0yy1ea()
 @ 2,3 SAY "Fecha..............:" ;
 	SIZE 1,20, 0
 @ 8,3 SAY "Importe Pagado.....:" ;
 	SIZE 1,20, 0
 
-IF NOT WVISIBLE("_58o0wrs1x")
-	ACTIVATE WINDOW _58o0wrs1x
+IF NOT WVISIBLE("_58o0yy1e6")
+	ACTIVATE WINDOW _58o0yy1e6
 ENDIF
 
 
@@ -182,7 +182,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrs1x
+RELEASE WINDOW _58o0yy1e6
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -205,7 +205,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRS22           m.monto VALID                      Ё
+*       Ё _58O0YY1EA           m.monto VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -218,7 +218,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrs22     &&  m.monto VALID
+FUNCTION _58o0yy1ea     &&  m.monto VALID
 #REGION 1
 IF INLIST(LASTKEY(), 19, 28, 127)
    RETURN .F.

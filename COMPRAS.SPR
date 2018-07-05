@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             COMPRAS.SPR               15:17:11 Ё
+*       Ё 07/05/18             COMPRAS.SPR               16:18:07 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wriwo")
-	DEFINE WINDOW _58o0wriwo ;
+IF NOT WEXIST("_58o0yxvlc")
+	DEFINE WINDOW _58o0yxvlc ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-66)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-66)/2)+65 ;
 		TITLE " LISTADOS E INFORMES " ;
@@ -100,21 +100,21 @@ paCompras[09, 02] = "l_06.spr"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wriwo")
-	ACTIVATE WINDOW _58o0wriwo SAME
+IF WVISIBLE("_58o0yxvlc")
+	ACTIVATE WINDOW _58o0yxvlc SAME
 ELSE
-	ACTIVATE WINDOW _58o0wriwo NOSHOW
+	ACTIVATE WINDOW _58o0yxvlc NOSHOW
 ENDIF
 @ 0,0 GET lstCompras ;
  	PICTURE "@&T" ;
 	FROM paCompras ;
 	SIZE 11,64 ;
 	DEFAULT 1 ;
-	VALID _58o0wriwr() ;
+	VALID _58o0yxvlf() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0wriwo")
-	ACTIVATE WINDOW _58o0wriwo
+IF NOT WVISIBLE("_58o0yxvlc")
+	ACTIVATE WINDOW _58o0yxvlc
 ENDIF
 
 
@@ -128,7 +128,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wriwo
+RELEASE WINDOW _58o0yxvlc
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -141,7 +141,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRIWR           lstCompras VALID                   Ё
+*       Ё _58O0YXVLF           lstCompras VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -154,7 +154,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wriwr     &&  lstCompras VALID
+FUNCTION _58o0yxvlf     &&  lstCompras VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

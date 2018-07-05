@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            OTHERSOP.SPR               15:17:05 Ё
+*       Ё 07/05/18            OTHERSOP.SPR               16:18:04 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -51,8 +51,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrdpe")
-	DEFINE WINDOW _58o0wrdpe ;
+IF NOT WEXIST("_58o0yxt67")
+	DEFINE WINDOW _58o0yxt67 ;
 		FROM INT((SROW()-20)/2),INT((SCOL()-68)/2) ;
 		TO INT((SROW()-20)/2)+19,INT((SCOL()-68)/2)+67 ;
 		TITLE " OTRAS OPCIONES " ;
@@ -139,21 +139,21 @@ paOthers(18, 02) = "o_04.spr"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrdpe")
-	ACTIVATE WINDOW _58o0wrdpe SAME
+IF WVISIBLE("_58o0yxt67")
+	ACTIVATE WINDOW _58o0yxt67 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrdpe NOSHOW
+	ACTIVATE WINDOW _58o0yxt67 NOSHOW
 ENDIF
 @ 0,0 GET lstOthers ;
  	PICTURE "@&T" ;
 	FROM paOthers ;
 	SIZE 18,66 ;
 	DEFAULT 1 ;
-	VALID _58o0wrdpj() ;
+	VALID _58o0yxt6c() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0wrdpe")
-	ACTIVATE WINDOW _58o0wrdpe
+IF NOT WVISIBLE("_58o0yxt67")
+	ACTIVATE WINDOW _58o0yxt67
 ENDIF
 
 
@@ -167,7 +167,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrdpe
+RELEASE WINDOW _58o0yxt67
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -180,7 +180,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRDPJ           lstOthers VALID                    Ё
+*       Ё _58O0YXT6C           lstOthers VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -193,7 +193,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrdpj     &&  lstOthers VALID
+FUNCTION _58o0yxt6c     &&  lstOthers VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

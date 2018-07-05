@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             QUIT02.SPR                15:17:05 Ё
+*       Ё 07/05/18             QUIT02.SPR                16:18:04 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrdo3")
-	DEFINE WINDOW _58o0wrdo3 ;
+IF NOT WEXIST("_58o0yxt5b")
+	DEFINE WINDOW _58o0yxt5b ;
 		FROM INT((SROW()-8)/2),INT((SCOL()-42)/2) ;
 		TO INT((SROW()-8)/2)+7,INT((SCOL()-42)/2)+41 ;
 		NOFLOAT ;
@@ -66,27 +66,27 @@ PRIVATE pnChoice
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrdo3")
-	ACTIVATE WINDOW _58o0wrdo3 SAME
+IF WVISIBLE("_58o0yxt5b")
+	ACTIVATE WINDOW _58o0yxt5b SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrdo3 NOSHOW
+	ACTIVATE WINDOW _58o0yxt5b NOSHOW
 ENDIF
 @ 3,0 TO 3,39
 @ 4,9 GET pnChoice ;
 	PICTURE "@*HT \!\<S║;\?\<No" ;
 	SIZE 1,6,10 ;
 	DEFAULT 1 ;
-	VALID _58o0wrdo5()
+	VALID _58o0yxt5d()
 @ 1,2 SAY "╗ DESEA RETORNAR AL MENU PRINCIPAL ?" ;
 	SIZE 1,36, 0
 
-IF NOT WVISIBLE("_58o0wrdo3")
-	ACTIVATE WINDOW _58o0wrdo3
+IF NOT WVISIBLE("_58o0yxt5b")
+	ACTIVATE WINDOW _58o0yxt5b
 ENDIF
 
 READ CYCLE
 
-RELEASE WINDOW _58o0wrdo3
+RELEASE WINDOW _58o0yxt5b
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -99,7 +99,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRDO5           pnChoice VALID                     Ё
+*       Ё _58O0YXT5D           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -112,7 +112,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrdo5     &&  pnChoice VALID
+FUNCTION _58o0yxt5d     &&  pnChoice VALID
 #REGION 1
 IF pnChoice = 1
    CLEAR READ

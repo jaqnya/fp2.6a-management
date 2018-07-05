@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            COBR_POP.SPR               15:17:30 Ё
+*       Ё 07/05/18            COBR_POP.SPR               16:18:17 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrxk6")
-	DEFINE WINDOW _58o0wrxk6 ;
+IF NOT WEXIST("_58o0yy3pc")
+	DEFINE WINDOW _58o0yy3pc ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-38)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-38)/2)+37 ;
 		TITLE " COBRADORES " ;
@@ -109,10 +109,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrxk6")
-	ACTIVATE WINDOW _58o0wrxk6 SAME
+IF WVISIBLE("_58o0yy3pc")
+	ACTIVATE WINDOW _58o0yy3pc SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrxk6 NOSHOW
+	ACTIVATE WINDOW _58o0yy3pc NOSHOW
 ENDIF
 @ 0,0 GET lstCobrador ;
  	PICTURE "@&T" ;
@@ -120,36 +120,36 @@ ENDIF
 	RANGE 2 ;
 	SIZE 15,36 ;
 	DEFAULT 1 ;
-	VALID _58o0wrxlt() ;
+	VALID _58o0yy3pg() ;
 	COLOR SCHEME 14
 @ 15,1 GET cmdNew ;
 	PICTURE "@*VN \<Agregar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0wrxlu()
+	VALID _58o0yy3ph()
 @ 15,13 GET cmdDelete ;
 	PICTURE "@*VN \<Borrar" ;
 	SIZE 1,10,1 ;
 	DEFAULT 1 ;
-	VALID _58o0wrxlv()
+	VALID _58o0yy3pi()
 @ 15,24 GET cmdEdit ;
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0wrxlw()
+	VALID _58o0yy3pj()
 @ 16,1 GET cmdGetHelp ;
 	PICTURE "@*VN a\<Yuda" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0wrxlx()
+	VALID _58o0yy3pk()
 @ 16,24 GET cmdCancel ;
 	PICTURE "@*VN \?\<Salir" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0wrxly()
+	VALID _58o0yy3pl()
 
-IF NOT WVISIBLE("_58o0wrxk6")
-	ACTIVATE WINDOW _58o0wrxk6
+IF NOT WVISIBLE("_58o0yy3pc")
+	ACTIVATE WINDOW _58o0yy3pc
 ENDIF
 
 
@@ -161,10 +161,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _58o0wrxlz() ;
+	SHOW _58o0yy3pm() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrxk6
+RELEASE WINDOW _58o0yy3pc
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -187,7 +187,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRXLT           lstCobrador VALID                  Ё
+*       Ё _58O0YY3PG           lstCobrador VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -200,7 +200,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrxlt     &&  lstCobrador VALID
+FUNCTION _58o0yy3pg     &&  lstCobrador VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal
@@ -214,7 +214,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRXLU           cmdNew VALID                       Ё
+*       Ё _58O0YY3PH           cmdNew VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -227,14 +227,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrxlu     &&  cmdNew VALID
+FUNCTION _58o0yy3ph     &&  cmdNew VALID
 #REGION 1
 DO cobrador.prg WITH "Add"
 _CUROBJ = OBJNUM(lstCobrador)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRXLV           cmdDelete VALID                    Ё
+*       Ё _58O0YY3PI           cmdDelete VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -247,7 +247,7 @@ _CUROBJ = OBJNUM(lstCobrador)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrxlv     &&  cmdDelete VALID
+FUNCTION _58o0yy3pi     &&  cmdDelete VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -271,7 +271,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRXLW           cmdEdit VALID                      Ё
+*       Ё _58O0YY3PJ           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -284,7 +284,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrxlw     &&  cmdEdit VALID
+FUNCTION _58o0yy3pj     &&  cmdEdit VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -308,7 +308,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRXLX           cmdGetHelp VALID                   Ё
+*       Ё _58O0YY3PK           cmdGetHelp VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -322,13 +322,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *HELP Ч Help Item
-FUNCTION _58o0wrxlx     &&  cmdGetHelp VALID
+FUNCTION _58o0yy3pk     &&  cmdGetHelp VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstCobrador)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRXLY           cmdCancel VALID                    Ё
+*       Ё _58O0YY3PL           cmdCancel VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -341,13 +341,13 @@ _CUROBJ = OBJNUM(lstCobrador)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrxly     &&  cmdCancel VALID
+FUNCTION _58o0yy3pl     &&  cmdCancel VALID
 #REGION 1
 CLEAR READ
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRXLZ           Nivel de lectura SHOW              Ё
+*       Ё _58O0YY3PM           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -359,7 +359,7 @@ CLEAR READ
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrxlz     && Read Level Show
+FUNCTION _58o0yy3pm     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             PAGOS1.SPR                15:17:16 Ё
+*       Ё 07/05/18             PAGOS1.SPR                16:18:09 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrmt8")
-	DEFINE WINDOW _58o0wrmt8 ;
+IF NOT WEXIST("_58o0yxxhi")
+	DEFINE WINDOW _58o0yxxhi ;
 		FROM INT((SROW()-12)/2),INT((SCOL()-67)/2) ;
 		TO INT((SROW()-12)/2)+11,INT((SCOL()-67)/2)+66 ;
 		TITLE " Consultar Recibo de Pago " ;
@@ -77,10 +77,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrmt8")
-	ACTIVATE WINDOW _58o0wrmt8 SAME
+IF WVISIBLE("_58o0yxxhi")
+	ACTIVATE WINDOW _58o0yxxhi SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrmt8 NOSHOW
+	ACTIVATE WINDOW _58o0yxxhi NOSHOW
 ENDIF
 @ 2,3 SAY "Fecha....:" ;
 	SIZE 1,10, 0
@@ -133,8 +133,8 @@ ENDIF
 	PICTURE "999,999,999.99" ;
 	COLOR B/W     
 
-IF NOT WVISIBLE("_58o0wrmt8")
-	ACTIVATE WINDOW _58o0wrmt8
+IF NOT WVISIBLE("_58o0yxxhi")
+	ACTIVATE WINDOW _58o0yxxhi
 ENDIF
 
 
@@ -146,10 +146,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	WHEN _58o0wrmtb() ;
+	WHEN _58o0yxxhl() ;
 	MODAL TIMEOUT 0
 
-RELEASE WINDOW _58o0wrmt8
+RELEASE WINDOW _58o0yxxhi
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -175,7 +175,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRMTB           Nivel de lectura WHEN              Ё
+*       Ё _58O0YXXHL           Nivel de lectura WHEN              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -187,7 +187,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrmtb     && Read Level When
+FUNCTION _58o0yxxhl     && Read Level When
 *
 * C╒digo WHEN de la pantalla: PAGOS1
 *

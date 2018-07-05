@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            MAESPRO2.SPR               15:17:20 Ё
+*       Ё 07/05/18            MAESPRO2.SPR               16:18:12 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -57,8 +57,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrpuz")
-	DEFINE WINDOW _58o0wrpuz ;
+IF NOT WEXIST("_58o0yxzpq")
+	DEFINE WINDOW _58o0yxzpq ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		TITLE (pcMyTitle) ;
@@ -78,10 +78,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrpuz")
-	ACTIVATE WINDOW _58o0wrpuz SAME
+IF WVISIBLE("_58o0yxzpq")
+	ACTIVATE WINDOW _58o0yxzpq SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrpuz NOSHOW
+	ACTIVATE WINDOW _58o0yxzpq NOSHOW
 ENDIF
 @ 6,0 TO 6,77
 @ 9,0 TO 9,77
@@ -183,7 +183,7 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@A!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _58o0wrpv4()
+	VALID _58o0yxzpu()
 @ 8,17 GET m.stock_max ;
 	SIZE 1,13 ;
 	DEFAULT 0 ;
@@ -194,7 +194,7 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@A!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _58o0wrpv5()
+	VALID _58o0yxzpv()
 @ 11,3 GET m.caracter1 ;
 	SIZE 1,60 ;
 	DEFAULT " " ;
@@ -232,8 +232,8 @@ ENDIF
 @ 2,43 SAY "Incluir en Listas:" ;
 	SIZE 1,18, 0
 
-IF NOT WVISIBLE("_58o0wrpuz")
-	ACTIVATE WINDOW _58o0wrpuz
+IF NOT WVISIBLE("_58o0yxzpq")
+	ACTIVATE WINDOW _58o0yxzpq
 ENDIF
 
 
@@ -245,11 +245,11 @@ ENDIF
 *
 
 READ ;
-	VALID _58o0wrpv6() ;
-	SHOW _58o0wrpv7() ;
+	VALID _58o0yxzpw() ;
+	SHOW _58o0yxzpx() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrpuz
+RELEASE WINDOW _58o0yxzpq
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -366,7 +366,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRPV4           m.polinvsmin VALID                 Ё
+*       Ё _58O0YXZPU           m.polinvsmin VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -379,7 +379,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrpv4     &&  m.polinvsmin VALID
+FUNCTION _58o0yxzpu     &&  m.polinvsmin VALID
 #REGION 1
 IF .NOT. INLIST(m.polinvsmin, "S", "N")
    WAIT WINDOW "╜ AVISAR DEBE SER (S)I o (N)O !"
@@ -388,7 +388,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRPV5           m.polinvsmax VALID                 Ё
+*       Ё _58O0YXZPV           m.polinvsmax VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -401,7 +401,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrpv5     &&  m.polinvsmax VALID
+FUNCTION _58o0yxzpv     &&  m.polinvsmax VALID
 #REGION 1
 IF .NOT. INLIST(m.polinvsmax, "S", "N")
    WAIT WINDOW "╜ AVISAR DEBE SER (S)I o (N)O !"
@@ -410,7 +410,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRPV6           Nivel de lectura v═lido            Ё
+*       Ё _58O0YXZPW           Nivel de lectura v═lido            Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -422,7 +422,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrpv6     && Read Level Valid
+FUNCTION _58o0yxzpw     && Read Level Valid
 *
 * C╒digo v═lido de la pantalla: MAESPRO2
 *
@@ -515,7 +515,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRPV7           Nivel de lectura SHOW              Ё
+*       Ё _58O0YXZPX           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -527,7 +527,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrpv7     && Read Level Show
+FUNCTION _58o0yxzpx     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

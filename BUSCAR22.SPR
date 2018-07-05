@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            BUSCAR22.SPR               15:17:16 Ё
+*       Ё 07/05/18            BUSCAR22.SPR               16:18:09 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -50,8 +50,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrmid")
-	DEFINE WINDOW _58o0wrmid ;
+IF NOT WEXIST("_58o0yxxaw")
+	DEFINE WINDOW _58o0yxxaw ;
 		FROM INT((SROW()-5)/2),INT((SCOL()-30)/2) ;
 		TO INT((SROW()-5)/2)+4,INT((SCOL()-30)/2)+29 ;
 		TITLE " BUSQUEDA POR " ;
@@ -125,10 +125,10 @@ m.serie = SUBSTR(control.serieot, 1, 1)
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrmid")
-	ACTIVATE WINDOW _58o0wrmid SAME
+IF WVISIBLE("_58o0yxxaw")
+	ACTIVATE WINDOW _58o0yxxaw SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrmid NOSHOW
+	ACTIVATE WINDOW _58o0yxxaw NOSHOW
 ENDIF
 @ 1,2 SAY "SERIE:" ;
 	SIZE 1,6, 0
@@ -138,16 +138,16 @@ ENDIF
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _58o0wrmii()
+	VALID _58o0yxxcj()
 @ 1,19 GET m.nroot ;
 	SIZE 1,7 ;
 	DEFAULT 0 ;
 	PICTURE "9999999" ;
 	WHEN .NOT. (EMPTY(m.serie)) ;
-	VALID _58o0wrmij()
+	VALID _58o0yxxck()
 
-IF NOT WVISIBLE("_58o0wrmid")
-	ACTIVATE WINDOW _58o0wrmid
+IF NOT WVISIBLE("_58o0yxxaw")
+	ACTIVATE WINDOW _58o0yxxaw
 ENDIF
 
 
@@ -161,7 +161,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrmid
+RELEASE WINDOW _58o0yxxaw
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -186,7 +186,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRMII           m.serie VALID                      Ё
+*       Ё _58O0YXXCJ           m.serie VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -199,7 +199,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrmii     &&  m.serie VALID
+FUNCTION _58o0yxxcj     &&  m.serie VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_F1, K_BSPACE)
    RETURN .F.
@@ -221,7 +221,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRMIJ           m.nroot VALID                      Ё
+*       Ё _58O0YXXCK           m.nroot VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -234,7 +234,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrmij     &&  m.nroot VALID
+FUNCTION _58o0yxxck     &&  m.nroot VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_ESC, K_BSPACE)
    RETURN

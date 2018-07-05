@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             TABLES.SPR                15:17:07 Ё
+*       Ё 07/05/18             TABLES.SPR                16:18:05 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrfm0")
-	DEFINE WINDOW _58o0wrfm0 ;
+IF NOT WEXIST("_58o0yxtv4")
+	DEFINE WINDOW _58o0yxtv4 ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-28)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-28)/2)+27 ;
 		TITLE " TABLAS DEL SISTEMA " ;
@@ -155,21 +155,21 @@ paTables[23, 02] = "ofertas.prg"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrfm0")
-	ACTIVATE WINDOW _58o0wrfm0 SAME
+IF WVISIBLE("_58o0yxtv4")
+	ACTIVATE WINDOW _58o0yxtv4 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrfm0 NOSHOW
+	ACTIVATE WINDOW _58o0yxtv4 NOSHOW
 ENDIF
 @ 0,0 GET lstTables ;
  	PICTURE "@&T" ;
 	FROM paTables ;
 	SIZE 17,26 ;
 	DEFAULT 1 ;
-	VALID _58o0wrfm6() ;
+	VALID _58o0yxtv9() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0wrfm0")
-	ACTIVATE WINDOW _58o0wrfm0
+IF NOT WVISIBLE("_58o0yxtv4")
+	ACTIVATE WINDOW _58o0yxtv4
 ENDIF
 
 
@@ -183,7 +183,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrfm0
+RELEASE WINDOW _58o0yxtv4
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -206,7 +206,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRFM6           lstTables VALID                    Ё
+*       Ё _58O0YXTV9           lstTables VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -219,7 +219,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrfm6     &&  lstTables VALID
+FUNCTION _58o0yxtv9     &&  lstTables VALID
 #REGION 1
 IF LASTKEY() = 27
    &pcSaveTo = " "

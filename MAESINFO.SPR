@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            MAESINFO.SPR               15:17:13 Ё
+*       Ё 07/05/18            MAESINFO.SPR               16:18:08 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrjv7")
-	DEFINE WINDOW _58o0wrjv7 ;
+IF NOT WEXIST("_58o0yxw27")
+	DEFINE WINDOW _58o0yxw27 ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		NOFLOAT ;
@@ -133,10 +133,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrjv7")
-	ACTIVATE WINDOW _58o0wrjv7 SAME
+IF WVISIBLE("_58o0yxw27")
+	ACTIVATE WINDOW _58o0yxw27 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrjv7 NOSHOW
+	ACTIVATE WINDOW _58o0yxw27 NOSHOW
 ENDIF
 @ 1,47 SAY "C.Alternativo:" ;
 	SIZE 1,14, 0
@@ -279,8 +279,8 @@ ENDIF
 	SIZE 3,76 ;
 	COLOR N/W     
 
-IF NOT WVISIBLE("_58o0wrjv7")
-	ACTIVATE WINDOW _58o0wrjv7
+IF NOT WVISIBLE("_58o0yxw27")
+	ACTIVATE WINDOW _58o0yxw27
 ENDIF
 
 
@@ -294,7 +294,7 @@ ENDIF
 READ CYCLE ;
 	MODAL TIMEOUT 0
 
-RELEASE WINDOW _58o0wrjv7
+RELEASE WINDOW _58o0yxw27
 
 #REGION 0
 IF m.talkstat = "ON"

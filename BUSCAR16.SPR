@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            BUSCAR16.SPR               15:17:17 Ё
+*       Ё 07/05/18            BUSCAR16.SPR               16:18:10 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrn2m")
-	DEFINE WINDOW _58o0wrn2m ;
+IF NOT WEXIST("_58o0yxxpd")
+	DEFINE WINDOW _58o0yxxpd ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-42)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-42)/2)+41 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,21 +67,21 @@ PRIVATE m.cedulaot
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrn2m")
-	ACTIVATE WINDOW _58o0wrn2m SAME
+IF WVISIBLE("_58o0yxxpd")
+	ACTIVATE WINDOW _58o0yxxpd SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrn2m NOSHOW
+	ACTIVATE WINDOW _58o0yxxpd NOSHOW
 ENDIF
 @ 0,23 GET m.cedulaot ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _58o0wrn47()
+	VALID _58o0yxxpg()
 @ 0,2 SAY "CEDULA DE IDENTIDAD:" ;
 	SIZE 1,20, 0
 
-IF NOT WVISIBLE("_58o0wrn2m")
-	ACTIVATE WINDOW _58o0wrn2m
+IF NOT WVISIBLE("_58o0yxxpd")
+	ACTIVATE WINDOW _58o0yxxpd
 ENDIF
 
 
@@ -95,7 +95,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrn2m
+RELEASE WINDOW _58o0yxxpd
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -108,7 +108,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRN47           m.cedulaot VALID                   Ё
+*       Ё _58O0YXXPG           m.cedulaot VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -121,7 +121,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrn47     &&  m.cedulaot VALID
+FUNCTION _58o0yxxpg     &&  m.cedulaot VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             CUOTAS.SPR                15:17:30 Ё
+*       Ё 07/05/18             CUOTAS.SPR                16:18:17 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrx7a")
-	DEFINE WINDOW _58o0wrx7a ;
+IF NOT WEXIST("_58o0yy3j8")
+	DEFINE WINDOW _58o0yy3j8 ;
 		FROM INT((SROW()-9)/2),INT((SCOL()-32)/2) ;
 		TO INT((SROW()-9)/2)+8,INT((SCOL()-32)/2)+31 ;
 		TITLE " Modificar Cuota " ;
@@ -57,10 +57,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrx7a")
-	ACTIVATE WINDOW _58o0wrx7a SAME
+IF WVISIBLE("_58o0yy3j8")
+	ACTIVATE WINDOW _58o0yy3j8 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrx7a NOSHOW
+	ACTIVATE WINDOW _58o0yy3j8 NOSHOW
 ENDIF
 @ 3,3 SAY "Importe.:" ;
 	SIZE 1,9, 0
@@ -83,15 +83,15 @@ ENDIF
 	SIZE 1,14 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999.99" ;
-	VALID _58o0wrx7e()
+	VALID _58o0yy3ja()
 @ 5,2 GET pnChoice ;
 	PICTURE "@*HT \!\<Aceptar;\?\<Cancelar" ;
 	SIZE 1,12,2 ;
 	DEFAULT 1 ;
-	VALID _58o0wrx7f()
+	VALID _58o0yy3jb()
 
-IF NOT WVISIBLE("_58o0wrx7a")
-	ACTIVATE WINDOW _58o0wrx7a
+IF NOT WVISIBLE("_58o0yy3j8")
+	ACTIVATE WINDOW _58o0yy3j8
 ENDIF
 
 
@@ -105,7 +105,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrx7a
+RELEASE WINDOW _58o0yy3j8
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -197,7 +197,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRX7E           m.importe VALID                    Ё
+*       Ё _58O0YY3JA           m.importe VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -210,7 +210,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrx7e     &&  m.importe VALID
+FUNCTION _58o0yy3ja     &&  m.importe VALID
 #REGION 1
 IF LASTKEY() = 27
    RETURN
@@ -223,7 +223,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRX7F           pnChoice VALID                     Ё
+*       Ё _58O0YY3JB           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -236,7 +236,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrx7f     &&  pnChoice VALID
+FUNCTION _58o0yy3jb     &&  pnChoice VALID
 #REGION 1
 IF pnChoice = 1
    CLEAR READ

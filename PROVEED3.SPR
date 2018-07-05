@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            PROVEED3.SPR               15:17:21 Ё
+*       Ё 07/05/18            PROVEED3.SPR               16:18:13 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrqlf")
-	DEFINE WINDOW _58o0wrqlf ;
+IF NOT WEXIST("_58o0yy0d5")
+	DEFINE WINDOW _58o0yy0d5 ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		TITLE " Consultar Proveedor " ;
@@ -76,10 +76,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrqlf")
-	ACTIVATE WINDOW _58o0wrqlf SAME
+IF WVISIBLE("_58o0yy0d5")
+	ACTIVATE WINDOW _58o0yy0d5 SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrqlf NOSHOW
+	ACTIVATE WINDOW _58o0yy0d5 NOSHOW
 ENDIF
 @ 0,64 SAY "Paso 1 de 2" ;
 	SIZE 1,11, 0
@@ -205,8 +205,8 @@ ENDIF
 	PICTURE "999,999,999,999" ;
 	COLOR N/W     
 
-IF NOT WVISIBLE("_58o0wrqlf")
-	ACTIVATE WINDOW _58o0wrqlf
+IF NOT WVISIBLE("_58o0yy0d5")
+	ACTIVATE WINDOW _58o0yy0d5
 ENDIF
 
 
@@ -220,7 +220,7 @@ ENDIF
 READ ;
 	MODAL TIMEOUT 0 COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrqlf
+RELEASE WINDOW _58o0yy0d5
 
 #REGION 0
 IF m.talkstat = "ON"

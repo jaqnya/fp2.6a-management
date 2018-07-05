@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            CLIBUSC3.SPR               15:17:14 Ё
+*       Ё 07/05/18            CLIBUSC3.SPR               16:18:08 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrkwf")
-	DEFINE WINDOW _58o0wrkwf ;
+IF NOT WEXIST("_58o0yxwly")
+	DEFINE WINDOW _58o0yxwly ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-44)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-44)/2)+43 ;
 		TITLE " BUSQUEDA POR " ;
@@ -57,21 +57,21 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrkwf")
-	ACTIVATE WINDOW _58o0wrkwf SAME
+IF WVISIBLE("_58o0yxwly")
+	ACTIVATE WINDOW _58o0yxwly SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrkwf NOSHOW
+	ACTIVATE WINDOW _58o0yxwly NOSHOW
 ENDIF
 @ 0,25 GET m.documento ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _58o0wrkwi()
+	VALID _58o0yxwm0()
 @ 0,2 SAY "DOCUMENTO DEL CLIENTE:" ;
 	SIZE 1,22, 0
 
-IF NOT WVISIBLE("_58o0wrkwf")
-	ACTIVATE WINDOW _58o0wrkwf
+IF NOT WVISIBLE("_58o0yxwly")
+	ACTIVATE WINDOW _58o0yxwly
 ENDIF
 
 
@@ -85,7 +85,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrkwf
+RELEASE WINDOW _58o0yxwly
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -98,7 +98,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRKWI           m.documento VALID                  Ё
+*       Ё _58O0YXWM0           m.documento VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -111,7 +111,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrkwi     &&  m.documento VALID
+FUNCTION _58o0yxwm0     &&  m.documento VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_F1, K_BSPACE)
    RETURN .F.

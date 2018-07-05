@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            PROVEED2.SPR               15:17:21 Ё
+*       Ё 07/05/18            PROVEED2.SPR               16:18:13 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -57,8 +57,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrqim")
-	DEFINE WINDOW _58o0wrqim ;
+IF NOT WEXIST("_58o0yy0an")
+	DEFINE WINDOW _58o0yy0an ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		TITLE (pcMyTitle) ;
@@ -78,10 +78,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrqim")
-	ACTIVATE WINDOW _58o0wrqim SAME
+IF WVISIBLE("_58o0yy0an")
+	ACTIVATE WINDOW _58o0yy0an SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrqim NOSHOW
+	ACTIVATE WINDOW _58o0yy0an NOSHOW
 ENDIF
 @ 7,3 SAY "Hablar con...:" ;
 	SIZE 1,14, 0
@@ -225,8 +225,8 @@ ENDIF
 	PICTURE "999,999,999,999" ;
 	WHEN .F.
 
-IF NOT WVISIBLE("_58o0wrqim")
-	ACTIVATE WINDOW _58o0wrqim
+IF NOT WVISIBLE("_58o0yy0an")
+	ACTIVATE WINDOW _58o0yy0an
 ENDIF
 
 
@@ -238,10 +238,10 @@ ENDIF
 *
 
 READ ;
-	VALID _58o0wrqir() ;
+	VALID _58o0yy0as() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrqim
+RELEASE WINDOW _58o0yy0an
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -254,7 +254,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRQIR           Nivel de lectura v═lido            Ё
+*       Ё _58O0YY0AS           Nivel de lectura v═lido            Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -266,7 +266,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrqir     && Read Level Valid
+FUNCTION _58o0yy0as     && Read Level Valid
 *
 * C╒digo v═lido de la pantalla: PROVEED2
 *

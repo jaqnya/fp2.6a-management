@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            MODULES2.SPR               15:17:07 Ё
+*       Ё 07/05/18            MODULES2.SPR               16:18:05 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrfdf")
-	DEFINE WINDOW _58o0wrfdf ;
+IF NOT WEXIST("_58o0yxtsk")
+	DEFINE WINDOW _58o0yxtsk ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-53)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-53)/2)+52 ;
 		TITLE " MODULOS DEL SISTEMA " ;
@@ -130,21 +130,21 @@ paModule(15, 02) = "notaprov.prg"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrfdf")
-	ACTIVATE WINDOW _58o0wrfdf SAME
+IF WVISIBLE("_58o0yxtsk")
+	ACTIVATE WINDOW _58o0yxtsk SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrfdf NOSHOW
+	ACTIVATE WINDOW _58o0yxtsk NOSHOW
 ENDIF
 @ 0,0 GET lstModule ;
  	PICTURE "@&T" ;
 	FROM paModule ;
 	SIZE 17,51 ;
 	DEFAULT 1 ;
-	VALID _58o0wrfdj() ;
+	VALID _58o0yxtsm() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0wrfdf")
-	ACTIVATE WINDOW _58o0wrfdf
+IF NOT WVISIBLE("_58o0yxtsk")
+	ACTIVATE WINDOW _58o0yxtsk
 ENDIF
 
 
@@ -158,7 +158,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrfdf
+RELEASE WINDOW _58o0yxtsk
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -171,7 +171,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRFDJ           lstModule VALID                    Ё
+*       Ё _58O0YXTSM           lstModule VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -184,7 +184,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrfdj     &&  lstModule VALID
+FUNCTION _58o0yxtsm     &&  lstModule VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

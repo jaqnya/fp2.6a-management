@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            CLIBUSC5.SPR               15:17:14 Ё
+*       Ё 07/05/18            CLIBUSC5.SPR               16:18:08 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0wrl1i")
-	DEFINE WINDOW _58o0wrl1i ;
+IF NOT WEXIST("_58o0yxwmr")
+	DEFINE WINDOW _58o0yxwmr ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-44)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-44)/2)+43 ;
 		TITLE " BUSQUEDA POR " ;
@@ -57,21 +57,21 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0wrl1i")
-	ACTIVATE WINDOW _58o0wrl1i SAME
+IF WVISIBLE("_58o0yxwmr")
+	ACTIVATE WINDOW _58o0yxwmr SAME
 ELSE
-	ACTIVATE WINDOW _58o0wrl1i NOSHOW
+	ACTIVATE WINDOW _58o0yxwmr NOSHOW
 ENDIF
 @ 0,25 GET m.docconyuge ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _58o0wrl1k()
+	VALID _58o0yxwmt()
 @ 0,2 SAY "DOCUMENTO DEL CONYUGE:" ;
 	SIZE 1,22, 0
 
-IF NOT WVISIBLE("_58o0wrl1i")
-	ACTIVATE WINDOW _58o0wrl1i
+IF NOT WVISIBLE("_58o0yxwmr")
+	ACTIVATE WINDOW _58o0yxwmr
 ENDIF
 
 
@@ -85,7 +85,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0wrl1i
+RELEASE WINDOW _58o0yxwmr
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -98,7 +98,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0WRL1K           m.docconyuge VALID                 Ё
+*       Ё _58O0YXWMT           m.docconyuge VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -111,7 +111,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0wrl1k     &&  m.docconyuge VALID
+FUNCTION _58o0yxwmt     &&  m.docconyuge VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_F1, K_BSPACE)
    RETURN .F.
