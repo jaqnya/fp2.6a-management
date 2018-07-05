@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            USUARIOS.SPR               08:19:06 Ё
+*       Ё 07/05/18            USUARIOS.SPR               15:17:20 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -57,8 +57,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htule")
-	DEFINE WINDOW _5450htule ;
+IF NOT WEXIST("_58o0wrpls")
+	DEFINE WINDOW _58o0wrpls ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-50)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-50)/2)+49 ;
 		TITLE (pcMyTitle) ;
@@ -139,10 +139,10 @@ SET COLOR OF SCHEME 24 TO W/N,W/W,W+/N,W+/N,W/N,B+/N,W+/N,N+/N,W+/N,W/N,-
 *
 
 #REGION 1
-IF WVISIBLE("_5450htule")
-	ACTIVATE WINDOW _5450htule SAME
+IF WVISIBLE("_58o0wrpls")
+	ACTIVATE WINDOW _58o0wrpls SAME
 ELSE
-	ACTIVATE WINDOW _5450htule NOSHOW
+	ACTIVATE WINDOW _58o0wrpls NOSHOW
 ENDIF
 @ 3,3 SAY "Contrase╓a:" ;
 	SIZE 1,11, 0
@@ -158,13 +158,13 @@ ENDIF
 	DEFAULT 0 ;
 	PICTURE "@K 9999" ;
 	WHEN plAdding ;
-	VALID _5450htulg()
+	VALID _58o0wrplx()
 @ 2,15 GET m.nombre ;
 	SIZE 1,30 ;
 	DEFAULT " " ;
 	PICTURE "@!K" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _5450htulh()
+	VALID _58o0wrply()
 @ 3,15 GET m.clave ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
@@ -176,22 +176,22 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _5450htuli() ;
+	VALID _58o0wrpm0() ;
 	COLOR SCHEME 24
 @ 6,7 GET m.assign ;
 	PICTURE "@*HN Modificar permisos del usuario" ;
 	SIZE 1,34,1 ;
 	DEFAULT 1 ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _5450htulj()
+	VALID _58o0wrpm1()
 @ 9,7 GET pnChoice ;
 	PICTURE "@*HT \\\!\<Grabar;\?\<Cancelar" ;
 	SIZE 1,12,10 ;
 	DEFAULT 1 ;
-	VALID _5450htulk()
+	VALID _58o0wrpm2()
 
-IF NOT WVISIBLE("_5450htule")
-	ACTIVATE WINDOW _5450htule
+IF NOT WVISIBLE("_58o0wrpls")
+	ACTIVATE WINDOW _58o0wrpls
 ENDIF
 
 
@@ -203,11 +203,11 @@ ENDIF
 *
 
 READ CYCLE ;
-	ACTIVATE _5450htull() ;
-	SHOW _5450htulm() ;
+	ACTIVATE _58o0wrpm3() ;
+	SHOW _58o0wrpm4() ;
 	MODAL
 
-RELEASE WINDOW _5450htule
+RELEASE WINDOW _58o0wrpls
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -345,7 +345,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTULG           m.codigo VALID                     Ё
+*       Ё _58O0WRPLX           m.codigo VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -358,7 +358,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htulg     &&  m.codigo VALID
+FUNCTION _58o0wrplx     &&  m.codigo VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -395,7 +395,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTULH           m.nombre VALID                     Ё
+*       Ё _58O0WRPLY           m.nombre VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -408,7 +408,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htulh     &&  m.nombre VALID
+FUNCTION _58o0wrply     &&  m.nombre VALID
 #REGION 1
 IF plAdding
    IF INLIST(LASTKEY(), 5, 19, 27, 127)
@@ -502,7 +502,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTULI           m.confirm_clave VALID              Ё
+*       Ё _58O0WRPM0           m.confirm_clave VALID              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -515,7 +515,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htuli     &&  m.confirm_clave VALID
+FUNCTION _58o0wrpm0     &&  m.confirm_clave VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -528,7 +528,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTULJ           m.assign VALID                     Ё
+*       Ё _58O0WRPM1           m.assign VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -541,7 +541,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htulj     &&  m.assign VALID
+FUNCTION _58o0wrpm1     &&  m.assign VALID
 #REGION 1
 DO userhelp.spr
 
@@ -609,7 +609,7 @@ SHOW GET pnChoice, 1 ENABLE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTULK           pnChoice VALID                     Ё
+*       Ё _58O0WRPM2           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -622,7 +622,7 @@ SHOW GET pnChoice, 1 ENABLE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htulk     &&  pnChoice VALID
+FUNCTION _58o0wrpm2     &&  pnChoice VALID
 #REGION 1
 IF pnChoice = 1
    IF plAdding .OR. plEditing
@@ -682,7 +682,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTULL           Nivel de lectura ACTIVATE          Ё
+*       Ё _58O0WRPM3           Nivel de lectura ACTIVATE          Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -694,7 +694,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htull     && Read Level Activate
+FUNCTION _58o0wrpm3     && Read Level Activate
 *
 * C╒digo ACTIVATE de la pantalla: USUARIOS
 *
@@ -705,7 +705,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTULM           Nivel de lectura SHOW              Ё
+*       Ё _58O0WRPM4           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -717,7 +717,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htulm     && Read Level Show
+FUNCTION _58o0wrpm4     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

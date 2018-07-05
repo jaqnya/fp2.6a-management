@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            BUSCAR08.SPR               08:19:01 Ё
+*       Ё 07/05/18            BUSCAR08.SPR               15:17:14 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htrd5")
-	DEFINE WINDOW _5450htrd5 ;
+IF NOT WEXIST("_58o0wrkk6")
+	DEFINE WINDOW _58o0wrkk6 ;
 		FROM INT((SROW()-4)/2),INT((SCOL()-42)/2) ;
 		TO INT((SROW()-4)/2)+3,INT((SCOL()-42)/2)+41 ;
 		TITLE " BUSQUEDA POR " ;
@@ -71,10 +71,10 @@ PRIVATE m.tipodocu, m.nrodocu
 *
 
 #REGION 1
-IF WVISIBLE("_5450htrd5")
-	ACTIVATE WINDOW _5450htrd5 SAME
+IF WVISIBLE("_58o0wrkk6")
+	ACTIVATE WINDOW _58o0wrkk6 SAME
 ELSE
-	ACTIVATE WINDOW _5450htrd5 NOSHOW
+	ACTIVATE WINDOW _58o0wrkk6 NOSHOW
 ENDIF
 @ 0,2 SAY "Documento:" ;
 	SIZE 1,10, 0
@@ -84,16 +84,16 @@ ENDIF
 	SIZE 1,1 ;
 	DEFAULT 0 ;
 	PICTURE "9" ;
-	WHEN _5450htrdz() ;
-	VALID _5450htre0()
+	WHEN _58o0wrkk8() ;
+	VALID _58o0wrkk9()
 @ 1,13 GET m.nrodocu ;
 	SIZE 1,9 ;
 	DEFAULT 0 ;
 	PICTURE "999999999" ;
-	VALID _5450htrea()
+	VALID _58o0wrkkf()
 
-IF NOT WVISIBLE("_5450htrd5")
-	ACTIVATE WINDOW _5450htrd5
+IF NOT WVISIBLE("_58o0wrkk6")
+	ACTIVATE WINDOW _58o0wrkk6
 ENDIF
 
 
@@ -105,10 +105,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _5450htrec() ;
+	SHOW _58o0wrkkh() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htrd5
+RELEASE WINDOW _58o0wrkk6
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -121,7 +121,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTRDZ           m.tipodocu WHEN                    Ё
+*       Ё _58O0WRKK8           m.tipodocu WHEN                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -140,11 +140,11 @@ ENDIF
 *   RETURN .F.
 *ENDIF
 
-FUNCTION _5450htrdz     &&  m.tipodocu WHEN
+FUNCTION _58o0wrkk8     &&  m.tipodocu WHEN
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTRE0           m.tipodocu VALID                   Ё
+*       Ё _58O0WRKK9           m.tipodocu VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -157,7 +157,7 @@ FUNCTION _5450htrdz     &&  m.tipodocu WHEN
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htre0     &&  m.tipodocu VALID
+FUNCTION _58o0wrkk9     &&  m.tipodocu VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -426,7 +426,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTREA           m.nrodocu VALID                    Ё
+*       Ё _58O0WRKKF           m.nrodocu VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -439,7 +439,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htrea     &&  m.nrodocu VALID
+FUNCTION _58o0wrkkf     &&  m.nrodocu VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -494,7 +494,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTREC           Nivel de lectura SHOW              Ё
+*       Ё _58O0WRKKH           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -506,7 +506,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htrec     && Read Level Show
+FUNCTION _58o0wrkkh     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

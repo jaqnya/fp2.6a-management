@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18              PAGOS.SPR                08:19:08 Ё
+*       Ё 07/05/18              PAGOS.SPR                15:17:23 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -57,8 +57,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htw7k")
-	DEFINE WINDOW _5450htw7k ;
+IF NOT WEXIST("_58o0wrryw")
+	DEFINE WINDOW _58o0wrryw ;
 		FROM INT((SROW()-12)/2),INT((SCOL()-67)/2) ;
 		TO INT((SROW()-12)/2)+11,INT((SCOL()-67)/2)+66 ;
 		TITLE (pcMyTitle) ;
@@ -103,10 +103,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htw7k")
-	ACTIVATE WINDOW _5450htw7k SAME
+IF WVISIBLE("_58o0wrryw")
+	ACTIVATE WINDOW _58o0wrryw SAME
 ELSE
-	ACTIVATE WINDOW _5450htw7k NOSHOW
+	ACTIVATE WINDOW _58o0wrryw NOSHOW
 ENDIF
 @ 2,3 SAY "Fecha....:" ;
 	SIZE 1,10, 0
@@ -130,18 +130,18 @@ ENDIF
 	SIZE 1,1 ;
 	DEFAULT 0 ;
 	PICTURE "9" ;
-	VALID _5450htw7q()
+	VALID _58o0wrrz0()
 @ 0,46 GET m.nroreci ;
 	SIZE 1,7 ;
 	DEFAULT 0 ;
 	PICTURE "9999999" ;
-	VALID _5450htw7r()
+	VALID _58o0wrrz1()
 @ 2,14 GET m.fechareci ;
 	SIZE 1,10 ;
 	DEFAULT " " ;
 	PICTURE "99/99/9999" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _5450htw7s()
+	VALID _58o0wrrz2()
 @ 2,46 GET m.id_local ;
 	SIZE 1,2 ;
 	DEFAULT " " ;
@@ -152,28 +152,28 @@ ENDIF
 	DEFAULT 0 ;
 	PICTURE "99999" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _5450htw7v()
+	VALID _58o0wrrz4()
 @ 6,19 GET m.moneda ;
 	SIZE 1,5 ;
 	DEFAULT 0 ;
 	PICTURE "99999" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _5450htw7z()
+	VALID _58o0wrrz7()
 @ 7,19 GET m.tipocambio ;
 	SIZE 1,9 ;
 	DEFAULT 0 ;
 	PICTURE "999999.99" ;
 	WHEN (plAdding .OR. plEditing) .AND. m.moneda <> 1 ;
-	VALID _5450htw87()
+	VALID _58o0wrrzc()
 @ 9,36 GET m.monto_pago ;
 	SIZE 1,14 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999.99" ;
 	WHEN .F. ;
-	VALID _5450htw8a()
+	VALID _58o0wrrzd()
 
-IF NOT WVISIBLE("_5450htw7k")
-	ACTIVATE WINDOW _5450htw7k
+IF NOT WVISIBLE("_58o0wrryw")
+	ACTIVATE WINDOW _58o0wrryw
 ENDIF
 
 
@@ -185,10 +185,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _5450htw8b() ;
+	SHOW _58o0wrrze() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htw7k
+RELEASE WINDOW _58o0wrryw
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -376,7 +376,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW7Q           m.tiporeci VALID                   Ё
+*       Ё _58O0WRRZ0           m.tiporeci VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -389,7 +389,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw7q     &&  m.tiporeci VALID
+FUNCTION _58o0wrrz0     &&  m.tiporeci VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -436,7 +436,7 @@ ENDCASE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW7R           m.nroreci VALID                    Ё
+*       Ё _58O0WRRZ1           m.nroreci VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -449,7 +449,7 @@ ENDCASE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw7r     &&  m.nroreci VALID
+FUNCTION _58o0wrrz1     &&  m.nroreci VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -463,7 +463,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW7S           m.fechareci VALID                  Ё
+*       Ё _58O0WRRZ2           m.fechareci VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -476,7 +476,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw7s     &&  m.fechareci VALID
+FUNCTION _58o0wrrz2     &&  m.fechareci VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -536,7 +536,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW7V           m.proveedor VALID                  Ё
+*       Ё _58O0WRRZ4           m.proveedor VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -549,7 +549,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw7v     &&  m.proveedor VALID
+FUNCTION _58o0wrrz4     &&  m.proveedor VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -661,7 +661,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW7Z           m.moneda VALID                     Ё
+*       Ё _58O0WRRZ7           m.moneda VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -674,7 +674,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw7z     &&  m.moneda VALID
+FUNCTION _58o0wrrz7     &&  m.moneda VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -907,7 +907,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW87           m.tipocambio VALID                 Ё
+*       Ё _58O0WRRZC           m.tipocambio VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -920,7 +920,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw87     &&  m.tipocambio VALID
+FUNCTION _58o0wrrzc     &&  m.tipocambio VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1012,7 +1012,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW8A           m.monto_pago VALID                 Ё
+*       Ё _58O0WRRZD           m.monto_pago VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1025,7 +1025,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw8a     &&  m.monto_pago VALID
+FUNCTION _58o0wrrzd     &&  m.monto_pago VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1038,7 +1038,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTW8B           Nivel de lectura SHOW              Ё
+*       Ё _58O0WRRZE           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1050,7 +1050,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htw8b     && Read Level Show
+FUNCTION _58o0wrrze     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

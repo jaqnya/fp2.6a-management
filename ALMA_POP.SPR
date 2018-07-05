@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            ALMA_POP.SPR               08:19:07 Ё
+*       Ё 07/05/18            ALMA_POP.SPR               15:17:23 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -60,8 +60,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htvuy")
-	DEFINE WINDOW _5450htvuy ;
+IF NOT WEXIST("_58o0wrrkk")
+	DEFINE WINDOW _58o0wrrkk ;
 		FROM INT((SROW()-17)/2),INT((SCOL()-56)/2) ;
 		TO INT((SROW()-17)/2)+16,INT((SCOL()-56)/2)+55 ;
 		TITLE " ALMACENES " ;
@@ -118,10 +118,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htvuy")
-	ACTIVATE WINDOW _5450htvuy SAME
+IF WVISIBLE("_58o0wrrkk")
+	ACTIVATE WINDOW _58o0wrrkk SAME
 ELSE
-	ACTIVATE WINDOW _5450htvuy NOSHOW
+	ACTIVATE WINDOW _58o0wrrkk NOSHOW
 ENDIF
 @ 1,51 SAY "э" ;
 	SIZE 1,1, 0
@@ -145,31 +145,31 @@ ENDIF
 	RANGE 2 ;
 	SIZE 15,36 ;
 	DEFAULT 1 ;
-	VALID _5450htvwn() ;
+	VALID _58o0wrrko() ;
 	COLOR SCHEME 14
 @ 1,40 GET cmdNew ;
 	PICTURE "@*VN \<Agregar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htvwo()
+	VALID _58o0wrrkp()
 @ 4,40 GET cmdDelete ;
 	PICTURE "@*VN \<Borrar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htvwp()
+	VALID _58o0wrrkq()
 @ 7,40 GET cmdEdit ;
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htvwq()
+	VALID _58o0wrrkr()
 @ 13,40 GET cmdGetHelp ;
 	PICTURE "@*VN A\<yuda" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htvwr()
+	VALID _58o0wrrks()
 
-IF NOT WVISIBLE("_5450htvuy")
-	ACTIVATE WINDOW _5450htvuy
+IF NOT WVISIBLE("_58o0wrrkk")
+	ACTIVATE WINDOW _58o0wrrkk
 ENDIF
 
 
@@ -181,10 +181,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _5450htvws() ;
+	SHOW _58o0wrrkt() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htvuy
+RELEASE WINDOW _58o0wrrkk
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -210,7 +210,7 @@ SET COLOR OF SCHEME 14 TO &cScheme14
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTVWN           lstAlmacen VALID                   Ё
+*       Ё _58O0WRRKO           lstAlmacen VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -223,7 +223,7 @@ SET COLOR OF SCHEME 14 TO &cScheme14
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htvwn     &&  lstAlmacen VALID
+FUNCTION _58o0wrrko     &&  lstAlmacen VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal
@@ -237,7 +237,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTVWO           cmdNew VALID                       Ё
+*       Ё _58O0WRRKP           cmdNew VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -250,14 +250,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htvwo     &&  cmdNew VALID
+FUNCTION _58o0wrrkp     &&  cmdNew VALID
 #REGION 1
 DO almacen.prg WITH "Add"
 _CUROBJ = OBJNUM(lstAlmacen)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTVWP           cmdDelete VALID                    Ё
+*       Ё _58O0WRRKQ           cmdDelete VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -270,7 +270,7 @@ _CUROBJ = OBJNUM(lstAlmacen)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htvwp     &&  cmdDelete VALID
+FUNCTION _58o0wrrkq     &&  cmdDelete VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 pnSelect = SELECT()
@@ -293,7 +293,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTVWQ           cmdEdit VALID                      Ё
+*       Ё _58O0WRRKR           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -306,7 +306,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htvwq     &&  cmdEdit VALID
+FUNCTION _58o0wrrkr     &&  cmdEdit VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 pnSelect = SELECT()
@@ -329,7 +329,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTVWR           cmdGetHelp VALID                   Ё
+*       Ё _58O0WRRKS           cmdGetHelp VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -343,13 +343,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *HELP Ч Help Item
-FUNCTION _5450htvwr     &&  cmdGetHelp VALID
+FUNCTION _58o0wrrks     &&  cmdGetHelp VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstAlmacen)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTVWS           Nivel de lectura SHOW              Ё
+*       Ё _58O0WRRKT           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -361,7 +361,7 @@ _CUROBJ = OBJNUM(lstAlmacen)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htvws     && Read Level Show
+FUNCTION _58o0wrrkt     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

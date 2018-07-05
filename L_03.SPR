@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18              L_03.SPR                 08:19:00 Ё
+*       Ё 07/05/18              L_03.SPR                 15:17:11 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htqb8")
-	DEFINE WINDOW _5450htqb8 ;
+IF NOT WEXIST("_58o0wrido")
+	DEFINE WINDOW _58o0wrido ;
 		FROM INT((SROW()-17)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-17)/2)+16,INT((SCOL()-65)/2)+64 ;
 		TITLE " Ventas y Detalle de los Art║culos Vendidos " ;
@@ -73,10 +73,10 @@ m.destino  = "P"
 *
 
 #REGION 1
-IF WVISIBLE("_5450htqb8")
-	ACTIVATE WINDOW _5450htqb8 SAME
+IF WVISIBLE("_58o0wrido")
+	ACTIVATE WINDOW _58o0wrido SAME
 ELSE
-	ACTIVATE WINDOW _5450htqb8 NOSHOW
+	ACTIVATE WINDOW _58o0wrido NOSHOW
 ENDIF
 @ 12,0 TO 12,62
 @ 4,2 SAY "HASTA EL:" ;
@@ -95,40 +95,40 @@ ENDIF
 	SIZE 1,5 ;
 	DEFAULT 0 ;
 	PICTURE "99999" ;
-	VALID _5450htqbc()
+	VALID _58o0wridq()
 @ 3,12 GET m.fecha01 ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _5450htqbd() ;
-	VALID _5450htqbe()
+	WHEN _58o0wrids() ;
+	VALID _58o0wridt()
 @ 4,12 GET m.fecha02 ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _5450htqbf() ;
-	VALID _5450htqbg()
+	WHEN _58o0wridu() ;
+	VALID _58o0wridv()
 @ 6,37 GET m.detalle ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _5450htqbh()
+	VALID _58o0wridw()
 @ 8,16 GET m.ordenado ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _5450htqbi()
+	VALID _58o0wridx()
 @ 10,12 GET m.destino ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _5450htqbj()
+	VALID _58o0wridy()
 @ 13,17 GET cmgChoice ;
 	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _5450htqbk()
+	VALID _58o0wridz()
 
-IF NOT WVISIBLE("_5450htqb8")
-	ACTIVATE WINDOW _5450htqb8
+IF NOT WVISIBLE("_58o0wrido")
+	ACTIVATE WINDOW _58o0wrido
 ENDIF
 
 
@@ -140,10 +140,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _5450htqbl() ;
+	SHOW _58o0wrie0() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htqb8
+RELEASE WINDOW _58o0wrido
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -424,7 +424,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBC           m.cliente VALID                    Ё
+*       Ё _58O0WRIDQ           m.cliente VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -437,7 +437,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbc     &&  m.cliente VALID
+FUNCTION _58o0wridq     &&  m.cliente VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -522,7 +522,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBD           m.fecha01 WHEN                     Ё
+*       Ё _58O0WRIDS           m.fecha01 WHEN                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -535,13 +535,13 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbd     &&  m.fecha01 WHEN
+FUNCTION _58o0wrids     &&  m.fecha01 WHEN
 #REGION 1
 SET NOTIFY  ON
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBE           m.fecha01 VALID                    Ё
+*       Ё _58O0WRIDT           m.fecha01 VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -554,13 +554,13 @@ SET NOTIFY  ON
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbe     &&  m.fecha01 VALID
+FUNCTION _58o0wridt     &&  m.fecha01 VALID
 #REGION 1
 SET NOTIFY  OFF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBF           m.fecha02 WHEN                     Ё
+*       Ё _58O0WRIDU           m.fecha02 WHEN                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -573,13 +573,13 @@ SET NOTIFY  OFF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbf     &&  m.fecha02 WHEN
+FUNCTION _58o0wridu     &&  m.fecha02 WHEN
 #REGION 1
 SET NOTIFY  ON
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBG           m.fecha02 VALID                    Ё
+*       Ё _58O0WRIDV           m.fecha02 VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -592,7 +592,7 @@ SET NOTIFY  ON
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbg     &&  m.fecha02 VALID
+FUNCTION _58o0wridv     &&  m.fecha02 VALID
 #REGION 1
 IF m.fecha02 < m.fecha01
    WAIT WINDOW "╜ LA FECHA FINAL DEBE SER MAYOR QUE LA FECHA INICIAL !"
@@ -603,7 +603,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBH           m.detalle VALID                    Ё
+*       Ё _58O0WRIDW           m.detalle VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -616,7 +616,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbh     &&  m.detalle VALID
+FUNCTION _58o0wridw     &&  m.detalle VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -629,7 +629,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBI           m.ordenado VALID                   Ё
+*       Ё _58O0WRIDX           m.ordenado VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -642,7 +642,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbi     &&  m.ordenado VALID
+FUNCTION _58o0wridx     &&  m.ordenado VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -677,7 +677,7 @@ ENDCASE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBJ           m.destino VALID                    Ё
+*       Ё _58O0WRIDY           m.destino VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -690,7 +690,7 @@ ENDCASE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbj     &&  m.destino VALID
+FUNCTION _58o0wridy     &&  m.destino VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -725,7 +725,7 @@ ENDCASE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBK           cmgChoice VALID                    Ё
+*       Ё _58O0WRIDZ           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -738,7 +738,7 @@ ENDCASE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbk     &&  cmgChoice VALID
+FUNCTION _58o0wridz     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    DO _Report_L_02
@@ -751,7 +751,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQBL           Nivel de lectura SHOW              Ё
+*       Ё _58O0WRIE0           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -763,7 +763,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqbl     && Read Level Show
+FUNCTION _58o0wrie0     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18             ORDEN07.SPR               08:19:03 Ё
+*       Ё 07/05/18             ORDEN07.SPR               15:17:16 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -53,8 +53,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450hts9l")
-	DEFINE WINDOW _5450hts9l ;
+IF NOT WEXIST("_58o0wrmfi")
+	DEFINE WINDOW _58o0wrmfi ;
 		FROM INT((SROW()-6)/2),INT((SCOL()-31)/2) ;
 		TO INT((SROW()-6)/2)+5,INT((SCOL()-31)/2)+30 ;
 		TITLE " ORDENAR POR " ;
@@ -98,21 +98,21 @@ ENDCASE
 *
 
 #REGION 1
-IF WVISIBLE("_5450hts9l")
-	ACTIVATE WINDOW _5450hts9l SAME
+IF WVISIBLE("_58o0wrmfi")
+	ACTIVATE WINDOW _58o0wrmfi SAME
 ELSE
-	ACTIVATE WINDOW _5450hts9l NOSHOW
+	ACTIVATE WINDOW _58o0wrmfi NOSHOW
 ENDIF
 @ 0,0 GET nChoice ;
  	PICTURE "@&T" ;
 	FROM aOrder ;
 	SIZE 4,29 ;
 	DEFAULT 1 ;
-	VALID _5450htsb8() ;
+	VALID _58o0wrmfl() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_5450hts9l")
-	ACTIVATE WINDOW _5450hts9l
+IF NOT WVISIBLE("_58o0wrmfi")
+	ACTIVATE WINDOW _58o0wrmfi
 ENDIF
 
 
@@ -126,7 +126,7 @@ ENDIF
 READ CYCLE ;
 	MODAL
 
-RELEASE WINDOW _5450hts9l
+RELEASE WINDOW _58o0wrmfi
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -152,7 +152,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTSB8           nChoice VALID                      Ё
+*       Ё _58O0WRMFL           nChoice VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -165,7 +165,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htsb8     &&  nChoice VALID
+FUNCTION _58o0wrmfl     &&  nChoice VALID
 #REGION 1
 IF INLIST(LOWER(ALIAS()), "cabemot", "cabemot2", "cabemovi")
    DO CASE

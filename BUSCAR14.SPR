@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            BUSCAR14.SPR               08:19:02 Ё
+*       Ё 07/05/18            BUSCAR14.SPR               15:17:15 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htrq3")
-	DEFINE WINDOW _5450htrq3 ;
+IF NOT WEXIST("_58o0wrldv")
+	DEFINE WINDOW _58o0wrldv ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-20)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-20)/2)+19 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,21 +67,21 @@ PRIVATE m.cliente
 *
 
 #REGION 1
-IF WVISIBLE("_5450htrq3")
-	ACTIVATE WINDOW _5450htrq3 SAME
+IF WVISIBLE("_58o0wrldv")
+	ACTIVATE WINDOW _58o0wrldv SAME
 ELSE
-	ACTIVATE WINDOW _5450htrq3 NOSHOW
+	ACTIVATE WINDOW _58o0wrldv NOSHOW
 ENDIF
 @ 0,11 GET m.cliente ;
 	SIZE 1,5 ;
 	DEFAULT 0 ;
 	PICTURE "99999" ;
-	VALID _5450htrq6()
+	VALID _58o0wrldy()
 @ 0,2 SAY "CLIENTE:" ;
 	SIZE 1,8, 0
 
-IF NOT WVISIBLE("_5450htrq3")
-	ACTIVATE WINDOW _5450htrq3
+IF NOT WVISIBLE("_58o0wrldv")
+	ACTIVATE WINDOW _58o0wrldv
 ENDIF
 
 
@@ -95,7 +95,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htrq3
+RELEASE WINDOW _58o0wrldv
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -108,7 +108,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTRQ6           m.cliente VALID                    Ё
+*       Ё _58O0WRLDY           m.cliente VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -121,7 +121,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htrq6     &&  m.cliente VALID
+FUNCTION _58o0wrldy     &&  m.cliente VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.

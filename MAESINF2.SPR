@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            MAESINF2.SPR               08:19:04 Ё
+*       Ё 07/05/18            MAESINF2.SPR               15:17:17 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htt2q")
-	DEFINE WINDOW _5450htt2q ;
+IF NOT WEXIST("_58o0wrnd7")
+	DEFINE WINDOW _58o0wrnd7 ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		NOFLOAT ;
@@ -96,10 +96,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htt2q")
-	ACTIVATE WINDOW _5450htt2q SAME
+IF WVISIBLE("_58o0wrnd7")
+	ACTIVATE WINDOW _58o0wrnd7 SAME
 ELSE
-	ACTIVATE WINDOW _5450htt2q NOSHOW
+	ACTIVATE WINDOW _58o0wrnd7 NOSHOW
 ENDIF
 @ 1,47 SAY "C.Alternativo:" ;
 	SIZE 1,14, 0
@@ -156,7 +156,7 @@ ENDIF
 	PICTURE "999.99" ;
 	COLOR N/W     
 @ 4,15 SAY ubicacion ;
-	SIZE 1,10 ;
+	SIZE 1,36 ;
 	COLOR N/W     
 @ 4,62 SAY marcas1.nombre ;
 	SIZE 1,15 ;
@@ -248,8 +248,8 @@ ENDIF
 	SIZE 3,76 ;
 	COLOR N/W     
 
-IF NOT WVISIBLE("_5450htt2q")
-	ACTIVATE WINDOW _5450htt2q
+IF NOT WVISIBLE("_58o0wrnd7")
+	ACTIVATE WINDOW _58o0wrnd7
 ENDIF
 
 
@@ -263,7 +263,7 @@ ENDIF
 READ CYCLE ;
 	MODAL TIMEOUT 0
 
-RELEASE WINDOW _5450htt2q
+RELEASE WINDOW _58o0wrnd7
 
 #REGION 0
 IF m.talkstat = "ON"

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            CLIBUSC1.SPR               08:19:02 Ё
+*       Ё 07/05/18            CLIBUSC1.SPR               15:17:14 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htrhs")
-	DEFINE WINDOW _5450htrhs ;
+IF NOT WEXIST("_58o0wrkqo")
+	DEFINE WINDOW _58o0wrkqo ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-19)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-19)/2)+18 ;
 		TITLE " BUSQUEDA POR " ;
@@ -57,20 +57,20 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htrhs")
-	ACTIVATE WINDOW _5450htrhs SAME
+IF WVISIBLE("_58o0wrkqo")
+	ACTIVATE WINDOW _58o0wrkqo SAME
 ELSE
-	ACTIVATE WINDOW _5450htrhs NOSHOW
+	ACTIVATE WINDOW _58o0wrkqo NOSHOW
 ENDIF
 @ 0,10 GET m.codigo ;
 	SIZE 1,5 ;
 	DEFAULT 0 ;
-	VALID _5450htrhv()
+	VALID _58o0wrkqr()
 @ 0,2 SAY "CODIGO:" ;
 	SIZE 1,7, 0
 
-IF NOT WVISIBLE("_5450htrhs")
-	ACTIVATE WINDOW _5450htrhs
+IF NOT WVISIBLE("_58o0wrkqo")
+	ACTIVATE WINDOW _58o0wrkqo
 ENDIF
 
 
@@ -84,7 +84,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htrhs
+RELEASE WINDOW _58o0wrkqo
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -97,7 +97,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTRHV           m.codigo VALID                     Ё
+*       Ё _58O0WRKQR           m.codigo VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -110,7 +110,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htrhv     &&  m.codigo VALID
+FUNCTION _58o0wrkqr     &&  m.codigo VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_ESCAPE)
    RETURN

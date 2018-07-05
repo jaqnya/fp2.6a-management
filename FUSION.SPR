@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18             FUSION.SPR                08:18:58 Ё
+*       Ё 07/05/18             FUSION.SPR                15:17:06 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htotz")
-	DEFINE WINDOW _5450htotz ;
+IF NOT WEXIST("_58o0wreht")
+	DEFINE WINDOW _58o0wreht ;
 		FROM INT((SROW()-8)/2),INT((SCOL()-35)/2) ;
 		TO INT((SROW()-8)/2)+7,INT((SCOL()-35)/2)+34 ;
 		NOFLOAT ;
@@ -56,23 +56,23 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htotz")
-	ACTIVATE WINDOW _5450htotz SAME
+IF WVISIBLE("_58o0wreht")
+	ACTIVATE WINDOW _58o0wreht SAME
 ELSE
-	ACTIVATE WINDOW _5450htotz NOSHOW
+	ACTIVATE WINDOW _58o0wreht NOSHOW
 ENDIF
 @ 3,0 TO 3,32
 @ 4,2 GET cmgChoice ;
 	PICTURE "@*HT \!\<Iniciar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _5450htou1()
+	VALID _58o0wrehw()
 @ 1,10 SAY "CONSOLIDACION" ;
 	SIZE 1,13, 0 ;
 	COLOR BG+/N   
 
-IF NOT WVISIBLE("_5450htotz")
-	ACTIVATE WINDOW _5450htotz
+IF NOT WVISIBLE("_58o0wreht")
+	ACTIVATE WINDOW _58o0wreht
 ENDIF
 
 
@@ -86,7 +86,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htotz
+RELEASE WINDOW _58o0wreht
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -99,7 +99,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTOU1           cmgChoice VALID                    Ё
+*       Ё _58O0WREHW           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -112,7 +112,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htou1     &&  cmgChoice VALID
+FUNCTION _58o0wrehw     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    HIDE WINDOW (WONTOP())

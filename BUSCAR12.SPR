@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            BUSCAR12.SPR               08:19:03 Ё
+*       Ё 07/05/18            BUSCAR12.SPR               15:17:17 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htsp4")
-	DEFINE WINDOW _5450htsp4 ;
+IF NOT WEXIST("_58o0wrmys")
+	DEFINE WINDOW _58o0wrmys ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-36)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-36)/2)+35 ;
 		TITLE " BUSQUEDA POR " ;
@@ -69,21 +69,21 @@ m.fecha = DTOC(DATE())
 *
 
 #REGION 1
-IF WVISIBLE("_5450htsp4")
-	ACTIVATE WINDOW _5450htsp4 SAME
+IF WVISIBLE("_58o0wrmys")
+	ACTIVATE WINDOW _58o0wrmys SAME
 ELSE
-	ACTIVATE WINDOW _5450htsp4 NOSHOW
+	ACTIVATE WINDOW _58o0wrmys NOSHOW
 ENDIF
 @ 0,22 GET m.fecha ;
 	SIZE 1,10 ;
 	DEFAULT " " ;
 	PICTURE "99/99/9999" ;
-	VALID _5450htsp7()
+	VALID _58o0wrmyu()
 @ 0,2 SAY "FECHA DE RECEPCION:" ;
 	SIZE 1,19, 0
 
-IF NOT WVISIBLE("_5450htsp4")
-	ACTIVATE WINDOW _5450htsp4
+IF NOT WVISIBLE("_58o0wrmys")
+	ACTIVATE WINDOW _58o0wrmys
 ENDIF
 
 
@@ -97,7 +97,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htsp4
+RELEASE WINDOW _58o0wrmys
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -110,7 +110,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTSP7           m.fecha VALID                      Ё
+*       Ё _58O0WRMYU           m.fecha VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -123,7 +123,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htsp7     &&  m.fecha VALID
+FUNCTION _58o0wrmyu     &&  m.fecha VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.

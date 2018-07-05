@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            TREC_POP.SPR               08:19:11 Ё
+*       Ё 07/05/18            TREC_POP.SPR               15:17:31 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -63,8 +63,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htyj1")
-	DEFINE WINDOW _5450htyj1 ;
+IF NOT WEXIST("_58o0wry3v")
+	DEFINE WINDOW _58o0wry3v ;
 		FROM INT((SROW()-17)/2),INT((SCOL()-56)/2) ;
 		TO INT((SROW()-17)/2)+16,INT((SCOL()-56)/2)+55 ;
 		TITLE " TIPO DE RECEPCION " ;
@@ -121,10 +121,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htyj1")
-	ACTIVATE WINDOW _5450htyj1 SAME
+IF WVISIBLE("_58o0wry3v")
+	ACTIVATE WINDOW _58o0wry3v SAME
 ELSE
-	ACTIVATE WINDOW _5450htyj1 NOSHOW
+	ACTIVATE WINDOW _58o0wry3v NOSHOW
 ENDIF
 @ 1,51 SAY "э" ;
 	SIZE 1,1, 0
@@ -148,31 +148,31 @@ ENDIF
 	RANGE 2 ;
 	SIZE 15,36 ;
 	DEFAULT 1 ;
-	VALID _5450htyj8() ;
+	VALID _58o0wry3z() ;
 	COLOR SCHEME 14
 @ 1,40 GET cmdNew ;
 	PICTURE "@*VN \<Agregar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htyj9()
+	VALID _58o0wry40()
 @ 4,40 GET cmdDelete ;
 	PICTURE "@*VN \<Borrar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htyja()
+	VALID _58o0wry41()
 @ 7,40 GET cmdEdit ;
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htyjb()
+	VALID _58o0wry42()
 @ 13,40 GET cmdGetHelp ;
 	PICTURE "@*VN A\<yuda" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _5450htyjc()
+	VALID _58o0wry43()
 
-IF NOT WVISIBLE("_5450htyj1")
-	ACTIVATE WINDOW _5450htyj1
+IF NOT WVISIBLE("_58o0wry3v")
+	ACTIVATE WINDOW _58o0wry3v
 ENDIF
 
 
@@ -184,10 +184,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _5450htyjd() ;
+	SHOW _58o0wry44() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htyj1
+RELEASE WINDOW _58o0wry3v
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -213,7 +213,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTYJ8           lstTipoRecep VALID                 Ё
+*       Ё _58O0WRY3Z           lstTipoRecep VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -226,7 +226,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htyj8     &&  lstTipoRecep VALID
+FUNCTION _58o0wry3z     &&  lstTipoRecep VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal
@@ -240,7 +240,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTYJ9           cmdNew VALID                       Ё
+*       Ё _58O0WRY40           cmdNew VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -254,13 +254,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *!* DO trecep.prg WITH "ADD"
-FUNCTION _5450htyj9     &&  cmdNew VALID
+FUNCTION _58o0wry40     &&  cmdNew VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstTipoRecep)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTYJA           cmdDelete VALID                    Ё
+*       Ё _58O0WRY41           cmdDelete VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -274,7 +274,7 @@ _CUROBJ = OBJNUM(lstTipoRecep)
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 * Declaraci╒n de variables.
-FUNCTION _5450htyja     &&  cmdDelete VALID
+FUNCTION _58o0wry41     &&  cmdDelete VALID
 #REGION 1
 PRIVATE nSelect, cOrder, nRecNo
 nSelect = SELECT()
@@ -299,7 +299,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTYJB           cmdEdit VALID                      Ё
+*       Ё _58O0WRY42           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -313,7 +313,7 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 * Declaraci╒n de variables.
-FUNCTION _5450htyjb     &&  cmdEdit VALID
+FUNCTION _58o0wry42     &&  cmdEdit VALID
 #REGION 1
 PRIVATE nSelect, cOrder, nRecNo
 nSelect = SELECT()
@@ -339,7 +339,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTYJC           cmdGetHelp VALID                   Ё
+*       Ё _58O0WRY43           cmdGetHelp VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -353,13 +353,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *HELP Ч Help Item
-FUNCTION _5450htyjc     &&  cmdGetHelp VALID
+FUNCTION _58o0wry43     &&  cmdGetHelp VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstTipoRecep)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTYJD           Nivel de lectura SHOW              Ё
+*       Ё _58O0WRY44           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -371,7 +371,7 @@ _CUROBJ = OBJNUM(lstTipoRecep)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htyjd     && Read Level Show
+FUNCTION _58o0wry44     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

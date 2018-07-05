@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            BUSCAR19.SPR               08:19:04 Ё
+*       Ё 07/05/18            BUSCAR19.SPR               15:17:17 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htt0w")
-	DEFINE WINDOW _5450htt0w ;
+IF NOT WEXIST("_58o0wrn95")
+	DEFINE WINDOW _58o0wrn95 ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-38)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-38)/2)+37 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,21 +67,21 @@ PRIVATE m.chapa
 *
 
 #REGION 1
-IF WVISIBLE("_5450htt0w")
-	ACTIVATE WINDOW _5450htt0w SAME
+IF WVISIBLE("_58o0wrn95")
+	ACTIVATE WINDOW _58o0wrn95 SAME
 ELSE
-	ACTIVATE WINDOW _5450htt0w NOSHOW
+	ACTIVATE WINDOW _58o0wrn95 NOSHOW
 ENDIF
 @ 0,9 GET m.chapa ;
 	SIZE 1,25 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _5450htt0y()
+	VALID _58o0wrn98()
 @ 0,2 SAY "CHAPA:" ;
 	SIZE 1,6, 0
 
-IF NOT WVISIBLE("_5450htt0w")
-	ACTIVATE WINDOW _5450htt0w
+IF NOT WVISIBLE("_58o0wrn95")
+	ACTIVATE WINDOW _58o0wrn95
 ENDIF
 
 
@@ -95,7 +95,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htt0w
+RELEASE WINDOW _58o0wrn95
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -108,7 +108,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTT0Y           m.chapa VALID                      Ё
+*       Ё _58O0WRN98           m.chapa VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -121,7 +121,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htt0y     &&  m.chapa VALID
+FUNCTION _58o0wrn98     &&  m.chapa VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

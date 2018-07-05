@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            CLIENTE5.SPR               08:19:06 Ё
+*       Ё 07/05/18            CLIENTE5.SPR               15:17:21 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -61,8 +61,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htv62")
-	DEFINE WINDOW _5450htv62 ;
+IF NOT WEXIST("_58o0wrqe5")
+	DEFINE WINDOW _58o0wrqe5 ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		TITLE (pcMyTitle) ;
@@ -92,10 +92,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htv62")
-	ACTIVATE WINDOW _5450htv62 SAME
+IF WVISIBLE("_58o0wrqe5")
+	ACTIVATE WINDOW _58o0wrqe5 SAME
 ELSE
-	ACTIVATE WINDOW _5450htv62 NOSHOW
+	ACTIVATE WINDOW _58o0wrqe5 NOSHOW
 ENDIF
 @ 15,3 SAY "Referencias Comerciales" ;
 	SIZE 1,23, 0
@@ -127,7 +127,7 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _5450htv68()
+	VALID _58o0wrqe9()
 @ 5,3 GET m.obs2 ;
 	SIZE 1,72 ;
 	DEFAULT " " ;
@@ -201,8 +201,8 @@ ENDIF
 @ 0,63 SAY "Paso 5 de 5" ;
 	SIZE 1,11, 0
 
-IF NOT WVISIBLE("_5450htv62")
-	ACTIVATE WINDOW _5450htv62
+IF NOT WVISIBLE("_58o0wrqe5")
+	ACTIVATE WINDOW _58o0wrqe5
 ENDIF
 
 
@@ -214,10 +214,10 @@ ENDIF
 *
 
 READ ;
-	VALID _5450htv6a() ;
+	VALID _58o0wrqeb() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htv62
+RELEASE WINDOW _58o0wrqe5
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -261,7 +261,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTV68           m.obs1 VALID                       Ё
+*       Ё _58O0WRQE9           m.obs1 VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -274,7 +274,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htv68     &&  m.obs1 VALID
+FUNCTION _58o0wrqe9     &&  m.obs1 VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_BSPACE)
    RETURN .F.
@@ -282,7 +282,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTV6A           Nivel de lectura v═lido            Ё
+*       Ё _58O0WRQEB           Nivel de lectura v═lido            Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -294,7 +294,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htv6a     && Read Level Valid
+FUNCTION _58o0wrqeb     && Read Level Valid
 *
 * C╒digo v═lido de la pantalla: CLIENTE5
 *

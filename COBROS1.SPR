@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18             COBROS1.SPR               08:19:00 Ё
+*       Ё 07/05/18             COBROS1.SPR               15:17:11 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htqhq")
-	DEFINE WINDOW _5450htqhq ;
+IF NOT WEXIST("_58o0wriks")
+	DEFINE WINDOW _58o0wriks ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-65)/2)+64 ;
 		TITLE " LISTADOS E INFORMES " ;
@@ -91,21 +91,21 @@ paCobros[03, 01] = " 3. De Cobros por rango de fechas."
 *
 
 #REGION 1
-IF WVISIBLE("_5450htqhq")
-	ACTIVATE WINDOW _5450htqhq SAME
+IF WVISIBLE("_58o0wriks")
+	ACTIVATE WINDOW _58o0wriks SAME
 ELSE
-	ACTIVATE WINDOW _5450htqhq NOSHOW
+	ACTIVATE WINDOW _58o0wriks NOSHOW
 ENDIF
 @ 0,0 GET lstCobros ;
  	PICTURE "@&T" ;
 	FROM paCobros ;
 	SIZE 11,63 ;
 	DEFAULT 1 ;
-	VALID _5450htqht() ;
+	VALID _58o0wrikv() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_5450htqhq")
-	ACTIVATE WINDOW _5450htqhq
+IF NOT WVISIBLE("_58o0wriks")
+	ACTIVATE WINDOW _58o0wriks
 ENDIF
 
 
@@ -119,7 +119,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htqhq
+RELEASE WINDOW _58o0wriks
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -132,7 +132,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTQHT           lstCobros VALID                    Ё
+*       Ё _58O0WRIKV           lstCobros VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -145,7 +145,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htqht     &&  lstCobros VALID
+FUNCTION _58o0wrikv     &&  lstCobros VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

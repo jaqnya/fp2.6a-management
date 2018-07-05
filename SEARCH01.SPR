@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            SEARCH01.SPR               08:19:02 Ё
+*       Ё 07/05/18            SEARCH01.SPR               15:17:16 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450hts3y")
-	DEFINE WINDOW _5450hts3y ;
+IF NOT WEXIST("_58o0wrm1y")
+	DEFINE WINDOW _58o0wrm1y ;
 		FROM INT((SROW()-4)/2),INT((SCOL()-41)/2) ;
 		TO INT((SROW()-4)/2)+3,INT((SCOL()-41)/2)+40 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,10 +67,10 @@ PRIVATE m.tipodocu, m.nrodocu
 *
 
 #REGION 1
-IF WVISIBLE("_5450hts3y")
-	ACTIVATE WINDOW _5450hts3y SAME
+IF WVISIBLE("_58o0wrm1y")
+	ACTIVATE WINDOW _58o0wrm1y SAME
 ELSE
-	ACTIVATE WINDOW _5450hts3y NOSHOW
+	ACTIVATE WINDOW _58o0wrm1y NOSHOW
 ENDIF
 @ 0,2 SAY "Documento:" ;
 	SIZE 1,10, 0
@@ -80,16 +80,16 @@ ENDIF
 	SIZE 1,1 ;
 	DEFAULT 0 ;
 	PICTURE "9" ;
-	VALID _5450hts41()
+	VALID _58o0wrm21()
 @ 1,13 GET m.nrodocu ;
 	SIZE 1,7 ;
 	DEFAULT 0 ;
 	PICTURE "9999999" ;
 	WHEN NOT EMPTY(m.tipodocu) ;
-	VALID _5450hts46()
+	VALID _58o0wrm26()
 
-IF NOT WVISIBLE("_5450hts3y")
-	ACTIVATE WINDOW _5450hts3y
+IF NOT WVISIBLE("_58o0wrm1y")
+	ACTIVATE WINDOW _58o0wrm1y
 ENDIF
 
 
@@ -103,7 +103,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450hts3y
+RELEASE WINDOW _58o0wrm1y
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -116,7 +116,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTS41           m.tipodocu VALID                   Ё
+*       Ё _58O0WRM21           m.tipodocu VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -129,7 +129,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450hts41     &&  m.tipodocu VALID
+FUNCTION _58o0wrm21     &&  m.tipodocu VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -284,7 +284,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTS46           m.nrodocu VALID                    Ё
+*       Ё _58O0WRM26           m.nrodocu VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -297,7 +297,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450hts46     &&  m.nrodocu VALID
+FUNCTION _58o0wrm26     &&  m.nrodocu VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

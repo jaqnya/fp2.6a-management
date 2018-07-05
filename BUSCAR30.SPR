@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18            BUSCAR30.SPR               08:19:01 Ё
+*       Ё 07/05/18            BUSCAR30.SPR               15:17:13 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htrb9")
-	DEFINE WINDOW _5450htrb9 ;
+IF NOT WEXIST("_58o0wrkc7")
+	DEFINE WINDOW _58o0wrkc7 ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-32)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-32)/2)+31 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,21 +67,21 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_5450htrb9")
-	ACTIVATE WINDOW _5450htrb9 SAME
+IF WVISIBLE("_58o0wrkc7")
+	ACTIVATE WINDOW _58o0wrkc7 SAME
 ELSE
-	ACTIVATE WINDOW _5450htrb9 NOSHOW
+	ACTIVATE WINDOW _58o0wrkc7 NOSHOW
 ENDIF
 @ 0,13 GET m.ubicacion ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _5450htrbb()
+	VALID _58o0wrkca()
 @ 0,2 SAY "UBICACION:" ;
 	SIZE 1,10, 0
 
-IF NOT WVISIBLE("_5450htrb9")
-	ACTIVATE WINDOW _5450htrb9
+IF NOT WVISIBLE("_58o0wrkc7")
+	ACTIVATE WINDOW _58o0wrkc7
 ENDIF
 
 
@@ -95,7 +95,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htrb9
+RELEASE WINDOW _58o0wrkc7
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -108,7 +108,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTRBB           m.ubicacion VALID                  Ё
+*       Ё _58O0WRKCA           m.ubicacion VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -121,7 +121,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htrbb     &&  m.ubicacion VALID
+FUNCTION _58o0wrkca     &&  m.ubicacion VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127) THEN
    RETURN

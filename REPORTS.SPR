@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 01/23/18             REPORTS.SPR               08:18:59 Ё
+*       Ё 07/05/18             REPORTS.SPR               15:17:08 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_5450htpdb")
-	DEFINE WINDOW _5450htpdb ;
+IF NOT WEXIST("_58o0wrgf4")
+	DEFINE WINDOW _58o0wrgf4 ;
 		FROM INT((SROW()-11)/2),INT((SCOL()-20)/2) ;
 		TO INT((SROW()-11)/2)+10,INT((SCOL()-20)/2)+19 ;
 		TITLE " LISTADOS " ;
@@ -102,21 +102,21 @@ paReports[7, 2] = "pagos2.spr"
 *
 
 #REGION 1
-IF WVISIBLE("_5450htpdb")
-	ACTIVATE WINDOW _5450htpdb SAME
+IF WVISIBLE("_58o0wrgf4")
+	ACTIVATE WINDOW _58o0wrgf4 SAME
 ELSE
-	ACTIVATE WINDOW _5450htpdb NOSHOW
+	ACTIVATE WINDOW _58o0wrgf4 NOSHOW
 ENDIF
 @ 0,0 GET lstReports ;
  	PICTURE "@&T" ;
 	FROM paReports ;
 	SIZE 9,18 ;
 	DEFAULT 1 ;
-	VALID _5450htpdg() ;
+	VALID _58o0wrggr() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_5450htpdb")
-	ACTIVATE WINDOW _5450htpdb
+IF NOT WVISIBLE("_58o0wrgf4")
+	ACTIVATE WINDOW _58o0wrgf4
 ENDIF
 
 
@@ -130,7 +130,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _5450htpdb
+RELEASE WINDOW _58o0wrgf4
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -143,7 +143,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _5450HTPDG           lstReports VALID                   Ё
+*       Ё _58O0WRGGR           lstReports VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -156,7 +156,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _5450htpdg     &&  lstReports VALID
+FUNCTION _58o0wrggr     &&  lstReports VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "
