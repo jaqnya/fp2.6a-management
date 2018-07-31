@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            MECA_POP.SPR               16:18:14 Ё
+*       Ё 07/31/18            MECA_POP.SPR               11:27:14 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -59,8 +59,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yy0ma")
-	DEFINE WINDOW _58o0yy0ma ;
+IF NOT WEXIST("_59e0ojsge")
+	DEFINE WINDOW _59e0ojsge ;
 		FROM INT((SROW()-17)/2),INT((SCOL()-56)/2) ;
 		TO INT((SROW()-17)/2)+16,INT((SCOL()-56)/2)+55 ;
 		TITLE " MECANICOS " ;
@@ -129,10 +129,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yy0ma")
-	ACTIVATE WINDOW _58o0yy0ma SAME
+IF WVISIBLE("_59e0ojsge")
+	ACTIVATE WINDOW _59e0ojsge SAME
 ELSE
-	ACTIVATE WINDOW _58o0yy0ma NOSHOW
+	ACTIVATE WINDOW _59e0ojsge NOSHOW
 ENDIF
 @ 1,51 SAY "э" ;
 	SIZE 1,1, 0
@@ -156,31 +156,31 @@ ENDIF
 	RANGE 2 ;
 	SIZE 15,36 ;
 	DEFAULT 1 ;
-	VALID _58o0yy0mf() ;
+	VALID _59e0ojsgj() ;
 	COLOR SCHEME 14
 @ 1,40 GET cmdNew ;
 	PICTURE "@*VN \<Agregar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yy0mg()
+	VALID _59e0ojsgk()
 @ 4,40 GET cmdDelete ;
 	PICTURE "@*VN \<Borrar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yy0mh()
+	VALID _59e0ojsi4()
 @ 7,40 GET cmdEdit ;
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yy0mi()
+	VALID _59e0ojsi5()
 @ 13,40 GET cmdGetHelp ;
 	PICTURE "@*VN A\<yuda" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yy0mj()
+	VALID _59e0ojsi6()
 
-IF NOT WVISIBLE("_58o0yy0ma")
-	ACTIVATE WINDOW _58o0yy0ma
+IF NOT WVISIBLE("_59e0ojsge")
+	ACTIVATE WINDOW _59e0ojsge
 ENDIF
 
 
@@ -192,10 +192,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _58o0yy0mk() ;
+	SHOW _59e0ojsi7() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yy0ma
+RELEASE WINDOW _59e0ojsge
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -221,7 +221,7 @@ SET COLOR OF SCHEME 14 TO &cScheme14
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY0MF           lstMecanico VALID                  Ё
+*       Ё _59E0OJSGJ           lstMecanico VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -234,7 +234,7 @@ SET COLOR OF SCHEME 14 TO &cScheme14
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy0mf     &&  lstMecanico VALID
+FUNCTION _59e0ojsgj     &&  lstMecanico VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal
@@ -252,7 +252,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY0MG           cmdNew VALID                       Ё
+*       Ё _59E0OJSGK           cmdNew VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -265,14 +265,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy0mg     &&  cmdNew VALID
+FUNCTION _59e0ojsgk     &&  cmdNew VALID
 #REGION 1
 DO mecanico.prg WITH "Add"
 _CUROBJ = OBJNUM(lstMecanico)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY0MH           cmdDelete VALID                    Ё
+*       Ё _59E0OJSI4           cmdDelete VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -285,7 +285,7 @@ _CUROBJ = OBJNUM(lstMecanico)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy0mh     &&  cmdDelete VALID
+FUNCTION _59e0ojsi4     &&  cmdDelete VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -309,7 +309,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY0MI           cmdEdit VALID                      Ё
+*       Ё _59E0OJSI5           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -322,7 +322,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy0mi     &&  cmdEdit VALID
+FUNCTION _59e0ojsi5     &&  cmdEdit VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -346,7 +346,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY0MJ           cmdGetHelp VALID                   Ё
+*       Ё _59E0OJSI6           cmdGetHelp VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -360,13 +360,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *HELP Ч Help Item
-FUNCTION _58o0yy0mj     &&  cmdGetHelp VALID
+FUNCTION _59e0ojsi6     &&  cmdGetHelp VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstMocanico)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY0MK           Nivel de lectura SHOW              Ё
+*       Ё _59E0OJSI7           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -378,7 +378,7 @@ _CUROBJ = OBJNUM(lstMocanico)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy0mk     && Read Level Show
+FUNCTION _59e0ojsi7     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18              ORDEN.SPR                16:18:09 Ё
+*       Ё 07/31/18              ORDEN.SPR                11:27:07 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yxx0a")
-	DEFINE WINDOW _58o0yxx0a ;
+IF NOT WEXIST("_59e0ojnbj")
+	DEFINE WINDOW _59e0ojnbj ;
 		FROM INT((SROW()-7)/2),INT((SCOL()-31)/2) ;
 		TO INT((SROW()-7)/2)+6,INT((SCOL()-31)/2)+30 ;
 		TITLE " ORDENAR POR " ;
@@ -117,21 +117,21 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxx0a")
-	ACTIVATE WINDOW _58o0yxx0a SAME
+IF WVISIBLE("_59e0ojnbj")
+	ACTIVATE WINDOW _59e0ojnbj SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxx0a NOSHOW
+	ACTIVATE WINDOW _59e0ojnbj NOSHOW
 ENDIF
 @ 0,0 GET pnChoice ;
  	PICTURE "@&T" ;
 	FROM paOrder ;
 	SIZE 5,29 ;
 	DEFAULT 1 ;
-	VALID _58o0yxx0d() ;
+	VALID _59e0ojnbo() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0yxx0a")
-	ACTIVATE WINDOW _58o0yxx0a
+IF NOT WVISIBLE("_59e0ojnbj")
+	ACTIVATE WINDOW _59e0ojnbj
 ENDIF
 
 
@@ -145,7 +145,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yxx0a
+RELEASE WINDOW _59e0ojnbj
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -158,7 +158,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXX0D           pnChoice VALID                     Ё
+*       Ё _59E0OJNBO           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -171,7 +171,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxx0d     &&  pnChoice VALID
+FUNCTION _59e0ojnbo     &&  pnChoice VALID
 #REGION 1
 IF LOWER(ALIAS()) = "cabecomp"
    DO CASE

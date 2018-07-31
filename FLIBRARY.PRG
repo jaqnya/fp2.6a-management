@@ -204,7 +204,7 @@ DO CASE
    CASE pcDriveC = "1659-57DA"   && Jose LT Dell                    [CASA CENTRAL]   dell-pc
    CASE pcDriveC = "C8FE-D52A"   && Ricardo LT Toshiba              [CASA CENTRAL]   computador8
    CASE pcDriveC = "0003-4F34"   && Branch House WinXP Server       [SUCURSAL Nº 1]  servidor
-   CASE pcDriveC = "6C5A-EB34"   && Show Room LT Acer Traveler 2420 [SUCURSAL Nº 1]  computador1
+   CASE pcDriveC = "08BD-9B33"   && Show Room LT Acer Traveler 2420 [SUCURSAL Nº 1]  computador1
    CASE pcDriveC = "DC3A-6E00"   && Ricardo LT                      [SUCURSAL Nº 1]  computador2
    CASE pcDriveC = "3484-F031"   && Lenovo IdeaPad S10              [CASA CENTRAL]   computador8
    CASE pcDriveC = "3A8C-9C0B"   && Lenovo IdeaPad S10              [CASA CENTRAL]   computador8

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             REINDEX.SPR               16:18:04 Ё
+*       Ё 07/31/18             REINDEX.SPR               11:27:00 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yxt0x")
-	DEFINE WINDOW _58o0yxt0x ;
+IF NOT WEXIST("_59e0ojho3")
+	DEFINE WINDOW _59e0ojho3 ;
 		FROM INT((SROW()-8)/2),INT((SCOL()-35)/2) ;
 		TO INT((SROW()-8)/2)+7,INT((SCOL()-35)/2)+34 ;
 		NOFLOAT ;
@@ -56,23 +56,23 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxt0x")
-	ACTIVATE WINDOW _58o0yxt0x SAME
+IF WVISIBLE("_59e0ojho3")
+	ACTIVATE WINDOW _59e0ojho3 SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxt0x NOSHOW
+	ACTIVATE WINDOW _59e0ojho3 NOSHOW
 ENDIF
 @ 3,0 TO 3,32
 @ 4,2 GET cmgChoice ;
 	PICTURE "@*HT \!\<Iniciar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _58o0yxt2i()
+	VALID _59e0ojho6()
 @ 1,9 SAY "RE-ORGANIZACION" ;
 	SIZE 1,15, 0 ;
 	COLOR BG+/N   
 
-IF NOT WVISIBLE("_58o0yxt0x")
-	ACTIVATE WINDOW _58o0yxt0x
+IF NOT WVISIBLE("_59e0ojho3")
+	ACTIVATE WINDOW _59e0ojho3
 ENDIF
 
 
@@ -86,7 +86,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yxt0x
+RELEASE WINDOW _59e0ojho3
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -99,7 +99,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXT2I           cmgChoice VALID                    Ё
+*       Ё _59E0OJHO6           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -112,7 +112,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxt2i     &&  cmgChoice VALID
+FUNCTION _59e0ojho6     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    DO reindex1.spr

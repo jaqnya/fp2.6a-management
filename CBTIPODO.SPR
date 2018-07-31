@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            CBTIPODO.SPR               16:18:16 Ё
+*       Ё 07/31/18            CBTIPODO.SPR               11:27:19 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -51,8 +51,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yy2p5")
-	DEFINE WINDOW _58o0yy2p5 ;
+IF NOT WEXIST("_59e0ojwgv")
+	DEFINE WINDOW _59e0ojwgv ;
 		FROM INT((SROW()-6)/2),INT((SCOL()-24)/2) ;
 		TO INT((SROW()-6)/2)+5,INT((SCOL()-24)/2)+23 ;
 		TITLE " TIPO DOCUMENTO " ;
@@ -89,10 +89,10 @@ PUSH KEY CLEAR
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yy2p5")
-	ACTIVATE WINDOW _58o0yy2p5 SAME
+IF WVISIBLE("_59e0ojwgv")
+	ACTIVATE WINDOW _59e0ojwgv SAME
 ELSE
-	ACTIVATE WINDOW _58o0yy2p5 NOSHOW
+	ACTIVATE WINDOW _59e0ojwgv NOSHOW
 ENDIF
 @ 0,0 GET pnChoice ;
  	PICTURE "@&T" ;
@@ -101,13 +101,13 @@ ENDIF
 	DEFAULT 1 ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0yy2p5")
-	ACTIVATE WINDOW _58o0yy2p5
+IF NOT WVISIBLE("_59e0ojwgv")
+	ACTIVATE WINDOW _59e0ojwgv
 ENDIF
 
 READ CYCLE
 
-RELEASE WINDOW _58o0yy2p5
+RELEASE WINDOW _59e0ojwgv
 
 #REGION 0
 IF m.talkstat = "ON"

@@ -1,6 +1,6 @@
 *       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 *       ³                                                         ³
-*       ³ 07/05/18            OPENFILE.SPR               16:18:04 ³
+*       ³ 07/31/18            OPENFILE.SPR               11:27:00 ³
 *       ³                                                         ³
 *       ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
 *       ³                                                         ³
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 *
 
-IF NOT WEXIST("_58o0yxt3o")
-	DEFINE WINDOW _58o0yxt3o ;
+IF NOT WEXIST("_59e0ojhse")
+	DEFINE WINDOW _59e0ojhse ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-55)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-55)/2)+54 ;
 		NOFLOAT ;
@@ -56,16 +56,16 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxt3o")
-	ACTIVATE WINDOW _58o0yxt3o SAME
+IF WVISIBLE("_59e0ojhse")
+	ACTIVATE WINDOW _59e0ojhse SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxt3o NOSHOW
+	ACTIVATE WINDOW _59e0ojhse NOSHOW
 ENDIF
 @ 0,1 SAY "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°" ;
 	SIZE 1,51, 0
 
-IF NOT WVISIBLE("_58o0yxt3o")
-	ACTIVATE WINDOW _58o0yxt3o
+IF NOT WVISIBLE("_59e0ojhse")
+	ACTIVATE WINDOW _59e0ojhse
 ENDIF
 
 #REGION 0

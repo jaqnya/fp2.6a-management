@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            ESTCIVIL.SPR               16:18:17 Ё
+*       Ё 07/31/18            ESTCIVIL.SPR               11:27:20 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -51,8 +51,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yy3dj")
-	DEFINE WINDOW _58o0yy3dj ;
+IF NOT WEXIST("_59e0ojxh4")
+	DEFINE WINDOW _59e0ojxh4 ;
 		FROM INT((SROW()-11)/2),INT((SCOL()-23)/2) ;
 		TO INT((SROW()-11)/2)+10,INT((SCOL()-23)/2)+22 ;
 		TITLE " ESTADO CIVIL " ;
@@ -93,21 +93,21 @@ paEstCivil(7) = "7. - NO DEFINIDO"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yy3dj")
-	ACTIVATE WINDOW _58o0yy3dj SAME
+IF WVISIBLE("_59e0ojxh4")
+	ACTIVATE WINDOW _59e0ojxh4 SAME
 ELSE
-	ACTIVATE WINDOW _58o0yy3dj NOSHOW
+	ACTIVATE WINDOW _59e0ojxh4 NOSHOW
 ENDIF
 @ 0,0 GET pnChoice ;
  	PICTURE "@&T" ;
 	FROM paEstCivil ;
 	SIZE 9,21 ;
 	DEFAULT 1 ;
-	VALID _58o0yy3dm() ;
+	VALID _59e0ojxh8() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0yy3dj")
-	ACTIVATE WINDOW _58o0yy3dj
+IF NOT WVISIBLE("_59e0ojxh4")
+	ACTIVATE WINDOW _59e0ojxh4
 ENDIF
 
 
@@ -121,7 +121,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yy3dj
+RELEASE WINDOW _59e0ojxh4
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -144,7 +144,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY3DM           pnChoice VALID                     Ё
+*       Ё _59E0OJXH8           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -157,7 +157,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy3dm     &&  pnChoice VALID
+FUNCTION _59e0ojxh8     &&  pnChoice VALID
 #REGION 1
 IF LASTKEY() = K_ESCAPE
    &cSaveTo = " "

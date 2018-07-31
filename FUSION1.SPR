@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             FUSION1.SPR               16:18:15 Ё
+*       Ё 07/31/18             FUSION1.SPR               11:27:16 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yy1qn")
-	DEFINE WINDOW _58o0yy1qn ;
+IF NOT WEXIST("_59e0ojufm")
+	DEFINE WINDOW _59e0ojufm ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-65)/2)+64 ;
 		TITLE " CONSOLIDACION " ;
@@ -57,10 +57,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yy1qn")
-	ACTIVATE WINDOW _58o0yy1qn SAME
+IF WVISIBLE("_59e0ojufm")
+	ACTIVATE WINDOW _59e0ojufm SAME
 ELSE
-	ACTIVATE WINDOW _58o0yy1qn NOSHOW
+	ACTIVATE WINDOW _59e0ojufm NOSHOW
 ENDIF
 @ 1,1 TO 3,37
 @ 1,2 SAY " Tarea actual " ;
@@ -76,8 +76,8 @@ ENDIF
 	SIZE 1,20, 0 ;
 	COLOR W+/N    
 
-IF NOT WVISIBLE("_58o0yy1qn")
-	ACTIVATE WINDOW _58o0yy1qn
+IF NOT WVISIBLE("_59e0ojufm")
+	ACTIVATE WINDOW _59e0ojufm
 ENDIF
 
 #REGION 0

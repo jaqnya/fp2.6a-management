@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            TIPODOC1.SPR               16:18:16 Ё
+*       Ё 07/31/18            TIPODOC1.SPR               11:27:19 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yy2jy")
-	DEFINE WINDOW _58o0yy2jy ;
+IF NOT WEXIST("_59e0ojwav")
+	DEFINE WINDOW _59e0ojwav ;
 		FROM INT((SROW()-8)/2),INT((SCOL()-25)/2) ;
 		TO INT((SROW()-8)/2)+7,INT((SCOL()-25)/2)+24 ;
 		TITLE " TIPO DOCUMENTO " ;
@@ -91,21 +91,21 @@ paTipoBole(4) = "4. AJUSTE - SALIDA"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yy2jy")
-	ACTIVATE WINDOW _58o0yy2jy SAME
+IF WVISIBLE("_59e0ojwav")
+	ACTIVATE WINDOW _59e0ojwav SAME
 ELSE
-	ACTIVATE WINDOW _58o0yy2jy NOSHOW
+	ACTIVATE WINDOW _59e0ojwav NOSHOW
 ENDIF
 @ 0,0 GET pnChoice ;
  	PICTURE "@&T" ;
 	FROM paTipoBole ;
 	SIZE 6,23 ;
 	DEFAULT 1 ;
-	VALID _58o0yy2k2() ;
+	VALID _59e0ojway() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0yy2jy")
-	ACTIVATE WINDOW _58o0yy2jy
+IF NOT WVISIBLE("_59e0ojwav")
+	ACTIVATE WINDOW _59e0ojwav
 ENDIF
 
 
@@ -119,7 +119,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yy2jy
+RELEASE WINDOW _59e0ojwav
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -142,7 +142,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY2K2           pnChoice VALID                     Ё
+*       Ё _59E0OJWAY           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -155,7 +155,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy2k2     &&  pnChoice VALID
+FUNCTION _59e0ojway     &&  pnChoice VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            SAVEWARN.SPR               16:18:17 Ё
+*       Ё 07/31/18            SAVEWARN.SPR               11:27:20 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yy3b1")
-	DEFINE WINDOW _58o0yy3b1 ;
+IF NOT WEXIST("_59e0ojx9z")
+	DEFINE WINDOW _59e0ojx9z ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-50)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-50)/2)+49 ;
 		NOFLOAT ;
@@ -82,29 +82,29 @@ PUSH KEY CLEAR
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yy3b1")
-	ACTIVATE WINDOW _58o0yy3b1 SAME
+IF WVISIBLE("_59e0ojx9z")
+	ACTIVATE WINDOW _59e0ojx9z SAME
 ELSE
-	ACTIVATE WINDOW _58o0yy3b1 NOSHOW
+	ACTIVATE WINDOW _59e0ojx9z NOSHOW
 ENDIF
 @ 0,3 GET cmdSave ;
 	PICTURE "@*VT \!\<Guardar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yy3b4()
+	VALID _59e0ojxa1()
 @ 0,17 GET cmdCancel ;
 	PICTURE "@*VT \<Cancelar" ;
 	SIZE 1,12,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yy3b5()
+	VALID _59e0ojxa2()
 @ 0,32 GET cmdEdit ;
 	PICTURE "@*VT \<Modificar" ;
 	SIZE 1,13,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yy3b6()
+	VALID _59e0ojxa3()
 
-IF NOT WVISIBLE("_58o0yy3b1")
-	ACTIVATE WINDOW _58o0yy3b1
+IF NOT WVISIBLE("_59e0ojx9z")
+	ACTIVATE WINDOW _59e0ojx9z
 ENDIF
 
 
@@ -116,10 +116,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	VALID _58o0yy3b7() ;
+	VALID _59e0ojxa4() ;
 	MODAL
 
-RELEASE WINDOW _58o0yy3b1
+RELEASE WINDOW _59e0ojx9z
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -142,7 +142,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY3B4           cmdSave VALID                      Ё
+*       Ё _59E0OJXA1           cmdSave VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -155,13 +155,13 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy3b4     &&  cmdSave VALID
+FUNCTION _59e0ojxa1     &&  cmdSave VALID
 #REGION 1
 &cSaveTo = 1
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY3B5           cmdCancel VALID                    Ё
+*       Ё _59E0OJXA2           cmdCancel VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -174,13 +174,13 @@ FUNCTION _58o0yy3b4     &&  cmdSave VALID
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy3b5     &&  cmdCancel VALID
+FUNCTION _59e0ojxa2     &&  cmdCancel VALID
 #REGION 1
 &cSaveTo = 2
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY3B6           cmdEdit VALID                      Ё
+*       Ё _59E0OJXA3           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -193,13 +193,13 @@ FUNCTION _58o0yy3b5     &&  cmdCancel VALID
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy3b6     &&  cmdEdit VALID
+FUNCTION _59e0ojxa3     &&  cmdEdit VALID
 #REGION 1
 &cSaveTo = 3
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YY3B7           Nivel de lectura v═lido            Ё
+*       Ё _59E0OJXA4           Nivel de lectura v═lido            Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -211,7 +211,7 @@ FUNCTION _58o0yy3b6     &&  cmdEdit VALID
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yy3b7     && Read Level Valid
+FUNCTION _59e0ojxa4     && Read Level Valid
 *
 * C╒digo v═lido de la pantalla: SAVEWARN
 *

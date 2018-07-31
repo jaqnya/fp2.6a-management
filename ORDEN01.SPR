@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             ORDEN01.SPR               16:18:07 Ё
+*       Ё 07/31/18             ORDEN01.SPR               11:27:05 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yxvsb")
-	DEFINE WINDOW _58o0yxvsb ;
+IF NOT WEXIST("_59e0ojllz")
+	DEFINE WINDOW _59e0ojllz ;
 		FROM INT((SROW()-6)/2),INT((SCOL()-19)/2) ;
 		TO INT((SROW()-6)/2)+5,INT((SCOL()-19)/2)+18 ;
 		TITLE " ORDENAR POR " ;
@@ -137,21 +137,21 @@ paOrder(2) = "2. NOMBRE"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxvsb")
-	ACTIVATE WINDOW _58o0yxvsb SAME
+IF WVISIBLE("_59e0ojllz")
+	ACTIVATE WINDOW _59e0ojllz SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxvsb NOSHOW
+	ACTIVATE WINDOW _59e0ojllz NOSHOW
 ENDIF
 @ 0,0 GET pnChoice ;
  	PICTURE "@&T" ;
 	FROM paOrder ;
 	SIZE 4,17 ;
 	DEFAULT 1 ;
-	VALID _58o0yxvsh() ;
+	VALID _59e0ojlm5() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0yxvsb")
-	ACTIVATE WINDOW _58o0yxvsb
+IF NOT WVISIBLE("_59e0ojllz")
+	ACTIVATE WINDOW _59e0ojllz
 ENDIF
 
 
@@ -165,7 +165,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yxvsb
+RELEASE WINDOW _59e0ojllz
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -188,7 +188,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXVSH           pnChoice VALID                     Ё
+*       Ё _59E0OJLM5           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -201,7 +201,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxvsh     &&  pnChoice VALID
+FUNCTION _59e0ojlm5     &&  pnChoice VALID
 #REGION 1
 IF INLIST(LOWER(ALIAS()), "familias", "rubros1", "rubros2", "marcas1", "proceden", "proveedo", "maquinas", "marcas2", "modelos", "monedas", "depar", "ciudades", "barrios", "mecanico", "vendedor", "cobrador", "estadoot", "unidad", "motivono", "motivocl", ;
 "locales")

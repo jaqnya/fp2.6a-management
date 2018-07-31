@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            CONSUVEN.SPR               16:18:05 Ё
+*       Ё 07/31/18            CONSUVEN.SPR               11:27:02 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yxu35")
-	DEFINE WINDOW _58o0yxu35 ;
+IF NOT WEXIST("_59e0ojjjl")
+	DEFINE WINDOW _59e0ojjjl ;
 		FROM INT((SROW()-9)/2),INT((SCOL()-66)/2) ;
 		TO INT((SROW()-9)/2)+8,INT((SCOL()-66)/2)+65 ;
 		TITLE " Consulta de M═quinas Vendidas " ;
@@ -69,10 +69,10 @@ STORE {} TO m.fecha1, m.fecha2
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxu35")
-	ACTIVATE WINDOW _58o0yxu35 SAME
+IF WVISIBLE("_59e0ojjjl")
+	ACTIVATE WINDOW _59e0ojjjl SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxu35 NOSHOW
+	ACTIVATE WINDOW _59e0ojjjl NOSHOW
 ENDIF
 @ 0,12 GET m.nombre ;
 	SIZE 1,51 ;
@@ -107,16 +107,16 @@ ENDIF
 	PICTURE "@*HN \! Ejecutar " ;
 	SIZE 1,12,1 ;
 	DEFAULT 1 ;
-	WHEN _58o0yxu38() ;
-	VALID _58o0yxu39()
+	WHEN _59e0ojjl7() ;
+	VALID _59e0ojjl8()
 @ 5,38 GET m.salir ;
 	PICTURE "@*HN \?\<Salir" ;
 	SIZE 1,9,1 ;
 	DEFAULT 1 ;
-	VALID _58o0yxu3a()
+	VALID _59e0ojjl9()
 
-IF NOT WVISIBLE("_58o0yxu35")
-	ACTIVATE WINDOW _58o0yxu35
+IF NOT WVISIBLE("_59e0ojjjl")
+	ACTIVATE WINDOW _59e0ojjjl
 ENDIF
 
 
@@ -130,7 +130,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR  , W+/BG
 
-RELEASE WINDOW _58o0yxu35
+RELEASE WINDOW _59e0ojjjl
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -143,7 +143,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXU38           m.ejecutar WHEN                    Ё
+*       Ё _59E0OJJL7           m.ejecutar WHEN                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -156,7 +156,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxu38     &&  m.ejecutar WHEN
+FUNCTION _59e0ojjl7     &&  m.ejecutar WHEN
 #REGION 1
 IF EMPTY(m.nombre) AND EMPTY(m.documento) AND EMPTY(m.obs1) AND EMPTY(m.fecha1) AND EMPTY(m.fecha2) THEN
    RETURN .F.
@@ -164,7 +164,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXU39           m.ejecutar VALID                   Ё
+*       Ё _59E0OJJL8           m.ejecutar VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -177,7 +177,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxu39     &&  m.ejecutar VALID
+FUNCTION _59e0ojjl8     &&  m.ejecutar VALID
 #REGION 1
 lBuscar = .F.
 
@@ -275,7 +275,7 @@ _CUROBJ = OBJNUM(m.nombre)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXU3A           m.salir VALID                      Ё
+*       Ё _59E0OJJL9           m.salir VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -288,6 +288,6 @@ _CUROBJ = OBJNUM(m.nombre)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxu3a     &&  m.salir VALID
+FUNCTION _59e0ojjl9     &&  m.salir VALID
 #REGION 1
 CLEAR READ

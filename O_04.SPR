@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18              O_04.SPR                 16:18:05 Ё
+*       Ё 07/31/18              O_04.SPR                 11:27:01 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yxtpg")
-	DEFINE WINDOW _58o0yxtpg ;
+IF NOT WEXIST("_59e0ojits")
+	DEFINE WINDOW _59e0ojits ;
 		FROM INT((SROW()-11)/2),INT((SCOL()-54)/2) ;
 		TO INT((SROW()-11)/2)+10,INT((SCOL()-54)/2)+53 ;
 		TITLE " Traslado de Movimientos de Art║culos " ;
@@ -67,10 +67,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxtpg")
-	ACTIVATE WINDOW _58o0yxtpg SAME
+IF WVISIBLE("_59e0ojits")
+	ACTIVATE WINDOW _59e0ojits SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxtpg NOSHOW
+	ACTIVATE WINDOW _59e0ojits NOSHOW
 ENDIF
 @ 6,0 TO 6,51
 @ 2,3 SAY "Nombre........:" ;
@@ -84,7 +84,7 @@ ENDIF
 @ 1,19 GET m.articulo ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
-	VALID _58o0yxtpj()
+	VALID _59e0ojitw()
 @ 2,19 GET m.nombre ;
 	SIZE 1,30 ;
 	DEFAULT " " ;
@@ -93,7 +93,7 @@ ENDIF
 @ 4,19 GET m.articulo2 ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
-	VALID _58o0yxtpk()
+	VALID _59e0ojity()
 @ 5,19 GET m.nombre2 ;
 	SIZE 1,30 ;
 	DEFAULT " " ;
@@ -103,10 +103,10 @@ ENDIF
 	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _58o0yxtpm()
+	VALID _59e0ojitz()
 
-IF NOT WVISIBLE("_58o0yxtpg")
-	ACTIVATE WINDOW _58o0yxtpg
+IF NOT WVISIBLE("_59e0ojits")
+	ACTIVATE WINDOW _59e0ojits
 ENDIF
 
 
@@ -120,7 +120,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yxtpg
+RELEASE WINDOW _59e0ojits
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -309,7 +309,7 @@ SHOW GETS
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXTPJ           m.articulo VALID                   Ё
+*       Ё _59E0OJITW           m.articulo VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -322,7 +322,7 @@ SHOW GETS
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxtpj     &&  m.articulo VALID
+FUNCTION _59e0ojitw     &&  m.articulo VALID
 #REGION 1
 IF LASTKEY() = 27
    RETURN
@@ -402,7 +402,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXTPK           m.articulo2 VALID                  Ё
+*       Ё _59E0OJITY           m.articulo2 VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -415,7 +415,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxtpk     &&  m.articulo2 VALID
+FUNCTION _59e0ojity     &&  m.articulo2 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
 *  SHOW GET cmgChoice, 1 DISABLE
@@ -492,7 +492,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXTPM           cmgChoice VALID                    Ё
+*       Ё _59E0OJITZ           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -505,7 +505,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxtpm     &&  cmgChoice VALID
+FUNCTION _59e0ojitz     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    DO _ReplaceCode

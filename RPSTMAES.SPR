@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18            RPSTMAES.SPR               16:18:04 Ё
+*       Ё 07/31/18            RPSTMAES.SPR               11:27:01 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yxtdl")
-	DEFINE WINDOW _58o0yxtdl ;
+IF NOT WEXIST("_59e0ojif1")
+	DEFINE WINDOW _59e0ojif1 ;
 		FROM INT((SROW()-14)/2),INT((SCOL()-62)/2) ;
 		TO INT((SROW()-14)/2)+13,INT((SCOL()-62)/2)+61 ;
 		NOFLOAT ;
@@ -56,10 +56,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxtdl")
-	ACTIVATE WINDOW _58o0yxtdl SAME
+IF WVISIBLE("_59e0ojif1")
+	ACTIVATE WINDOW _59e0ojif1 SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxtdl NOSHOW
+	ACTIVATE WINDOW _59e0ojif1 NOSHOW
 ENDIF
 @ 1,0 TO 1,59
 @ 0,11 SAY "REPROCESAMIENTO DE STOCK DE ARTICULOS" ;
@@ -82,10 +82,10 @@ ENDIF
 	PICTURE "@*HN \!\<Iniciar;\?\<Cancelar" ;
 	SIZE 1,12,10 ;
 	DEFAULT 1 ;
-	VALID _58o0yxtdo()
+	VALID _59e0ojif4()
 
-IF NOT WVISIBLE("_58o0yxtdl")
-	ACTIVATE WINDOW _58o0yxtdl
+IF NOT WVISIBLE("_59e0ojif1")
+	ACTIVATE WINDOW _59e0ojif1
 ENDIF
 
 
@@ -99,7 +99,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yxtdl
+RELEASE WINDOW _59e0ojif1
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -112,7 +112,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXTDO           pnChoice VALID                     Ё
+*       Ё _59E0OJIF4           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -125,7 +125,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxtdo     &&  pnChoice VALID
+FUNCTION _59e0ojif4     &&  pnChoice VALID
 #REGION 1
 DO CASE
    CASE pnChoice = 1     && Iniciar.

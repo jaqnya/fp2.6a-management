@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/05/18             ORDEN05.SPR               16:18:10 Ё
+*       Ё 07/31/18             ORDEN05.SPR               11:27:08 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_58o0yxxj4")
-	DEFINE WINDOW _58o0yxxj4 ;
+IF NOT WEXIST("_59e0ojo6s")
+	DEFINE WINDOW _59e0ojo6s ;
 		FROM INT((SROW()-15)/2),INT((SCOL()-29)/2) ;
 		TO INT((SROW()-15)/2)+14,INT((SCOL()-29)/2)+28 ;
 		TITLE " ORDENAR POR " ;
@@ -99,21 +99,21 @@ paOrder(11) = "11. CAJA #"
 *
 
 #REGION 1
-IF WVISIBLE("_58o0yxxj4")
-	ACTIVATE WINDOW _58o0yxxj4 SAME
+IF WVISIBLE("_59e0ojo6s")
+	ACTIVATE WINDOW _59e0ojo6s SAME
 ELSE
-	ACTIVATE WINDOW _58o0yxxj4 NOSHOW
+	ACTIVATE WINDOW _59e0ojo6s NOSHOW
 ENDIF
 @ 0,0 GET pnChoice ;
  	PICTURE "@&T" ;
 	FROM paOrder ;
 	SIZE 13,27 ;
 	DEFAULT 1 ;
-	VALID _58o0yxxj7() ;
+	VALID _59e0ojo8e() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_58o0yxxj4")
-	ACTIVATE WINDOW _58o0yxxj4
+IF NOT WVISIBLE("_59e0ojo6s")
+	ACTIVATE WINDOW _59e0ojo6s
 ENDIF
 
 
@@ -127,7 +127,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _58o0yxxj4
+RELEASE WINDOW _59e0ojo6s
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -150,7 +150,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _58O0YXXJ7           pnChoice VALID                     Ё
+*       Ё _59E0OJO8E           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -163,7 +163,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _58o0yxxj7     &&  pnChoice VALID
+FUNCTION _59e0ojo8e     &&  pnChoice VALID
 #REGION 1
 DO CASE
    CASE pnChoice = 1
