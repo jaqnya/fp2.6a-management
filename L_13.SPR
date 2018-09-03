@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18              L_13.SPR                 11:27:02 Ё
+*       Ё 09/03/18              L_13.SPR                 12:57:44 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojjvm")
-	DEFINE WINDOW _59e0ojjvm ;
+IF NOT WEXIST("_5ac0rs6v6")
+	DEFINE WINDOW _5ac0rs6v6 ;
 		FROM INT((SROW()-12)/2),INT((SCOL()-77)/2) ;
 		TO INT((SROW()-12)/2)+11,INT((SCOL()-77)/2)+76 ;
 		TITLE " EXISTENCIA DE ARTICULOS " ;
@@ -70,10 +70,10 @@ mordenado  = "C"
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojjvm")
-	ACTIVATE WINDOW _59e0ojjvm SAME
+IF WVISIBLE("_5ac0rs6v6")
+	ACTIVATE WINDOW _5ac0rs6v6 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojjvm NOSHOW
+	ACTIVATE WINDOW _5ac0rs6v6 NOSHOW
 ENDIF
 @ 1,2 SAY "DEL ARTICULO:" ;
 	SIZE 1,13, 0
@@ -82,11 +82,11 @@ ENDIF
 @ 1,16 GET marti1 ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
-	VALID _59e0ojjvo()
+	VALID _5ac0rs6ws()
 @ 2,16 GET marti2 ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
-	VALID _59e0ojjvp()
+	VALID _5ac0rs6wt()
 @ 4,2 SAY "LISTAR ARTICULOS CON EXISTENCIA = 0:" ;
 	SIZE 1,36, 0
 @ 5,2 SAY "LISTAR ARTICULOS VIGENTES (S/N/T)..:" ;
@@ -97,26 +97,26 @@ ENDIF
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _59e0ojjvq()
+	VALID _5ac0rs6wu()
 @ 5,39 GET mvigente ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _59e0ojjvr()
+	VALID _5ac0rs6wv()
 @ 6,39 GET mordenado ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _59e0ojjvs()
+	VALID _5ac0rs6ww()
 @ 7,0 TO 7,74
 @ 8,23 GET cmgChoice ;
 	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _59e0ojjvt()
+	VALID _5ac0rs6wx()
 
-IF NOT WVISIBLE("_59e0ojjvm")
-	ACTIVATE WINDOW _59e0ojjvm
+IF NOT WVISIBLE("_5ac0rs6v6")
+	ACTIVATE WINDOW _5ac0rs6v6
 ENDIF
 
 
@@ -130,7 +130,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojjvm
+RELEASE WINDOW _5ac0rs6v6
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -238,7 +238,7 @@ DELETE FILE l_13.cdx
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJVO           marti1 VALID                       Ё
+*       Ё _5AC0RS6WS           marti1 VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -251,7 +251,7 @@ DELETE FILE l_13.cdx
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojjvo     &&  marti1 VALID
+FUNCTION _5ac0rs6ws     &&  marti1 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN 0
@@ -300,7 +300,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJVP           marti2 VALID                       Ё
+*       Ё _5AC0RS6WT           marti2 VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -313,7 +313,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojjvp     &&  marti2 VALID
+FUNCTION _5ac0rs6wt     &&  marti2 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -358,7 +358,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJVQ           mconexistencia VALID               Ё
+*       Ё _5AC0RS6WU           mconexistencia VALID               Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -371,7 +371,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojjvq     &&  mconexistencia VALID
+FUNCTION _5ac0rs6wu     &&  mconexistencia VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -385,7 +385,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJVR           mvigente VALID                     Ё
+*       Ё _5AC0RS6WV           mvigente VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -398,7 +398,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojjvr     &&  mvigente VALID
+FUNCTION _5ac0rs6wv     &&  mvigente VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -412,7 +412,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJVS           mordenado VALID                    Ё
+*       Ё _5AC0RS6WW           mordenado VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -425,7 +425,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojjvs     &&  mordenado VALID
+FUNCTION _5ac0rs6ww     &&  mordenado VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -438,7 +438,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJVT           cmgChoice VALID                    Ё
+*       Ё _5AC0RS6WX           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -451,7 +451,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojjvt     &&  cmgChoice VALID
+FUNCTION _5ac0rs6wx     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    DO sql_13

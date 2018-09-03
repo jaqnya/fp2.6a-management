@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            BUSCAR10.SPR               11:27:08 Ё
+*       Ё 09/03/18            BUSCAR10.SPR               12:57:49 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojo14")
-	DEFINE WINDOW _59e0ojo14 ;
+IF NOT WEXIST("_5ac0rsa6g")
+	DEFINE WINDOW _5ac0rsa6g ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-22)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-22)/2)+21 ;
 		TITLE " BUSQUEDA POR " ;
@@ -68,21 +68,21 @@ PRIVATE m.proveedor
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojo14")
-	ACTIVATE WINDOW _59e0ojo14 SAME
+IF WVISIBLE("_5ac0rsa6g")
+	ACTIVATE WINDOW _5ac0rsa6g SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojo14 NOSHOW
+	ACTIVATE WINDOW _5ac0rsa6g NOSHOW
 ENDIF
 @ 0,13 GET m.proveedor ;
 	SIZE 1,5 ;
 	DEFAULT 0 ;
 	PICTURE "99999" ;
-	VALID _59e0ojo16()
+	VALID _5ac0rsa6j()
 @ 0,2 SAY "PROVEEDOR:" ;
 	SIZE 1,10, 0
 
-IF NOT WVISIBLE("_59e0ojo14")
-	ACTIVATE WINDOW _59e0ojo14
+IF NOT WVISIBLE("_5ac0rsa6g")
+	ACTIVATE WINDOW _5ac0rsa6g
 ENDIF
 
 
@@ -96,7 +96,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojo14
+RELEASE WINDOW _5ac0rsa6g
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -109,7 +109,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJO16           m.proveedor VALID                  Ё
+*       Ё _5AC0RSA6J           m.proveedor VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -122,7 +122,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojo16     &&  m.proveedor VALID
+FUNCTION _5ac0rsa6j     &&  m.proveedor VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.

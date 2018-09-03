@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            EDITPRIC.SPR               11:27:21 Ё
+*       Ё 09/03/18            EDITPRIC.SPR               12:57:56 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojxvc")
-	DEFINE WINDOW _59e0ojxvc ;
+IF NOT WEXIST("_5ac0rsfo7")
+	DEFINE WINDOW _5ac0rsfo7 ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-54)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-54)/2)+53 ;
 		NOFLOAT ;
@@ -87,10 +87,10 @@ PRIVATE pnSelect, pcOrder, pnRecNo
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojxvc")
-	ACTIVATE WINDOW _59e0ojxvc SAME
+IF WVISIBLE("_5ac0rsfo7")
+	ACTIVATE WINDOW _5ac0rsfo7 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojxvc NOSHOW
+	ACTIVATE WINDOW _5ac0rsfo7 NOSHOW
 ENDIF
 @ 2,1 SAY "Descripci╒n.:" ;
 	SIZE 1,13, 0
@@ -129,27 +129,27 @@ ENDIF
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
-	VALID _59e0ojxvg()
+	VALID _5ac0rsfpv()
 @ 11,16 GET pventag2 ;
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
-	VALID _59e0ojxvh()
+	VALID _5ac0rsfpw()
 @ 12,16 GET pventag3 ;
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
-	VALID _59e0ojxvi()
+	VALID _5ac0rsfpx()
 @ 13,16 GET pventag4 ;
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
-	VALID _59e0ojxvj()
+	VALID _5ac0rsfpy()
 @ 14,16 GET pventag5 ;
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
-	VALID _59e0ojxvk()
+	VALID _5ac0rsfpz()
 @ 8,4 SAY "Lista" ;
 	SIZE 1,5, 0
 @ 9,2 TO 9,48
@@ -180,8 +180,8 @@ ENDIF
 @ 16,1 SAY "Estos precios no incluyen impuestos." ;
 	SIZE 1,36, 0
 
-IF NOT WVISIBLE("_59e0ojxvc")
-	ACTIVATE WINDOW _59e0ojxvc
+IF NOT WVISIBLE("_5ac0rsfo7")
+	ACTIVATE WINDOW _5ac0rsfo7
 ENDIF
 
 
@@ -195,7 +195,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojxvc
+RELEASE WINDOW _5ac0rsfo7
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -219,7 +219,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXVG           pventag1 VALID                     Ё
+*       Ё _5AC0RSFPV           pventag1 VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -232,7 +232,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxvg     &&  pventag1 VALID
+FUNCTION _5ac0rsfpv     &&  pventag1 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -250,7 +250,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXVH           pventag2 VALID                     Ё
+*       Ё _5AC0RSFPW           pventag2 VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -263,7 +263,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxvh     &&  pventag2 VALID
+FUNCTION _5ac0rsfpw     &&  pventag2 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -281,7 +281,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXVI           pventag3 VALID                     Ё
+*       Ё _5AC0RSFPX           pventag3 VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -294,7 +294,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxvi     &&  pventag3 VALID
+FUNCTION _5ac0rsfpx     &&  pventag3 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -312,7 +312,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXVJ           pventag4 VALID                     Ё
+*       Ё _5AC0RSFPY           pventag4 VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -325,7 +325,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxvj     &&  pventag4 VALID
+FUNCTION _5ac0rsfpy     &&  pventag4 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -343,7 +343,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXVK           pventag5 VALID                     Ё
+*       Ё _5AC0RSFPZ           pventag5 VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -356,7 +356,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxvk     &&  pventag5 VALID
+FUNCTION _5ac0rsfpz     &&  pventag5 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

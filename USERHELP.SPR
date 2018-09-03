@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            USERHELP.SPR               11:27:20 Ё
+*       Ё 09/03/18            USERHELP.SPR               12:57:55 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojx5a")
-	DEFINE WINDOW _59e0ojx5a ;
+IF NOT WEXIST("_5ac0rsf8t")
+	DEFINE WINDOW _5ac0rsf8t ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-65)/2)+64 ;
 		TITLE " Ayuda " ;
@@ -77,10 +77,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojx5a")
-	ACTIVATE WINDOW _59e0ojx5a SAME
+IF WVISIBLE("_5ac0rsf8t")
+	ACTIVATE WINDOW _5ac0rsf8t SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojx5a NOSHOW
+	ACTIVATE WINDOW _5ac0rsf8t NOSHOW
 ENDIF
 @ 9,4 SAY "1" ;
 	SIZE 1,1, 0
@@ -258,8 +258,8 @@ ENDIF
 @ 3,3 SAY "modificarlas." ;
 	SIZE 1,13, 0
 
-IF NOT WVISIBLE("_59e0ojx5a")
-	ACTIVATE WINDOW _59e0ojx5a
+IF NOT WVISIBLE("_5ac0rsf8t")
+	ACTIVATE WINDOW _5ac0rsf8t
 ENDIF
 
 
@@ -273,7 +273,7 @@ ENDIF
 READ CYCLE ;
 	MODAL TIMEOUT 0
 
-RELEASE WINDOW _59e0ojx5a
+RELEASE WINDOW _5ac0rsf8t
 
 #REGION 0
 IF m.talkstat = "ON"

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            SERVICIO.SPR               11:27:11 Ё
+*       Ё 09/03/18            SERVICIO.SPR               12:57:51 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -57,8 +57,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojqsb")
-	DEFINE WINDOW _59e0ojqsb ;
+IF NOT WEXIST("_5ac0rsboe")
+	DEFINE WINDOW _5ac0rsboe ;
 		FROM INT((SROW()-10)/2),INT((SCOL()-48)/2) ;
 		TO INT((SROW()-10)/2)+9,INT((SCOL()-48)/2)+47 ;
 		TITLE (pcMyTitle) ;
@@ -90,10 +90,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojqsb")
-	ACTIVATE WINDOW _59e0ojqsb SAME
+IF WVISIBLE("_5ac0rsboe")
+	ACTIVATE WINDOW _5ac0rsboe SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojqsb NOSHOW
+	ACTIVATE WINDOW _5ac0rsboe NOSHOW
 ENDIF
 @ 5,0 TO 5,45
 @ 2,3 SAY "Nombre..:" ;
@@ -102,7 +102,7 @@ ENDIF
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	WHEN plAdding ;
-	VALID _59e0ojqsf()
+	VALID _5ac0rsboh()
 @ 2,13 GET m.nombre ;
 	SIZE 1,30 ;
 	DEFAULT " " ;
@@ -113,12 +113,12 @@ ENDIF
 	DEFAULT 0 ;
 	PICTURE "999.99" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojqsh()
+	VALID _5ac0rsboj()
 @ 6,6 GET pnChoice ;
 	PICTURE "@*HT \\\!\<Grabar;\?\<Cancelar" ;
 	SIZE 1,12,10 ;
 	DEFAULT 1 ;
-	VALID _59e0ojqsi()
+	VALID _5ac0rsbol()
 @ 3,20 SAY "%" ;
 	SIZE 1,1, 0
 @ 3,3 SAY "Comisi╒n:" ;
@@ -126,8 +126,8 @@ ENDIF
 @ 1,3 SAY "C╒digo..:" ;
 	SIZE 1,9, 0
 
-IF NOT WVISIBLE("_59e0ojqsb")
-	ACTIVATE WINDOW _59e0ojqsb
+IF NOT WVISIBLE("_5ac0rsboe")
+	ACTIVATE WINDOW _5ac0rsboe
 ENDIF
 
 
@@ -139,11 +139,11 @@ ENDIF
 *
 
 READ CYCLE ;
-	ACTIVATE _59e0ojqsj() ;
-	SHOW _59e0ojqsk() ;
+	ACTIVATE _5ac0rsbom() ;
+	SHOW _5ac0rsbon() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojqsb
+RELEASE WINDOW _5ac0rsboe
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -156,7 +156,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJQSF           m.articulo VALID                   Ё
+*       Ё _5AC0RSBOH           m.articulo VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -169,7 +169,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojqsf     &&  m.articulo VALID
+FUNCTION _5ac0rsboh     &&  m.articulo VALID
 #REGION 1
 IF LASTKEY() = 27
    RETURN
@@ -271,7 +271,7 @@ SHOW GET pnChoice, 1 ENABLE
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJQSH           m.pcomision VALID                  Ё
+*       Ё _5AC0RSBOJ           m.pcomision VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -284,7 +284,7 @@ SHOW GET pnChoice, 1 ENABLE
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojqsh     &&  m.pcomision VALID
+FUNCTION _5ac0rsboj     &&  m.pcomision VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -318,7 +318,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJQSI           pnChoice VALID                     Ё
+*       Ё _5AC0RSBOL           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -331,7 +331,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojqsi     &&  pnChoice VALID
+FUNCTION _5ac0rsbol     &&  pnChoice VALID
 #REGION 1
 IF pnChoice = 1
    IF plAdding .OR. plEditing
@@ -359,7 +359,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJQSJ           Nivel de lectura ACTIVATE          Ё
+*       Ё _5AC0RSBOM           Nivel de lectura ACTIVATE          Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -371,7 +371,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojqsj     && Read Level Activate
+FUNCTION _5ac0rsbom     && Read Level Activate
 *
 * C╒digo ACTIVATE de la pantalla: SERVICIO
 *
@@ -382,7 +382,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJQSK           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSBON           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -394,7 +394,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojqsk     && Read Level Show
+FUNCTION _5ac0rsbon     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

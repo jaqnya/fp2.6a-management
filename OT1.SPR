@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18               OT1.SPR                 11:27:15 Ё
+*       Ё 09/03/18               OT1.SPR                 12:57:54 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojtvd")
-	DEFINE WINDOW _59e0ojtvd ;
+IF NOT WEXIST("_5ac0rse0h")
+	DEFINE WINDOW _5ac0rse0h ;
 		FROM 1, 0 ;
 		TO 23,79 ;
 		TITLE " Consultar Orden de Trabajo " ;
@@ -133,10 +133,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojtvd")
-	ACTIVATE WINDOW _59e0ojtvd SAME
+IF WVISIBLE("_5ac0rse0h")
+	ACTIVATE WINDOW _5ac0rse0h SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojtvd NOSHOW
+	ACTIVATE WINDOW _5ac0rse0h NOSHOW
 ENDIF
 @ 10,44 SAY "Barrio:" ;
 	SIZE 1,7, 0
@@ -329,8 +329,8 @@ ENDIF
 @ 13,42 SAY "Caja #:" ;
 	SIZE 1,7, 0
 
-IF NOT WVISIBLE("_59e0ojtvd")
-	ACTIVATE WINDOW _59e0ojtvd
+IF NOT WVISIBLE("_5ac0rse0h")
+	ACTIVATE WINDOW _5ac0rse0h
 ENDIF
 
 
@@ -342,11 +342,11 @@ ENDIF
 *
 
 READ CYCLE ;
-	WHEN _59e0ojtw2() ;
-	SHOW _59e0ojtw3() ;
+	WHEN _5ac0rse0p() ;
+	SHOW _5ac0rse0q() ;
 	MODAL TIMEOUT 0
 
-RELEASE WINDOW _59e0ojtvd
+RELEASE WINDOW _5ac0rse0h
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -372,7 +372,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTW2           Nivel de lectura WHEN              Ё
+*       Ё _5AC0RSE0P           Nivel de lectura WHEN              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -384,7 +384,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtw2     && Read Level When
+FUNCTION _5ac0rse0p     && Read Level When
 *
 * C╒digo WHEN de la pantalla: OT1
 *
@@ -610,7 +610,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTW3           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSE0Q           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -622,15 +622,15 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtw3     && Read Level Show
+FUNCTION _5ac0rse0q     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *
 * C╒digo SHOW de la pantalla: OT1
 *
 #REGION 1
-IF SYS(2016) = "_59E0OJTVD" OR SYS(2016) = "*"
-	ACTIVATE WINDOW _59e0ojtvd SAME
+IF SYS(2016) = "_5AC0RSE0H" OR SYS(2016) = "*"
+	ACTIVATE WINDOW _5ac0rse0h SAME
 	@ 0,15 SAY m.serie ;
 		SIZE 1,1, 0 ;
 		PICTURE "@A!" ;

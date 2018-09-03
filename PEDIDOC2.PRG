@@ -937,6 +937,18 @@ IF SEEK(m.serieot + STR(m.nroot, 7)) THEN
             ENDIF
             *EOF
 
+
+
+            *BOB: Descuento promo servicio tecnico, por mes aniversario.
+            IF YEAR(DATE()) = 2018 AND MONTH(DATE()) = 9 THEN
+                m.porcdesc = 15
+                m.importdesc = ROUND(cabemot.monto_fact * m.porcdesc / 100, 0)
+                DO print_footer
+            ENDIF
+            *EOB: Descuento promo servicio tecnico, por mes aniversario.
+
+
+
             *BOB: Graba directamente el pedido si es que se trata de una OT
             IF !save_record() THEN
                RETURN 0

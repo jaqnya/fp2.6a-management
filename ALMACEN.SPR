@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18             ALMACEN.SPR               11:27:22 Ё
+*       Ё 09/03/18             ALMACEN.SPR               12:57:56 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -63,8 +63,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojz9p")
-	DEFINE WINDOW _59e0ojz9p ;
+IF NOT WEXIST("_5ac0rsg5f")
+	DEFINE WINDOW _5ac0rsg5f ;
 		FROM INT((SROW()-10)/2),INT((SCOL()-46)/2) ;
 		TO INT((SROW()-10)/2)+9,INT((SCOL()-46)/2)+45 ;
 		TITLE (pcMyTitle) ;
@@ -97,10 +97,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojz9p")
-	ACTIVATE WINDOW _59e0ojz9p SAME
+IF WVISIBLE("_5ac0rsg5f")
+	ACTIVATE WINDOW _5ac0rsg5f SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojz9p NOSHOW
+	ACTIVATE WINDOW _5ac0rsg5f NOSHOW
 ENDIF
 @ 1,3 SAY "Codigo:" ;
 	SIZE 1,7, 0
@@ -113,28 +113,28 @@ ENDIF
 	DEFAULT 0 ;
 	PICTURE "9999" ;
 	WHEN plAdding ;
-	VALID _59e0ojz9t()
+	VALID _5ac0rsg5i()
 @ 2,11 GET m.nombre ;
 	SIZE 1,30 ;
 	DEFAULT " " ;
 	PICTURE "@!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojz9u()
+	VALID _5ac0rsg5j()
 @ 4,29 GET m.vigente ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojz9x()
+	VALID _5ac0rsg5m()
 @ 6,5 GET pnChoice ;
 	PICTURE "@*HT \\\!\<Grabar;\?\<Cancelar" ;
 	SIZE 1,12,10 ;
 	DEFAULT 1 ;
-	VALID _59e0ojzae()
+	VALID _5ac0rsg5n()
 @ 5,0 TO 5,43
 
-IF NOT WVISIBLE("_59e0ojz9p")
-	ACTIVATE WINDOW _59e0ojz9p
+IF NOT WVISIBLE("_5ac0rsg5f")
+	ACTIVATE WINDOW _5ac0rsg5f
 ENDIF
 
 
@@ -146,11 +146,11 @@ ENDIF
 *
 
 READ CYCLE ;
-	ACTIVATE _59e0ojzag() ;
-	SHOW _59e0ojzah() ;
+	ACTIVATE _5ac0rsg5o() ;
+	SHOW _5ac0rsg5p() ;
 	MODAL COLOR ",B/BG,,,,GR+/GR,,,,,"
 
-RELEASE WINDOW _59e0ojz9p
+RELEASE WINDOW _5ac0rsg5f
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -241,7 +241,7 @@ RETURN (NextCode)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJZ9T           m.codigo VALID                     Ё
+*       Ё _5AC0RSG5I           m.codigo VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -254,7 +254,7 @@ RETURN (NextCode)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojz9t     &&  m.codigo VALID
+FUNCTION _5ac0rsg5i     &&  m.codigo VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -291,7 +291,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJZ9U           m.nombre VALID                     Ё
+*       Ё _5AC0RSG5J           m.nombre VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -304,7 +304,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojz9u     &&  m.nombre VALID
+FUNCTION _5ac0rsg5j     &&  m.nombre VALID
 #REGION 1
 IF plAdding
    IF INLIST(LASTKEY(), 5, 19, 27, 127)
@@ -398,7 +398,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJZ9X           m.vigente VALID                    Ё
+*       Ё _5AC0RSG5M           m.vigente VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -411,7 +411,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojz9x     &&  m.vigente VALID
+FUNCTION _5ac0rsg5m     &&  m.vigente VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -434,7 +434,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJZAE           pnChoice VALID                     Ё
+*       Ё _5AC0RSG5N           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -447,7 +447,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojzae     &&  pnChoice VALID
+FUNCTION _5ac0rsg5n     &&  pnChoice VALID
 #REGION 1
 IF pnChoice = 1
    IF .NOT. INLIST(m.vigente, "S", "N")
@@ -487,7 +487,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJZAG           Nivel de lectura ACTIVATE          Ё
+*       Ё _5AC0RSG5O           Nivel de lectura ACTIVATE          Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -499,7 +499,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojzag     && Read Level Activate
+FUNCTION _5ac0rsg5o     && Read Level Activate
 *
 * C╒digo ACTIVATE de la pantalla: ALMACEN
 *
@@ -510,7 +510,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJZAH           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSG5P           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -522,7 +522,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojzah     && Read Level Show
+FUNCTION _5ac0rsg5p     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

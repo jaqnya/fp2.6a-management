@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            FILTER01.SPR               11:27:10 Ё
+*       Ё 09/03/18            FILTER01.SPR               12:57:49 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -53,8 +53,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojpcn")
-	DEFINE WINDOW _59e0ojpcn ;
+IF NOT WEXIST("_5ac0rsas4")
+	DEFINE WINDOW _5ac0rsas4 ;
 		FROM INT((SROW()-12)/2),INT((SCOL()-52)/2) ;
 		TO INT((SROW()-12)/2)+11,INT((SCOL()-52)/2)+51 ;
 		TITLE " Filtro para Art║culos " ;
@@ -88,10 +88,10 @@ STORE "" TO items
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojpcn")
-	ACTIVATE WINDOW _59e0ojpcn SAME
+IF WVISIBLE("_5ac0rsas4")
+	ACTIVATE WINDOW _5ac0rsas4 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojpcn NOSHOW
+	ACTIVATE WINDOW _5ac0rsas4 NOSHOW
 ENDIF
 @ 0,2 SAY "Rubros:" ;
 	SIZE 1,7, 0 ;
@@ -111,7 +111,7 @@ ENDIF
 @ 1,2 GET m.item ;
  	PICTURE "@&N" ;
 	FROM items ;
-	RANGE 2, _59e0ojpcq() ;
+	RANGE 2, _5ac0rsas6() ;
 	SIZE 9,32 ;
 	DEFAULT 1 ;
 	COLOR SCHEME 14
@@ -119,21 +119,21 @@ ENDIF
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojpcr()
+	VALID _5ac0rsas7()
 @ 5,36 GET cmdOk ;
 	PICTURE "@*VN \!\<Aceptar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojpcs() ;
+	VALID _5ac0rsas8() ;
 	DISABLE
 @ 8,36 GET cmdCancel ;
 	PICTURE "@*VN \?\<Cancelar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojpct()
+	VALID _5ac0rsas9()
 
-IF NOT WVISIBLE("_59e0ojpcn")
-	ACTIVATE WINDOW _59e0ojpcn
+IF NOT WVISIBLE("_5ac0rsas4")
+	ACTIVATE WINDOW _5ac0rsas4
 ENDIF
 
 
@@ -145,10 +145,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _59e0ojpcu() ;
+	SHOW _5ac0rsasa() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojpcn
+RELEASE WINDOW _5ac0rsas4
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -256,7 +256,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJPCQ           m.item Emerger desde               Ё
+*       Ё _5AC0RSAS6           m.item Emerger desde               Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -269,7 +269,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojpcq     &&  m.item Emerger desde
+FUNCTION _5ac0rsas6     &&  m.item Emerger desde
 #REGION 1
 PRIVATE m.cnt, m.limit
 m.cnt = 1
@@ -284,7 +284,7 @@ RETURN m.cnt - 1
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJPCR           cmdEdit VALID                      Ё
+*       Ё _5AC0RSAS7           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -297,7 +297,7 @@ RETURN m.cnt - 1
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojpcr     &&  cmdEdit VALID
+FUNCTION _5ac0rsas7     &&  cmdEdit VALID
 #REGION 1
 PRIVATE itemcpy, m.osize, m.nsize, m.i
 
@@ -352,7 +352,7 @@ RETURN m.cnt - 1
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJPCS           cmdOk VALID                        Ё
+*       Ё _5AC0RSAS8           cmdOk VALID                        Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -365,7 +365,7 @@ RETURN m.cnt - 1
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojpcs     &&  cmdOk VALID
+FUNCTION _5ac0rsas8     &&  cmdOk VALID
 #REGION 1
 DO saveitems
 
@@ -383,7 +383,7 @@ CLEAR READ
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJPCT           cmdCancel VALID                    Ё
+*       Ё _5AC0RSAS9           cmdCancel VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -396,14 +396,14 @@ CLEAR READ
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojpct     &&  cmdCancel VALID
+FUNCTION _5ac0rsas9     &&  cmdCancel VALID
 #REGION 1
 CLEAR READ
 
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJPCU           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSASA           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -415,7 +415,7 @@ CLEAR READ
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojpcu     && Read Level Show
+FUNCTION _5ac0rsasa     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

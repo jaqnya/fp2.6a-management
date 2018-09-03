@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            MAQU_POP.SPR               11:27:21 Ё
+*       Ё 09/03/18            MAQU_POP.SPR               12:57:56 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -51,8 +51,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojxyx")
-	DEFINE WINDOW _59e0ojxyx ;
+IF NOT WEXIST("_5ac0rsfsv")
+	DEFINE WINDOW _5ac0rsfsv ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-38)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-38)/2)+37 ;
 		TITLE " MAQUINAS " ;
@@ -108,10 +108,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojxyx")
-	ACTIVATE WINDOW _59e0ojxyx SAME
+IF WVISIBLE("_5ac0rsfsv")
+	ACTIVATE WINDOW _5ac0rsfsv SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojxyx NOSHOW
+	ACTIVATE WINDOW _5ac0rsfsv NOSHOW
 ENDIF
 @ 0,0 GET lstMaquinas ;
  	PICTURE "@&T" ;
@@ -119,36 +119,36 @@ ENDIF
 	RANGE 2 ;
 	SIZE 15,36 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxyz() ;
+	VALID _5ac0rsfsy() ;
 	COLOR SCHEME 14
 @ 15,1 GET cmdNew ;
 	PICTURE "@*VN \<Agregar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxz0()
+	VALID _5ac0rsfsz()
 @ 15,13 GET cmdDelete ;
 	PICTURE "@*VN \<Borrar" ;
 	SIZE 1,10,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxz1()
+	VALID _5ac0rsft0()
 @ 15,24 GET cmdEdit ;
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxz2()
+	VALID _5ac0rsft1()
 @ 16,1 GET cmdGetHelp ;
 	PICTURE "@*VN a\<Yuda" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxz3()
+	VALID _5ac0rsft2()
 @ 16,24 GET cmdCancel ;
 	PICTURE "@*VN \?\<Salir" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxz4()
+	VALID _5ac0rsft3()
 
-IF NOT WVISIBLE("_59e0ojxyx")
-	ACTIVATE WINDOW _59e0ojxyx
+IF NOT WVISIBLE("_5ac0rsfsv")
+	ACTIVATE WINDOW _5ac0rsfsv
 ENDIF
 
 
@@ -160,10 +160,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _59e0ojxz5() ;
+	SHOW _5ac0rsft4() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojxyx
+RELEASE WINDOW _5ac0rsfsv
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -186,7 +186,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXYZ           lstMaquinas VALID                  Ё
+*       Ё _5AC0RSFSY           lstMaquinas VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -199,7 +199,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxyz     &&  lstMaquinas VALID
+FUNCTION _5ac0rsfsy     &&  lstMaquinas VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal
@@ -213,7 +213,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXZ0           cmdNew VALID                       Ё
+*       Ё _5AC0RSFSZ           cmdNew VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -226,14 +226,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxz0     &&  cmdNew VALID
+FUNCTION _5ac0rsfsz     &&  cmdNew VALID
 #REGION 1
 DO maquinas.prg WITH "Add"
 _CUROBJ = OBJNUM(lstMaquinas)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXZ1           cmdDelete VALID                    Ё
+*       Ё _5AC0RSFT0           cmdDelete VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -246,7 +246,7 @@ _CUROBJ = OBJNUM(lstMaquinas)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxz1     &&  cmdDelete VALID
+FUNCTION _5ac0rsft0     &&  cmdDelete VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -270,7 +270,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXZ2           cmdEdit VALID                      Ё
+*       Ё _5AC0RSFT1           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -283,7 +283,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxz2     &&  cmdEdit VALID
+FUNCTION _5ac0rsft1     &&  cmdEdit VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -307,7 +307,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXZ3           cmdGetHelp VALID                   Ё
+*       Ё _5AC0RSFT2           cmdGetHelp VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -321,13 +321,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *HELP Ч Maquinas
-FUNCTION _59e0ojxz3     &&  cmdGetHelp VALID
+FUNCTION _5ac0rsft2     &&  cmdGetHelp VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstMaquinas)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXZ4           cmdCancel VALID                    Ё
+*       Ё _5AC0RSFT3           cmdCancel VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -340,13 +340,13 @@ _CUROBJ = OBJNUM(lstMaquinas)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxz4     &&  cmdCancel VALID
+FUNCTION _5ac0rsft3     &&  cmdCancel VALID
 #REGION 1
 CLEAR READ
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXZ5           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSFT4           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -358,7 +358,7 @@ CLEAR READ
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxz5     && Read Level Show
+FUNCTION _5ac0rsft4     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            BARR_POP.SPR               11:27:20 Ё
+*       Ё 09/03/18            BARR_POP.SPR               12:57:55 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojxdi")
-	DEFINE WINDOW _59e0ojxdi ;
+IF NOT WEXIST("_5ac0rsfdd")
+	DEFINE WINDOW _5ac0rsfdd ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-38)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-38)/2)+37 ;
 		TITLE " BARRIOS " ;
@@ -120,10 +120,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojxdi")
-	ACTIVATE WINDOW _59e0ojxdi SAME
+IF WVISIBLE("_5ac0rsfdd")
+	ACTIVATE WINDOW _5ac0rsfdd SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojxdi NOSHOW
+	ACTIVATE WINDOW _5ac0rsfdd NOSHOW
 ENDIF
 @ 0,0 GET lstBarrios ;
  	PICTURE "@&T" ;
@@ -131,36 +131,36 @@ ENDIF
 	RANGE 2 ;
 	SIZE 15,36 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxdn() ;
+	VALID _5ac0rsfdh() ;
 	COLOR SCHEME 14
 @ 15,1 GET cmdNew ;
 	PICTURE "@*VN \<Agregar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxdo()
+	VALID _5ac0rsfdi()
 @ 15,13 GET cmdDelete ;
 	PICTURE "@*VN \<Borrar" ;
 	SIZE 1,10,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxdp()
+	VALID _5ac0rsfdj()
 @ 15,24 GET cmdEdit ;
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxdq()
+	VALID _5ac0rsfdk()
 @ 16,1 GET cmdGetHelp ;
 	PICTURE "@*VN a\<Yuda" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxdr()
+	VALID _5ac0rsfdl()
 @ 16,24 GET cmdCancel ;
 	PICTURE "@*VN \?\<Salir" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojxds()
+	VALID _5ac0rsfdm()
 
-IF NOT WVISIBLE("_59e0ojxdi")
-	ACTIVATE WINDOW _59e0ojxdi
+IF NOT WVISIBLE("_5ac0rsfdd")
+	ACTIVATE WINDOW _5ac0rsfdd
 ENDIF
 
 
@@ -172,10 +172,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _59e0ojxdt() ;
+	SHOW _5ac0rsfdn() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojxdi
+RELEASE WINDOW _5ac0rsfdd
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -198,7 +198,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXDN           lstBarrios VALID                   Ё
+*       Ё _5AC0RSFDH           lstBarrios VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -211,7 +211,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxdn     &&  lstBarrios VALID
+FUNCTION _5ac0rsfdh     &&  lstBarrios VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal
@@ -225,7 +225,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXDO           cmdNew VALID                       Ё
+*       Ё _5AC0RSFDI           cmdNew VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -238,14 +238,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxdo     &&  cmdNew VALID
+FUNCTION _5ac0rsfdi     &&  cmdNew VALID
 #REGION 1
 DO barrios.prg WITH "Add"
 _CUROBJ = OBJNUM(lstBarrios)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXDP           cmdDelete VALID                    Ё
+*       Ё _5AC0RSFDJ           cmdDelete VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -258,7 +258,7 @@ _CUROBJ = OBJNUM(lstBarrios)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxdp     &&  cmdDelete VALID
+FUNCTION _5ac0rsfdj     &&  cmdDelete VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -282,7 +282,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXDQ           cmdEdit VALID                      Ё
+*       Ё _5AC0RSFDK           cmdEdit VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -295,7 +295,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxdq     &&  cmdEdit VALID
+FUNCTION _5ac0rsfdk     &&  cmdEdit VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -319,7 +319,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXDR           cmdGetHelp VALID                   Ё
+*       Ё _5AC0RSFDL           cmdGetHelp VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -333,13 +333,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *HELP Ч Help Item
-FUNCTION _59e0ojxdr     &&  cmdGetHelp VALID
+FUNCTION _5ac0rsfdl     &&  cmdGetHelp VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstBarrios)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXDS           cmdCancel VALID                    Ё
+*       Ё _5AC0RSFDM           cmdCancel VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -352,13 +352,13 @@ _CUROBJ = OBJNUM(lstBarrios)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxds     &&  cmdCancel VALID
+FUNCTION _5ac0rsfdm     &&  cmdCancel VALID
 #REGION 1
 CLEAR READ
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJXDT           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSFDN           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -370,7 +370,7 @@ CLEAR READ
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojxdt     && Read Level Show
+FUNCTION _5ac0rsfdn     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

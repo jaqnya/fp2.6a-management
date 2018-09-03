@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18             MNUDATA.SPR               11:27:01 Ё
+*       Ё 09/03/18             MNUDATA.SPR               12:57:43 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojinw")
-	DEFINE WINDOW _59e0ojinw ;
+IF NOT WEXIST("_5ac0rs66m")
+	DEFINE WINDOW _5ac0rs66m ;
 		FROM INT((SROW()-7)/2),INT((SCOL()-27)/2) ;
 		TO INT((SROW()-7)/2)+6,INT((SCOL()-27)/2)+26 ;
 		TITLE " Datos de la Empresa " ;
@@ -57,24 +57,24 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojinw")
-	ACTIVATE WINDOW _59e0ojinw SAME
+IF WVISIBLE("_5ac0rs66m")
+	ACTIVATE WINDOW _5ac0rs66m SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojinw NOSHOW
+	ACTIVATE WINDOW _5ac0rs66m NOSHOW
 ENDIF
 @ 1,4 GET cmgChoice ;
 	PICTURE "@*VN \<General;\<Configuraci╒n" ;
 	SIZE 1,17,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojiny()
+	VALID _5ac0rs66o()
 
-IF NOT WVISIBLE("_59e0ojinw")
-	ACTIVATE WINDOW _59e0ojinw
+IF NOT WVISIBLE("_5ac0rs66m")
+	ACTIVATE WINDOW _5ac0rs66m
 ENDIF
 
 READ CYCLE
 
-RELEASE WINDOW _59e0ojinw
+RELEASE WINDOW _5ac0rs66m
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -87,7 +87,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJINY           cmgChoice VALID                    Ё
+*       Ё _5AC0RS66O           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -100,7 +100,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojiny     &&  cmgChoice VALID
+FUNCTION _5ac0rs66o     &&  cmgChoice VALID
 #REGION 1
 DO CASE
    CASE cmgChoice = 1

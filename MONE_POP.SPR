@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            MONE_POP.SPR               11:27:13 Ё
+*       Ё 09/03/18            MONE_POP.SPR               12:57:52 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojsdn")
-	DEFINE WINDOW _59e0ojsdn ;
+IF NOT WEXIST("_5ac0rsd41")
+	DEFINE WINDOW _5ac0rsd41 ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-38)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-38)/2)+37 ;
 		TITLE " MONEDAS " ;
@@ -110,10 +110,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojsdn")
-	ACTIVATE WINDOW _59e0ojsdn SAME
+IF WVISIBLE("_5ac0rsd41")
+	ACTIVATE WINDOW _5ac0rsd41 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojsdn NOSHOW
+	ACTIVATE WINDOW _5ac0rsd41 NOSHOW
 ENDIF
 @ 0,0 GET lstMonedas ;
  	PICTURE "@&T" ;
@@ -121,36 +121,36 @@ ENDIF
 	RANGE 2 ;
 	SIZE 15,36 ;
 	DEFAULT 1 ;
-	VALID _59e0ojsds() ;
+	VALID _5ac0rsd43() ;
 	COLOR SCHEME 14
 @ 15,1 GET m.new ;
 	PICTURE "@*VN \<Agregar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojsdt()
+	VALID _5ac0rsd44()
 @ 15,13 GET m.delete ;
 	PICTURE "@*VN \<Borrar" ;
 	SIZE 1,10,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojsdu()
+	VALID _5ac0rsd45()
 @ 15,24 GET m.edit ;
 	PICTURE "@*VN \<Modificar" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojsdv()
+	VALID _5ac0rsd46()
 @ 16,1 GET m.gethelp ;
 	PICTURE "@*VN a\<Yuda" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojsdw()
+	VALID _5ac0rsd47()
 @ 16,24 GET m.cancel ;
 	PICTURE "@*VN \?\<Salir" ;
 	SIZE 1,11,1 ;
 	DEFAULT 1 ;
-	VALID _59e0ojsdx()
+	VALID _5ac0rsd48()
 
-IF NOT WVISIBLE("_59e0ojsdn")
-	ACTIVATE WINDOW _59e0ojsdn
+IF NOT WVISIBLE("_5ac0rsd41")
+	ACTIVATE WINDOW _5ac0rsd41
 ENDIF
 
 
@@ -162,10 +162,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	SHOW _59e0ojsdy() ;
+	SHOW _5ac0rsd49() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojsdn
+RELEASE WINDOW _5ac0rsd41
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -188,7 +188,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSDS           lstMonedas VALID                   Ё
+*       Ё _5AC0RSD43           lstMonedas VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -201,7 +201,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojsds     &&  lstMonedas VALID
+FUNCTION _5ac0rsd43     &&  lstMonedas VALID
 #REGION 1
 IF LASTKEY() = 27
    &cSaveTo = nNewVal
@@ -215,7 +215,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSDT           m.new VALID                        Ё
+*       Ё _5AC0RSD44           m.new VALID                        Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -228,14 +228,14 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojsdt     &&  m.new VALID
+FUNCTION _5ac0rsd44     &&  m.new VALID
 #REGION 1
 DO monedas.prg WITH "Add"
 _CUROBJ = OBJNUM(lstMonedas)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSDU           m.delete VALID                     Ё
+*       Ё _5AC0RSD45           m.delete VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -248,7 +248,7 @@ _CUROBJ = OBJNUM(lstMonedas)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojsdu     &&  m.delete VALID
+FUNCTION _5ac0rsd45     &&  m.delete VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -272,7 +272,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSDV           m.edit VALID                       Ё
+*       Ё _5AC0RSD46           m.edit VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -285,7 +285,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojsdv     &&  m.edit VALID
+FUNCTION _5ac0rsd46     &&  m.edit VALID
 #REGION 1
 PRIVATE pnSelect, pcOrder, pnRecNo
 
@@ -309,7 +309,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSDW           m.gethelp VALID                    Ё
+*       Ё _5AC0RSD47           m.gethelp VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -323,13 +323,13 @@ ENDIF
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 *HELP Ч Help Item
-FUNCTION _59e0ojsdw     &&  m.gethelp VALID
+FUNCTION _5ac0rsd47     &&  m.gethelp VALID
 #REGION 1
 _CUROBJ = OBJNUM(lstMonedas)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSDX           m.cancel VALID                     Ё
+*       Ё _5AC0RSD48           m.cancel VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -342,13 +342,13 @@ _CUROBJ = OBJNUM(lstMonedas)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojsdx     &&  m.cancel VALID
+FUNCTION _5ac0rsd48     &&  m.cancel VALID
 #REGION 1
 CLEAR READ
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSDY           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSD49           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -360,7 +360,7 @@ CLEAR READ
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojsdy     && Read Level Show
+FUNCTION _5ac0rsd49     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

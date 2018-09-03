@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            BUSCAR23.SPR               11:27:08 Ё
+*       Ё 09/03/18            BUSCAR23.SPR               12:57:48 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -50,8 +50,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojnto")
-	DEFINE WINDOW _59e0ojnto ;
+IF NOT WEXIST("_5ac0rsa1l")
+	DEFINE WINDOW _5ac0rsa1l ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-25)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-25)/2)+24 ;
 		TITLE " BUSQUEDA POR " ;
@@ -123,10 +123,10 @@ m.fecha = DTOC(DATE())
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojnto")
-	ACTIVATE WINDOW _59e0ojnto SAME
+IF WVISIBLE("_5ac0rsa1l")
+	ACTIVATE WINDOW _5ac0rsa1l SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojnto NOSHOW
+	ACTIVATE WINDOW _5ac0rsa1l NOSHOW
 ENDIF
 @ 0,3 SAY "FECHA:" ;
 	SIZE 1,6, 0
@@ -134,10 +134,10 @@ ENDIF
 	SIZE 1,10 ;
 	DEFAULT " " ;
 	PICTURE "99/99/9999" ;
-	VALID _59e0ojntt()
+	VALID _5ac0rsa1n()
 
-IF NOT WVISIBLE("_59e0ojnto")
-	ACTIVATE WINDOW _59e0ojnto
+IF NOT WVISIBLE("_5ac0rsa1l")
+	ACTIVATE WINDOW _5ac0rsa1l
 ENDIF
 
 
@@ -151,7 +151,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojnto
+RELEASE WINDOW _5ac0rsa1l
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -176,7 +176,7 @@ POP KEY
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJNTT           m.fecha VALID                      Ё
+*       Ё _5AC0RSA1N           m.fecha VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -189,7 +189,7 @@ POP KEY
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojntt     &&  m.fecha VALID
+FUNCTION _5ac0rsa1n     &&  m.fecha VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_F1, K_BSPACE)
    RETURN .F.

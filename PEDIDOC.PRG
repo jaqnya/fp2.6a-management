@@ -225,7 +225,7 @@ DO WHILE .T.
                      WAIT "LIMITE DE CREDITO EXCEDIDO, NO SE PUEDE FACTURAR" + CHR(13) + "POR FAVOR, CONSULTE CON EL ADMINISTRADOR." WINDOW
                   ENDIF
                ENDIF
-            ELSE
+            ELSE   && Imprime factura de una OT.
                IF saldo_ok() THEN
 
                   m.saldo_ok2 = saldo_ok2()
@@ -239,6 +239,18 @@ DO WHILE .T.
                               m.mostrar_desc = .T.
                            ENDIF
                         ENDIF
+
+
+
+                        * BOB: Descuento promo servicio tecnico, por mes aniversario.
+                        IF YEAR(DATE()) = 2018 AND MONTH(DATE()) = 9 THEN
+                           IF m.porcdesc = 15 AND m.importdesc > 0 THEN
+                              m.mostrar_desc = .T.
+                           ENDIF
+                        ENDIF
+                        * EOB: Descuento promo servicio tecnico, por mes aniversario.
+
+
 
                         DO calc_net
                            * BOB: parche, hasta encontrar la manera de acelerar el proceso de impresion.
@@ -2494,6 +2506,20 @@ pcPriorDir = SUBSTR(pcSys16, RAT("\", pcSys16, 2) + 1, RAT("\", pcSys16) - RAT("
 IF pcPriorDir = "INTEGRAD.001" THEN
    REPORT FORM factura4 TO PRINTER NOCONSOLE
 ELSE
+   *BOB: Descuento promo servicio tecnico, por mes aniversario.
+   IF YEAR(DATE()) = 2018 AND MONTH(DATE()) = 9 THEN
+      IF BETWEEN(m.porcdesc, 0.13, 0.15) THEN
+         IF !EMPTY(m.nroot) THEN
+            WAIT 'DESCUENTO PROMO SERVICIO TECNICO, POR MES ANIVERSARIO :-)' WINDOW NOWAIT
+
+            IF EMPTY(m.obs3) THEN
+                m.obs3 = 'DESCUENTO PROMO SERVICIO TECNICO, POR MES ANIVERSARIO :-)'
+            ENDIF
+     	 ENDIF
+     ENDIF
+   ENDIF
+   *EOB: Descuento promo servicio tecnico, por mes aniversario.
+
    REPORT FORM factura6 TO PRINTER NOCONSOLE
 ENDIF
 

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            CLIENTE5.SPR               11:27:13 Ё
+*       Ё 09/03/18            CLIENTE5.SPR               12:57:52 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -61,8 +61,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojs1w")
-	DEFINE WINDOW _59e0ojs1w ;
+IF NOT WEXIST("_5ac0rscq0")
+	DEFINE WINDOW _5ac0rscq0 ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		TITLE (pcMyTitle) ;
@@ -92,10 +92,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojs1w")
-	ACTIVATE WINDOW _59e0ojs1w SAME
+IF WVISIBLE("_5ac0rscq0")
+	ACTIVATE WINDOW _5ac0rscq0 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojs1w NOSHOW
+	ACTIVATE WINDOW _5ac0rscq0 NOSHOW
 ENDIF
 @ 15,3 SAY "Referencias Comerciales" ;
 	SIZE 1,23, 0
@@ -127,7 +127,7 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojs20()
+	VALID _5ac0rscq3()
 @ 5,3 GET m.obs2 ;
 	SIZE 1,72 ;
 	DEFAULT " " ;
@@ -201,8 +201,8 @@ ENDIF
 @ 0,63 SAY "Paso 5 de 5" ;
 	SIZE 1,11, 0
 
-IF NOT WVISIBLE("_59e0ojs1w")
-	ACTIVATE WINDOW _59e0ojs1w
+IF NOT WVISIBLE("_5ac0rscq0")
+	ACTIVATE WINDOW _5ac0rscq0
 ENDIF
 
 
@@ -214,10 +214,10 @@ ENDIF
 *
 
 READ ;
-	VALID _59e0ojs21() ;
+	VALID _5ac0rscq5() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojs1w
+RELEASE WINDOW _5ac0rscq0
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -261,7 +261,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJS20           m.obs1 VALID                       Ё
+*       Ё _5AC0RSCQ3           m.obs1 VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -274,7 +274,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojs20     &&  m.obs1 VALID
+FUNCTION _5ac0rscq3     &&  m.obs1 VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_BSPACE)
    RETURN .F.
@@ -282,7 +282,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJS21           Nivel de lectura v═lido            Ё
+*       Ё _5AC0RSCQ5           Nivel de lectura v═lido            Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -294,7 +294,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojs21     && Read Level Valid
+FUNCTION _5ac0rscq5     && Read Level Valid
 *
 * C╒digo v═lido de la pantalla: CLIENTE5
 *

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            COMPINFO.SPR               11:27:08 Ё
+*       Ё 09/03/18            COMPINFO.SPR               12:57:49 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojnyq")
-	DEFINE WINDOW _59e0ojnyq ;
+IF NOT WEXIST("_5ac0rsa56")
+	DEFINE WINDOW _5ac0rsa56 ;
 		FROM INT((SROW()-19)/2),INT((SCOL()-56)/2) ;
 		TO INT((SROW()-19)/2)+18,INT((SCOL()-56)/2)+55 ;
 		TITLE " Estado de la Factura de Compra " ;
@@ -77,10 +77,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojnyq")
-	ACTIVATE WINDOW _59e0ojnyq SAME
+IF WVISIBLE("_5ac0rsa56")
+	ACTIVATE WINDOW _5ac0rsa56 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojnyq NOSHOW
+	ACTIVATE WINDOW _5ac0rsa56 NOSHOW
 ENDIF
 @ 1,2 SAY "Documento:" ;
 	SIZE 1,10, 0
@@ -155,8 +155,8 @@ ENDIF
 	PICTURE "999,999,999.99" ;
 	COLOR B/W     
 
-IF NOT WVISIBLE("_59e0ojnyq")
-	ACTIVATE WINDOW _59e0ojnyq
+IF NOT WVISIBLE("_5ac0rsa56")
+	ACTIVATE WINDOW _5ac0rsa56
 ENDIF
 
 
@@ -168,10 +168,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	WHEN _59e0ojnyv() ;
+	WHEN _5ac0rsa58() ;
 	MODAL TIMEOUT 0
 
-RELEASE WINDOW _59e0ojnyq
+RELEASE WINDOW _5ac0rsa56
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -197,7 +197,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJNYV           Nivel de lectura WHEN              Ё
+*       Ё _5AC0RSA58           Nivel de lectura WHEN              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -209,7 +209,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojnyv     && Read Level When
+FUNCTION _5ac0rsa58     && Read Level When
 *
 * C╒digo WHEN de la pantalla: COMPINFO
 *

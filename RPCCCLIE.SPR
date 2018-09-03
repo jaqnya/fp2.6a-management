@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            RPCCCLIE.SPR               11:27:00 Ё
+*       Ё 09/03/18            RPCCCLIE.SPR               12:57:43 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0oji8f")
-	DEFINE WINDOW _59e0oji8f ;
+IF NOT WEXIST("_5ac0rs5yg")
+	DEFINE WINDOW _5ac0rs5yg ;
 		FROM INT((SROW()-16)/2),INT((SCOL()-62)/2) ;
 		TO INT((SROW()-16)/2)+15,INT((SCOL()-62)/2)+61 ;
 		NOFLOAT ;
@@ -56,10 +56,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0oji8f")
-	ACTIVATE WINDOW _59e0oji8f SAME
+IF WVISIBLE("_5ac0rs5yg")
+	ACTIVATE WINDOW _5ac0rs5yg SAME
 ELSE
-	ACTIVATE WINDOW _59e0oji8f NOSHOW
+	ACTIVATE WINDOW _5ac0rs5yg NOSHOW
 ENDIF
 @ 1,0 TO 1,59
 @ 12,0 TO 12,59
@@ -82,14 +82,14 @@ ENDIF
 	PICTURE "@*HN \!\<Iniciar;\?\<Cancelar" ;
 	SIZE 1,12,10 ;
 	DEFAULT 1 ;
-	VALID _59e0oji8i()
+	VALID _5ac0rs5yj()
 @ 7,3 SAY " Actualiza las Ventas y las cuotas desde N.D┌b./Cr┌d." ;
 	SIZE 1,54, 0
 @ 10,3 SAY " Actualiza el saldo de Clientes desde N.D┌b./Cr┌d." ;
 	SIZE 1,51, 0
 
-IF NOT WVISIBLE("_59e0oji8f")
-	ACTIVATE WINDOW _59e0oji8f
+IF NOT WVISIBLE("_5ac0rs5yg")
+	ACTIVATE WINDOW _5ac0rs5yg
 ENDIF
 
 
@@ -103,7 +103,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0oji8f
+RELEASE WINDOW _5ac0rs5yg
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -116,7 +116,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJI8I           pnChoice VALID                     Ё
+*       Ё _5AC0RS5YJ           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -129,7 +129,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0oji8i     &&  pnChoice VALID
+FUNCTION _5ac0rs5yj     &&  pnChoice VALID
 #REGION 1
 DO CASE
    CASE pnChoice = 1     && Iniciar.

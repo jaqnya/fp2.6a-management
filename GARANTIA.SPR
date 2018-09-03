@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            GARANTIA.SPR               11:27:02 Ё
+*       Ё 09/03/18            GARANTIA.SPR               12:57:44 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojj9f")
-	DEFINE WINDOW _59e0ojj9f ;
+IF NOT WEXIST("_5ac0rs6hs")
+	DEFINE WINDOW _5ac0rs6hs ;
 		FROM INT((SROW()-6)/2),INT((SCOL()-30)/2) ;
 		TO INT((SROW()-6)/2)+5,INT((SCOL()-30)/2)+29 ;
 		TITLE " MAQUINAS EN GARANTIA " ;
@@ -92,21 +92,21 @@ paGarantia(02, 02) = "moviot2.prg"
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojj9f")
-	ACTIVATE WINDOW _59e0ojj9f SAME
+IF WVISIBLE("_5ac0rs6hs")
+	ACTIVATE WINDOW _5ac0rs6hs SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojj9f NOSHOW
+	ACTIVATE WINDOW _5ac0rs6hs NOSHOW
 ENDIF
 @ 0,0 GET lstGarantia ;
  	PICTURE "@&T" ;
 	FROM paGarantia ;
 	SIZE 4,28 ;
 	DEFAULT 1 ;
-	VALID _59e0ojj9i() ;
+	VALID _5ac0rs6hu() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_59e0ojj9f")
-	ACTIVATE WINDOW _59e0ojj9f
+IF NOT WVISIBLE("_5ac0rs6hs")
+	ACTIVATE WINDOW _5ac0rs6hs
 ENDIF
 
 
@@ -120,7 +120,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojj9f
+RELEASE WINDOW _5ac0rs6hs
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -133,7 +133,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJ9I           lstGarantia VALID                  Ё
+*       Ё _5AC0RS6HU           lstGarantia VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -146,7 +146,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojj9i     &&  lstGarantia VALID
+FUNCTION _5ac0rs6hu     &&  lstGarantia VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

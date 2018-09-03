@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18             BACKUP.SPR                11:27:00 Ё
+*       Ё 09/03/18             BACKUP.SPR                12:57:43 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojhod")
-	DEFINE WINDOW _59e0ojhod ;
+IF NOT WEXIST("_5ac0rs5q2")
+	DEFINE WINDOW _5ac0rs5q2 ;
 		FROM INT((SROW()-8)/2),INT((SCOL()-35)/2) ;
 		TO INT((SROW()-8)/2)+7,INT((SCOL()-35)/2)+34 ;
 		NOFLOAT ;
@@ -56,23 +56,23 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojhod")
-	ACTIVATE WINDOW _59e0ojhod SAME
+IF WVISIBLE("_5ac0rs5q2")
+	ACTIVATE WINDOW _5ac0rs5q2 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojhod NOSHOW
+	ACTIVATE WINDOW _5ac0rs5q2 NOSHOW
 ENDIF
 @ 3,0 TO 3,32
 @ 4,2 GET cmgChoice ;
 	PICTURE "@*HT \!\<Iniciar;\?\<Cancelar" ;
 	SIZE 1,12,5 ;
 	DEFAULT 1 ;
-	VALID _59e0ojhog()
+	VALID _5ac0rs5q5()
 @ 1,7 SAY "COPIA DE SEGURIDAD" ;
 	SIZE 1,18, 0 ;
 	COLOR BG+/N   
 
-IF NOT WVISIBLE("_59e0ojhod")
-	ACTIVATE WINDOW _59e0ojhod
+IF NOT WVISIBLE("_5ac0rs5q2")
+	ACTIVATE WINDOW _5ac0rs5q2
 ENDIF
 
 
@@ -86,7 +86,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojhod
+RELEASE WINDOW _5ac0rs5q2
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -99,7 +99,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJHOG           cmgChoice VALID                    Ё
+*       Ё _5AC0RS5Q5           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -112,7 +112,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojhog     &&  cmgChoice VALID
+FUNCTION _5ac0rs5q5     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    RELEASE WINDOW

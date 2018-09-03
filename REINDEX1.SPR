@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            REINDEX1.SPR               11:27:16 Ё
+*       Ё 09/03/18            REINDEX1.SPR               12:57:54 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0oju51")
-	DEFINE WINDOW _59e0oju51 ;
+IF NOT WEXIST("_5ac0rse4p")
+	DEFINE WINDOW _5ac0rse4p ;
 		FROM INT((SROW()-11)/2),INT((SCOL()-41)/2) ;
 		TO INT((SROW()-11)/2)+10,INT((SCOL()-41)/2)+40 ;
 		TITLE " RE-ORGANIZADOR " ;
@@ -57,10 +57,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0oju51")
-	ACTIVATE WINDOW _59e0oju51 SAME
+IF WVISIBLE("_5ac0rse4p")
+	ACTIVATE WINDOW _5ac0rse4p SAME
 ELSE
-	ACTIVATE WINDOW _59e0oju51 NOSHOW
+	ACTIVATE WINDOW _5ac0rse4p NOSHOW
 ENDIF
 @ 2,10 SAY "CREANDO 142 INDICES" ;
 	SIZE 1,19, 0
@@ -69,8 +69,8 @@ ENDIF
 @ 6,4 SAY "INDICE NRO.  ддд" ;
 	SIZE 1,17, 0
 
-IF NOT WVISIBLE("_59e0oju51")
-	ACTIVATE WINDOW _59e0oju51
+IF NOT WVISIBLE("_5ac0rse4p")
+	ACTIVATE WINDOW _5ac0rse4p
 ENDIF
 
 #REGION 0

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18             HELPBAR.SPR               11:27:05 Ё
+*       Ё 09/03/18             HELPBAR.SPR               12:57:47 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojm00")
-	DEFINE WINDOW _59e0ojm00 ;
+IF NOT WEXIST("_5ac0rs8mt")
+	DEFINE WINDOW _5ac0rs8mt ;
 		FROM 24, 0 ;
 		TO 24,79 ;
 		NOFLOAT ;
@@ -57,14 +57,14 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojm00")
-	ACTIVATE WINDOW _59e0ojm00 SAME
+IF WVISIBLE("_5ac0rs8mt")
+	ACTIVATE WINDOW _5ac0rs8mt SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojm00 NOSHOW
+	ACTIVATE WINDOW _5ac0rs8mt NOSHOW
 ENDIF
 
-IF NOT WVISIBLE("_59e0ojm00")
-	ACTIVATE WINDOW _59e0ojm00
+IF NOT WVISIBLE("_5ac0rs8mt")
+	ACTIVATE WINDOW _5ac0rs8mt
 ENDIF
 
 #REGION 0

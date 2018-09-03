@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18              L_11.SPR                 11:27:03 Ё
+*       Ё 09/03/18              L_11.SPR                 12:57:45 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojkf0")
-	DEFINE WINDOW _59e0ojkf0 ;
+IF NOT WEXIST("_5ac0rs7az")
+	DEFINE WINDOW _5ac0rs7az ;
 		FROM INT((SROW()-12)/2),INT((SCOL()-75)/2) ;
 		TO INT((SROW()-12)/2)+11,INT((SCOL()-75)/2)+74 ;
 		TITLE " FICHA DE MOVIMIENTOS DE ARTICULO " ;
@@ -91,10 +91,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojkf0")
-	ACTIVATE WINDOW _59e0ojkf0 SAME
+IF WVISIBLE("_5ac0rs7az")
+	ACTIVATE WINDOW _5ac0rs7az SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojkf0 NOSHOW
+	ACTIVATE WINDOW _5ac0rs7az NOSHOW
 ENDIF
 @ 7,0 TO 7,72
 @ 3,3 SAY "DESDE EL:" ;
@@ -109,30 +109,30 @@ ENDIF
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@K" ;
-	VALID _59e0ojkf4()
+	VALID _5ac0rs7b1()
 @ 3,13 GET mfecha1 ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _59e0ojkf6() ;
-	VALID _59e0ojkf7()
+	WHEN _5ac0rs7b2() ;
+	VALID _5ac0rs7b3()
 @ 4,13 GET mfecha2 ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _59e0ojkf8() ;
-	VALID _59e0ojkf9()
+	WHEN _5ac0rs7b4() ;
+	VALID _5ac0rs7b5()
 @ 6,46 GET mopcion ;
 	SIZE 1,1 ;
 	DEFAULT " " ;
 	PICTURE "@A!" ;
-	VALID _59e0ojkfa()
+	VALID _5ac0rs7b6()
 @ 8,19 GET cmgChoice ;
 	PICTURE "@*HN \!\<Procesar;\?\<Cancelar" ;
 	SIZE 1,12,10 ;
 	DEFAULT 1 ;
-	VALID _59e0ojkfb()
+	VALID _5ac0rs7b7()
 
-IF NOT WVISIBLE("_59e0ojkf0")
-	ACTIVATE WINDOW _59e0ojkf0
+IF NOT WVISIBLE("_5ac0rs7az")
+	ACTIVATE WINDOW _5ac0rs7az
 ENDIF
 
 
@@ -146,7 +146,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojkf0
+RELEASE WINDOW _5ac0rs7az
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -159,7 +159,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKF4           marti1 VALID                       Ё
+*       Ё _5AC0RS7B1           marti1 VALID                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -172,7 +172,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkf4     &&  marti1 VALID
+FUNCTION _5ac0rs7b1     &&  marti1 VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -267,7 +267,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKF6           mfecha1 WHEN                       Ё
+*       Ё _5AC0RS7B2           mfecha1 WHEN                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -280,13 +280,13 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkf6     &&  mfecha1 WHEN
+FUNCTION _5ac0rs7b2     &&  mfecha1 WHEN
 #REGION 1
 SET NOTIFY  ON
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKF7           mfecha1 VALID                      Ё
+*       Ё _5AC0RS7B3           mfecha1 VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -299,13 +299,13 @@ SET NOTIFY  ON
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkf7     &&  mfecha1 VALID
+FUNCTION _5ac0rs7b3     &&  mfecha1 VALID
 #REGION 1
 SET NOTIFY  OFF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKF8           mfecha2 WHEN                       Ё
+*       Ё _5AC0RS7B4           mfecha2 WHEN                       Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -318,13 +318,13 @@ SET NOTIFY  OFF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkf8     &&  mfecha2 WHEN
+FUNCTION _5ac0rs7b4     &&  mfecha2 WHEN
 #REGION 1
 SET NOTIFY  ON
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKF9           mfecha2 VALID                      Ё
+*       Ё _5AC0RS7B5           mfecha2 VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -337,7 +337,7 @@ SET NOTIFY  ON
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkf9     &&  mfecha2 VALID
+FUNCTION _5ac0rs7b5     &&  mfecha2 VALID
 #REGION 1
 IF mfecha2 < mfecha1
    WAIT WINDOW "╜ LA FECHA FINAL DEBE SER MAYOR QUE LA FECHA INICIAL !"
@@ -348,7 +348,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKFA           mopcion VALID                      Ё
+*       Ё _5AC0RS7B6           mopcion VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -361,7 +361,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkfa     &&  mopcion VALID
+FUNCTION _5ac0rs7b6     &&  mopcion VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN
@@ -374,7 +374,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKFB           cmgChoice VALID                    Ё
+*       Ё _5AC0RS7B7           cmgChoice VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -387,7 +387,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkfb     &&  cmgChoice VALID
+FUNCTION _5ac0rs7b7     &&  cmgChoice VALID
 #REGION 1
 IF cmgChoice = 1
    =Report05()

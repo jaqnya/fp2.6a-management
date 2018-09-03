@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            APLICONT.SPR               11:27:14 Ё
+*       Ё 09/03/18            APLICONT.SPR               12:57:53 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -51,8 +51,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojssr")
-	DEFINE WINDOW _59e0ojssr ;
+IF NOT WEXIST("_5ac0rsdae")
+	DEFINE WINDOW _5ac0rsdae ;
 		FROM INT((SROW()-6)/2),INT((SCOL()-25)/2) ;
 		TO INT((SROW()-6)/2)+5,INT((SCOL()-25)/2)+24 ;
 		TITLE " APLICADO CONTRA " ;
@@ -89,21 +89,21 @@ paApliCont(2) = "2. CUENTA CORRIENTE"
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojssr")
-	ACTIVATE WINDOW _59e0ojssr SAME
+IF WVISIBLE("_5ac0rsdae")
+	ACTIVATE WINDOW _5ac0rsdae SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojssr NOSHOW
+	ACTIVATE WINDOW _5ac0rsdae NOSHOW
 ENDIF
 @ 0,0 GET lstApliContra ;
  	PICTURE "@&T" ;
 	FROM paApliCont ;
 	SIZE 4,23 ;
 	DEFAULT 1 ;
-	VALID _59e0ojsud() ;
+	VALID _5ac0rsdag() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_59e0ojssr")
-	ACTIVATE WINDOW _59e0ojssr
+IF NOT WVISIBLE("_5ac0rsdae")
+	ACTIVATE WINDOW _5ac0rsdae
 ENDIF
 
 
@@ -117,7 +117,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojssr
+RELEASE WINDOW _5ac0rsdae
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -130,7 +130,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJSUD           lstApliContra VALID                Ё
+*       Ё _5AC0RSDAG           lstApliContra VALID                Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -143,7 +143,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojsud     &&  lstApliContra VALID
+FUNCTION _5ac0rsdag     &&  lstApliContra VALID
 #REGION 1
 IF LASTKEY() = K_ESCAPE
    &cSaveTo = 0

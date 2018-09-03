@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18             PAGOS2.SPR                11:27:05 Ё
+*       Ё 09/03/18             PAGOS2.SPR                12:57:46 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojlig")
-	DEFINE WINDOW _59e0ojlig ;
+IF NOT WEXIST("_5ac0rs88d")
+	DEFINE WINDOW _5ac0rs88d ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-65)/2)+64 ;
 		TITLE " LISTADOS E INFORMES " ;
@@ -90,21 +90,21 @@ paPagos[02, 01] = " 2. De Pagos por rango de fechas."
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojlig")
-	ACTIVATE WINDOW _59e0ojlig SAME
+IF WVISIBLE("_5ac0rs88d")
+	ACTIVATE WINDOW _5ac0rs88d SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojlig NOSHOW
+	ACTIVATE WINDOW _5ac0rs88d NOSHOW
 ENDIF
 @ 0,0 GET lstPagos ;
  	PICTURE "@&T" ;
 	FROM paPagos ;
 	SIZE 11,63 ;
 	DEFAULT 1 ;
-	VALID _59e0ojlk2() ;
+	VALID _5ac0rs88h() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_59e0ojlig")
-	ACTIVATE WINDOW _59e0ojlig
+IF NOT WVISIBLE("_5ac0rs88d")
+	ACTIVATE WINDOW _5ac0rs88d
 ENDIF
 
 
@@ -118,7 +118,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojlig
+RELEASE WINDOW _5ac0rs88d
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -131,7 +131,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJLK2           lstPagos VALID                     Ё
+*       Ё _5AC0RS88H           lstPagos VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -144,7 +144,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojlk2     &&  lstPagos VALID
+FUNCTION _5ac0rs88h     &&  lstPagos VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

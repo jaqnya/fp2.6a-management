@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            CABEVEN2.SPR               11:27:07 Ё
+*       Ё 09/03/18            CABEVEN2.SPR               12:57:48 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojmz9")
-	DEFINE WINDOW _59e0ojmz9 ;
+IF NOT WEXIST("_5ac0rs9hh")
+	DEFINE WINDOW _5ac0rs9hh ;
 		FROM INT((SROW()-17)/2),INT((SCOL()-76)/2) ;
 		TO INT((SROW()-17)/2)+16,INT((SCOL()-76)/2)+75 ;
 		NOFLOAT ;
@@ -69,10 +69,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojmz9")
-	ACTIVATE WINDOW _59e0ojmz9 SAME
+IF WVISIBLE("_5ac0rs9hh")
+	ACTIVATE WINDOW _5ac0rs9hh SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojmz9 NOSHOW
+	ACTIVATE WINDOW _5ac0rs9hh NOSHOW
 ENDIF
 @ 0,1 TO 7,72
 @ 2,4 SAY "C.I. o R.U.C.:" ;
@@ -97,7 +97,7 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@!" ;
 	WHEN m.editing ;
-	VALID _59e0ojmzb()
+	VALID _5ac0rs9hk()
 @ 2,19 GET m.documento ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
@@ -140,10 +140,10 @@ ENDIF
 	PICTURE "@*HN \!\<Grabar;\?\<Cancelar" ;
 	SIZE 1,12,3 ;
 	DEFAULT 1 ;
-	VALID _59e0ojmzd()
+	VALID _5ac0rs9hl()
 
-IF NOT WVISIBLE("_59e0ojmz9")
-	ACTIVATE WINDOW _59e0ojmz9
+IF NOT WVISIBLE("_5ac0rs9hh")
+	ACTIVATE WINDOW _5ac0rs9hh
 ENDIF
 
 
@@ -155,10 +155,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	ACTIVATE _59e0ojmze() ;
+	ACTIVATE _5ac0rs9hm() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojmz9
+RELEASE WINDOW _5ac0rs9hh
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -171,7 +171,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJMZB           m.nombre VALID                     Ё
+*       Ё _5AC0RS9HK           m.nombre VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -184,7 +184,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojmzb     &&  m.nombre VALID
+FUNCTION _5ac0rs9hk     &&  m.nombre VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -198,7 +198,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJMZD           pnChoice VALID                     Ё
+*       Ё _5AC0RS9HL           pnChoice VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -211,7 +211,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojmzd     &&  pnChoice VALID
+FUNCTION _5ac0rs9hl     &&  pnChoice VALID
 #REGION 1
 IF m.editing
    DO CASE
@@ -253,7 +253,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJMZE           Nivel de lectura ACTIVATE          Ё
+*       Ё _5AC0RS9HM           Nivel de lectura ACTIVATE          Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -265,7 +265,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojmze     && Read Level Activate
+FUNCTION _5ac0rs9hm     && Read Level Activate
 *
 * C╒digo ACTIVATE de la pantalla: CABEVEN2
 *

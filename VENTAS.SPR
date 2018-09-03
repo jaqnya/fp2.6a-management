@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18             VENTAS.SPR                11:27:04 Ё
+*       Ё 09/03/18             VENTAS.SPR                12:57:45 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojkp7")
-	DEFINE WINDOW _59e0ojkp7 ;
+IF NOT WEXIST("_5ac0rs7lq")
+	DEFINE WINDOW _5ac0rs7lq ;
 		FROM INT((SROW()-17)/2),INT((SCOL()-67)/2) ;
 		TO INT((SROW()-17)/2)+16,INT((SCOL()-67)/2)+66 ;
 		TITLE " LISTADOS E INFORMES " ;
@@ -119,21 +119,21 @@ paVentas[19, 02] = "l_21.prg"
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojkp7")
-	ACTIVATE WINDOW _59e0ojkp7 SAME
+IF WVISIBLE("_5ac0rs7lq")
+	ACTIVATE WINDOW _5ac0rs7lq SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojkp7 NOSHOW
+	ACTIVATE WINDOW _5ac0rs7lq NOSHOW
 ENDIF
 @ 0,0 GET lstVentas ;
  	PICTURE "@&T" ;
 	FROM paVentas ;
 	SIZE 15,65 ;
 	DEFAULT 1 ;
-	VALID _59e0ojkpb() ;
+	VALID _5ac0rs7ls() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_59e0ojkp7")
-	ACTIVATE WINDOW _59e0ojkp7
+IF NOT WVISIBLE("_5ac0rs7lq")
+	ACTIVATE WINDOW _5ac0rs7lq
 ENDIF
 
 
@@ -147,7 +147,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojkp7
+RELEASE WINDOW _5ac0rs7lq
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -160,7 +160,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJKPB           lstVentas VALID                    Ё
+*       Ё _5AC0RS7LS           lstVentas VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -173,7 +173,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojkpb     &&  lstVentas VALID
+FUNCTION _5ac0rs7ls     &&  lstVentas VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

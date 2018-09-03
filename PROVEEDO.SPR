@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            PROVEEDO.SPR               11:27:04 Ё
+*       Ё 09/03/18            PROVEEDO.SPR               12:57:46 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojlak")
-	DEFINE WINDOW _59e0ojlak ;
+IF NOT WEXIST("_5ac0rs7z1")
+	DEFINE WINDOW _5ac0rs7z1 ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-65)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-65)/2)+64 ;
 		TITLE " LISTADOS E INFORMES " ;
@@ -91,21 +91,21 @@ paProveedo[03, 01] = " 3. Extracto de Cuenta de Proveedores."
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojlak")
-	ACTIVATE WINDOW _59e0ojlak SAME
+IF WVISIBLE("_5ac0rs7z1")
+	ACTIVATE WINDOW _5ac0rs7z1 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojlak NOSHOW
+	ACTIVATE WINDOW _5ac0rs7z1 NOSHOW
 ENDIF
 @ 0,0 GET lstProveedo ;
  	PICTURE "@&T" ;
 	FROM paProveedo ;
 	SIZE 11,63 ;
 	DEFAULT 1 ;
-	VALID _59e0ojlam() ;
+	VALID _5ac0rs7z4() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_59e0ojlak")
-	ACTIVATE WINDOW _59e0ojlak
+IF NOT WVISIBLE("_5ac0rs7z1")
+	ACTIVATE WINDOW _5ac0rs7z1
 ENDIF
 
 
@@ -119,7 +119,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojlak
+RELEASE WINDOW _5ac0rs7z1
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -132,7 +132,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJLAM           lstProveedo VALID                  Ё
+*       Ё _5AC0RS7Z4           lstProveedo VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -145,7 +145,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojlam     &&  lstProveedo VALID
+FUNCTION _5ac0rs7z4     &&  lstProveedo VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

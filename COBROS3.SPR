@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18             COBROS3.SPR               11:27:23 Ё
+*       Ё 09/03/18             COBROS3.SPR               12:57:57 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojzoz")
-	DEFINE WINDOW _59e0ojzoz ;
+IF NOT WEXIST("_5ac0rsgbj")
+	DEFINE WINDOW _5ac0rsgbj ;
 		FROM INT((SROW()-8)/2),INT((SCOL()-67)/2) ;
 		TO INT((SROW()-8)/2)+7,INT((SCOL()-67)/2)+66 ;
 		TITLE " Consultar Recibo de Cobro " ;
@@ -77,10 +77,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojzoz")
-	ACTIVATE WINDOW _59e0ojzoz SAME
+IF WVISIBLE("_5ac0rsgbj")
+	ACTIVATE WINDOW _5ac0rsgbj SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojzoz NOSHOW
+	ACTIVATE WINDOW _5ac0rsgbj NOSHOW
 ENDIF
 @ 0,42 SAY "N╖:" ;
 	SIZE 1,3, 0
@@ -121,8 +121,8 @@ ENDIF
 	PICTURE "999,999,999.99" ;
 	COLOR B/W     
 
-IF NOT WVISIBLE("_59e0ojzoz")
-	ACTIVATE WINDOW _59e0ojzoz
+IF NOT WVISIBLE("_5ac0rsgbj")
+	ACTIVATE WINDOW _5ac0rsgbj
 ENDIF
 
 
@@ -134,10 +134,10 @@ ENDIF
 *
 
 READ CYCLE ;
-	WHEN _59e0ojzp2() ;
+	WHEN _5ac0rsgbn() ;
 	MODAL TIMEOUT 0
 
-RELEASE WINDOW _59e0ojzoz
+RELEASE WINDOW _5ac0rsgbj
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -163,7 +163,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJZP2           Nivel de lectura WHEN              Ё
+*       Ё _5AC0RSGBN           Nivel de lectura WHEN              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -175,7 +175,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojzp2     && Read Level When
+FUNCTION _5ac0rsgbn     && Read Level When
 *
 * C╒digo WHEN de la pantalla: COBROS3
 *

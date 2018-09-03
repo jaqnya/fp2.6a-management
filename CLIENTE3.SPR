@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            CLIENTE3.SPR               11:27:13 Ё
+*       Ё 09/03/18            CLIENTE3.SPR               12:57:52 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -61,8 +61,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojrvf")
-	DEFINE WINDOW _59e0ojrvf ;
+IF NOT WEXIST("_5ac0rsclf")
+	DEFINE WINDOW _5ac0rsclf ;
 		FROM INT((SROW()-23)/2),INT((SCOL()-80)/2) ;
 		TO INT((SROW()-23)/2)+22,INT((SCOL()-80)/2)+79 ;
 		TITLE (pcMyTitle) ;
@@ -92,10 +92,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojrvf")
-	ACTIVATE WINDOW _59e0ojrvf SAME
+IF WVISIBLE("_5ac0rsclf")
+	ACTIVATE WINDOW _5ac0rsclf SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojrvf NOSHOW
+	ACTIVATE WINDOW _5ac0rsclf NOSHOW
 ENDIF
 @ 0,3 SAY "Documento:" ;
 	SIZE 1,10, 0
@@ -144,7 +144,7 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@!" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojrx1()
+	VALID _5ac0rsclj()
 @ 4,17 GET m.docconyuge ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
@@ -155,7 +155,7 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "99/99/9999" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojrx2()
+	VALID _5ac0rsclk()
 @ 7,17 GET m.trabajocon ;
 	SIZE 1,50 ;
 	DEFAULT " " ;
@@ -181,30 +181,30 @@ ENDIF
 	DEFAULT 0 ;
 	PICTURE "99.99" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojrx4()
+	VALID _5ac0rsclm()
 @ 12,17 GET m.sueldoc ;
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojrx5()
+	VALID _5ac0rscln()
 @ 13,17 GET m.oingresosc ;
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojrx6()
+	VALID _5ac0rsclo()
 @ 14,17 GET m.gastosc ;
 	SIZE 1,11 ;
 	DEFAULT 0 ;
 	PICTURE "999,999,999" ;
 	WHEN plAdding .OR. plEditing ;
-	VALID _59e0ojrx7()
+	VALID _5ac0rsclp()
 @ 0,63 SAY "Paso 3 de 5" ;
 	SIZE 1,11, 0
 
-IF NOT WVISIBLE("_59e0ojrvf")
-	ACTIVATE WINDOW _59e0ojrvf
+IF NOT WVISIBLE("_5ac0rsclf")
+	ACTIVATE WINDOW _5ac0rsclf
 ENDIF
 
 
@@ -216,10 +216,10 @@ ENDIF
 *
 
 READ ;
-	VALID _59e0ojrx8() ;
+	VALID _5ac0rsclq() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojrvf
+RELEASE WINDOW _5ac0rsclf
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -261,7 +261,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJRX1           m.nombre_c VALID                   Ё
+*       Ё _5AC0RSCLJ           m.nombre_c VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -274,7 +274,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojrx1     &&  m.nombre_c VALID
+FUNCTION _5ac0rsclj     &&  m.nombre_c VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_BSPACE)
    RETURN .F.
@@ -282,7 +282,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJRX2           m.fechanacco VALID                 Ё
+*       Ё _5AC0RSCLK           m.fechanacco VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -295,7 +295,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojrx2     &&  m.fechanacco VALID
+FUNCTION _5ac0rsclk     &&  m.fechanacco VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT, K_ESCAPE)
    RETURN
@@ -370,7 +370,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJRX4           m.antiguec VALID                   Ё
+*       Ё _5AC0RSCLM           m.antiguec VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -383,7 +383,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojrx4     &&  m.antiguec VALID
+FUNCTION _5ac0rsclm     &&  m.antiguec VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT)
    RETURN
@@ -396,7 +396,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJRX5           m.sueldoc VALID                    Ё
+*       Ё _5AC0RSCLN           m.sueldoc VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -409,7 +409,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojrx5     &&  m.sueldoc VALID
+FUNCTION _5ac0rscln     &&  m.sueldoc VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT)
    RETURN
@@ -422,7 +422,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJRX6           m.oingresosc VALID                 Ё
+*       Ё _5AC0RSCLO           m.oingresosc VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -435,7 +435,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojrx6     &&  m.oingresosc VALID
+FUNCTION _5ac0rsclo     &&  m.oingresosc VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT)
    RETURN
@@ -448,7 +448,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJRX7           m.gastosc VALID                    Ё
+*       Ё _5AC0RSCLP           m.gastosc VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -461,7 +461,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojrx7     &&  m.gastosc VALID
+FUNCTION _5ac0rsclp     &&  m.gastosc VALID
 #REGION 1
 IF INLIST(LASTKEY(), K_UP, K_LEFT)
    RETURN
@@ -474,7 +474,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJRX8           Nivel de lectura v═lido            Ё
+*       Ё _5AC0RSCLQ           Nivel de lectura v═lido            Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -486,7 +486,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojrx8     && Read Level Valid
+FUNCTION _5ac0rsclq     && Read Level Valid
 *
 * C╒digo v═lido de la pantalla: CLIENTE3
 *

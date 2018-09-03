@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            LOCALPOP.SPR               11:27:20 Ё
+*       Ё 09/03/18            LOCALPOP.SPR               12:57:56 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -51,8 +51,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojxqs")
-	DEFINE WINDOW _59e0ojxqs ;
+IF NOT WEXIST("_5ac0rsfkp")
+	DEFINE WINDOW _5ac0rsfkp ;
 		FROM INT((SROW()-9)/2),INT((SCOL()-21)/2) ;
 		TO INT((SROW()-9)/2)+8,INT((SCOL()-21)/2)+20 ;
 		TITLE " LOCALES " ;
@@ -91,10 +91,10 @@ PUSH KEY CLEAR
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojxqs")
-	ACTIVATE WINDOW _59e0ojxqs SAME
+IF WVISIBLE("_5ac0rsfkp")
+	ACTIVATE WINDOW _5ac0rsfkp SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojxqs NOSHOW
+	ACTIVATE WINDOW _5ac0rsfkp NOSHOW
 ENDIF
 @ 0,0 GET pnChoice ;
  	PICTURE "@&T" ;
@@ -103,13 +103,13 @@ ENDIF
 	DEFAULT 1 ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_59e0ojxqs")
-	ACTIVATE WINDOW _59e0ojxqs
+IF NOT WVISIBLE("_5ac0rsfkp")
+	ACTIVATE WINDOW _5ac0rsfkp
 ENDIF
 
 READ CYCLE
 
-RELEASE WINDOW _59e0ojxqs
+RELEASE WINDOW _5ac0rsfkp
 
 #REGION 0
 IF m.talkstat = "ON"

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            BUSCAR07.SPR               11:27:06 Ё
+*       Ё 09/03/18            BUSCAR07.SPR               12:57:47 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojm8u")
-	DEFINE WINDOW _59e0ojm8u ;
+IF NOT WEXIST("_5ac0rs8s1")
+	DEFINE WINDOW _5ac0rs8s1 ;
 		FROM INT((SROW()-3)/2),INT((SCOL()-38)/2) ;
 		TO INT((SROW()-3)/2)+2,INT((SCOL()-38)/2)+37 ;
 		TITLE " BUSQUEDA POR " ;
@@ -67,21 +67,21 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojm8u")
-	ACTIVATE WINDOW _59e0ojm8u SAME
+IF WVISIBLE("_5ac0rs8s1")
+	ACTIVATE WINDOW _5ac0rs8s1 SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojm8u NOSHOW
+	ACTIVATE WINDOW _5ac0rs8s1 NOSHOW
 ENDIF
 @ 0,19 GET m.codorig ;
 	SIZE 1,15 ;
 	DEFAULT " " ;
 	PICTURE "@!T" ;
-	VALID _59e0ojm8w()
+	VALID _5ac0rs8s3()
 @ 0,2 SAY "CODIGO ORIGINAL:" ;
 	SIZE 1,16, 0
 
-IF NOT WVISIBLE("_59e0ojm8u")
-	ACTIVATE WINDOW _59e0ojm8u
+IF NOT WVISIBLE("_5ac0rs8s1")
+	ACTIVATE WINDOW _5ac0rs8s1
 ENDIF
 
 
@@ -95,7 +95,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojm8u
+RELEASE WINDOW _5ac0rs8s1
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -108,7 +108,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJM8W           m.codorig VALID                    Ё
+*       Ё _5AC0RS8S3           m.codorig VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -121,7 +121,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojm8w     &&  m.codorig VALID
+FUNCTION _5ac0rs8s3     &&  m.codorig VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN

@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18               OT.SPR                  11:27:15 Ё
+*       Ё 09/03/18               OT.SPR                  12:57:54 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -57,8 +57,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojtmt")
-	DEFINE WINDOW _59e0ojtmt ;
+IF NOT WEXIST("_5ac0rsdxh")
+	DEFINE WINDOW _5ac0rsdxh ;
 		FROM 1, 0 ;
 		TO 23,79 ;
 		TITLE (pcMyTitle) ;
@@ -121,10 +121,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojtmt")
-	ACTIVATE WINDOW _59e0ojtmt SAME
+IF WVISIBLE("_5ac0rsdxh")
+	ACTIVATE WINDOW _5ac0rsdxh SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojtmt NOSHOW
+	ACTIVATE WINDOW _5ac0rsdxh NOSHOW
 ENDIF
 @ 10,44 SAY "Barrio:" ;
 	SIZE 1,7, 0
@@ -186,13 +186,13 @@ ENDIF
 	DEFAULT " " ;
 	PICTURE "@A!" ;
 	WHEN plAdding ;
-	VALID _59e0ojtpg()
+	VALID _5ac0rsdxn()
 @ 0,18 GET m.nroot ;
 	SIZE 1,7 ;
 	DEFAULT 0 ;
 	PICTURE "9999999" ;
 	WHEN plAdding ;
-	VALID _59e0ojtpi()
+	VALID _5ac0rsdxo()
 @ 0,62 GET m.tipodocu ;
 	SIZE 1,1 ;
 	DEFAULT 0 ;
@@ -208,13 +208,13 @@ ENDIF
 	DEFAULT 0 ;
 	PICTURE "99" ;
 	WHEN .F. ;
-	VALID _59e0ojtpj()
+	VALID _5ac0rsdxq()
 @ 1,43 GET m.mecanico ;
 	SIZE 1,3 ;
 	DEFAULT 0 ;
 	PICTURE "999" ;
 	WHEN plEditing ;
-	VALID _59e0ojtpl()
+	VALID _5ac0rsdzb()
 @ 2,15 GET m.referencia ;
 	SIZE 1,10 ;
 	DEFAULT " " ;
@@ -222,8 +222,8 @@ ENDIF
 @ 2,38 GET m.frecepcion ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _59e0ojtpm() ;
-	VALID _59e0ojtpn()
+	WHEN _5ac0rsdzd() ;
+	VALID _5ac0rsdze()
 @ 2,62 SAY m.fecha ;
 	SIZE 1,10 ;
 	PICTURE "@D" ;
@@ -231,23 +231,23 @@ ENDIF
 @ 3,38 GET m.fpentrega ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _59e0ojtpo() ;
-	VALID _59e0ojtpp()
+	WHEN _5ac0rsdzf() ;
+	VALID _5ac0rsdzg()
 @ 3,62 GET m.fentrega ;
 	SIZE 1,10 ;
 	DEFAULT {  /  /  } ;
-	WHEN _59e0ojtpq() ;
-	VALID _59e0ojtpr()
+	WHEN _5ac0rsdzh() ;
+	VALID _5ac0rsdzi()
 @ 5,15 GET m.cliente ;
 	SIZE 1,5 ;
 	DEFAULT 0 ;
 	PICTURE "99999" ;
-	VALID _59e0ojtps()
+	VALID _5ac0rsdzj()
 @ 5,22 GET m.nombreot ;
 	SIZE 1,40 ;
 	DEFAULT " " ;
 	PICTURE "@!" ;
-	VALID _59e0ojtpt()
+	VALID _5ac0rsdzk()
 @ 6,15 GET m.contacto ;
 	SIZE 1,40 ;
 	DEFAULT " " ;
@@ -268,31 +268,31 @@ ENDIF
 	SIZE 1,3 ;
 	DEFAULT 0 ;
 	PICTURE "999" ;
-	VALID _59e0ojtpu()
+	VALID _5ac0rsdzl()
 @ 10,15 GET m.ciudad ;
 	SIZE 1,5 ;
 	DEFAULT 0 ;
-	VALID _59e0ojtpv()
+	VALID _5ac0rsdzn()
 @ 10,52 GET m.barrio ;
 	SIZE 1,4 ;
 	DEFAULT 0 ;
 	PICTURE "9999" ;
-	VALID _59e0ojtpw()
+	VALID _5ac0rsdzp()
 @ 12,15 GET m.maquina ;
 	SIZE 1,3 ;
 	DEFAULT 0 ;
 	PICTURE "999" ;
-	VALID _59e0ojtpx()
+	VALID _5ac0rsdzs()
 @ 12,36 GET m.marca ;
 	SIZE 1,4 ;
 	DEFAULT 0 ;
 	PICTURE "9999" ;
-	VALID _59e0ojtpy()
+	VALID _5ac0rsdzt()
 @ 12,57 GET m.modelo ;
 	SIZE 1,4 ;
 	DEFAULT 0 ;
 	PICTURE "9999" ;
-	VALID _59e0ojtpz()
+	VALID _5ac0rsdzw()
 @ 13,15 GET m.motor ;
 	SIZE 1,25 ;
 	DEFAULT " " ;
@@ -334,12 +334,12 @@ ENDIF
 	DEFAULT 0 ;
 	PICTURE "999" ;
 	WHEN gnUser = 1 ;
-	VALID _59e0ojtq0()
+	VALID _5ac0rsdzz()
 @ 13,42 SAY "Caja #:" ;
 	SIZE 1,7, 0
 
-IF NOT WVISIBLE("_59e0ojtmt")
-	ACTIVATE WINDOW _59e0ojtmt
+IF NOT WVISIBLE("_5ac0rsdxh")
+	ACTIVATE WINDOW _5ac0rsdxh
 ENDIF
 
 
@@ -351,11 +351,11 @@ ENDIF
 *
 
 READ ;
-	VALID _59e0ojtq1() ;
-	SHOW _59e0ojtq2() ;
+	VALID _5ac0rse00() ;
+	SHOW _5ac0rse01() ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojtmt
+RELEASE WINDOW _5ac0rsdxh
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -368,7 +368,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPG           m.serie VALID                      Ё
+*       Ё _5AC0RSDXN           m.serie VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -381,7 +381,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpg     &&  m.serie VALID
+FUNCTION _5ac0rsdxn     &&  m.serie VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -428,7 +428,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPI           m.nroot VALID                      Ё
+*       Ё _5AC0RSDXO           m.nroot VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -441,7 +441,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpi     &&  m.nroot VALID
+FUNCTION _5ac0rsdxo     &&  m.nroot VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -482,7 +482,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPJ           m.localrep VALID                   Ё
+*       Ё _5AC0RSDXQ           m.localrep VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -495,7 +495,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpj     &&  m.localrep VALID
+FUNCTION _5ac0rsdxq     &&  m.localrep VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -585,7 +585,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPL           m.mecanico VALID                   Ё
+*       Ё _5AC0RSDZB           m.mecanico VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -598,7 +598,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpl     &&  m.mecanico VALID
+FUNCTION _5ac0rsdzb     &&  m.mecanico VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 28, 127)
    RETURN .F.
@@ -687,7 +687,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPM           m.frecepcion WHEN                  Ё
+*       Ё _5AC0RSDZD           m.frecepcion WHEN                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -700,13 +700,13 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpm     &&  m.frecepcion WHEN
+FUNCTION _5ac0rsdzd     &&  m.frecepcion WHEN
 #REGION 1
 SET NOTIFY ON
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPN           m.frecepcion VALID                 Ё
+*       Ё _5AC0RSDZE           m.frecepcion VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -719,13 +719,13 @@ SET NOTIFY ON
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpn     &&  m.frecepcion VALID
+FUNCTION _5ac0rsdze     &&  m.frecepcion VALID
 #REGION 1
 SET NOTIFY OFF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPO           m.fpentrega WHEN                   Ё
+*       Ё _5AC0RSDZF           m.fpentrega WHEN                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -738,13 +738,13 @@ SET NOTIFY OFF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpo     &&  m.fpentrega WHEN
+FUNCTION _5ac0rsdzf     &&  m.fpentrega WHEN
 #REGION 1
 SET NOTIFY ON
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPP           m.fpentrega VALID                  Ё
+*       Ё _5AC0RSDZG           m.fpentrega VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -757,13 +757,13 @@ SET NOTIFY ON
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpp     &&  m.fpentrega VALID
+FUNCTION _5ac0rsdzg     &&  m.fpentrega VALID
 #REGION 1
 SET NOTIFY OFF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPQ           m.fentrega WHEN                    Ё
+*       Ё _5AC0RSDZH           m.fentrega WHEN                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -776,7 +776,7 @@ SET NOTIFY OFF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpq     &&  m.fentrega WHEN
+FUNCTION _5ac0rsdzh     &&  m.fentrega WHEN
 #REGION 1
 IF plEditing
    SET NOTIFY ON
@@ -784,7 +784,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPR           m.fentrega VALID                   Ё
+*       Ё _5AC0RSDZI           m.fentrega VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -797,13 +797,13 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpr     &&  m.fentrega VALID
+FUNCTION _5ac0rsdzi     &&  m.fentrega VALID
 #REGION 1
 SET NOTIFY OFF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPS           m.cliente VALID                    Ё
+*       Ё _5AC0RSDZJ           m.cliente VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -816,7 +816,7 @@ SET NOTIFY OFF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtps     &&  m.cliente VALID
+FUNCTION _5ac0rsdzj     &&  m.cliente VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -949,7 +949,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPT           m.nombreot VALID                   Ё
+*       Ё _5AC0RSDZK           m.nombreot VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -962,7 +962,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpt     &&  m.nombreot VALID
+FUNCTION _5ac0rsdzk     &&  m.nombreot VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -991,7 +991,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPU           m.departamen VALID                 Ё
+*       Ё _5AC0RSDZL           m.departamen VALID                 Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1004,7 +1004,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpu     &&  m.departamen VALID
+FUNCTION _5ac0rsdzl     &&  m.departamen VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1093,7 +1093,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPV           m.ciudad VALID                     Ё
+*       Ё _5AC0RSDZN           m.ciudad VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1106,7 +1106,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpv     &&  m.ciudad VALID
+FUNCTION _5ac0rsdzn     &&  m.ciudad VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1211,7 +1211,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPW           m.barrio VALID                     Ё
+*       Ё _5AC0RSDZP           m.barrio VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1224,7 +1224,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpw     &&  m.barrio VALID
+FUNCTION _5ac0rsdzp     &&  m.barrio VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1331,7 +1331,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPX           m.maquina VALID                    Ё
+*       Ё _5AC0RSDZS           m.maquina VALID                    Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1344,7 +1344,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpx     &&  m.maquina VALID
+FUNCTION _5ac0rsdzs     &&  m.maquina VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1425,7 +1425,7 @@ RETURN (plReturnedValue)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPY           m.marca VALID                      Ё
+*       Ё _5AC0RSDZT           m.marca VALID                      Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1438,7 +1438,7 @@ RETURN (plReturnedValue)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpy     &&  m.marca VALID
+FUNCTION _5ac0rsdzt     &&  m.marca VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1519,7 +1519,7 @@ RETURN (plReturnedValue)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTPZ           m.modelo VALID                     Ё
+*       Ё _5AC0RSDZW           m.modelo VALID                     Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1532,7 +1532,7 @@ RETURN (plReturnedValue)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtpz     &&  m.modelo VALID
+FUNCTION _5ac0rsdzw     &&  m.modelo VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1623,7 +1623,7 @@ RETURN (plReturnedValue)
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTQ0           m.estadoot VALID                   Ё
+*       Ё _5AC0RSDZZ           m.estadoot VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1636,7 +1636,7 @@ RETURN (plReturnedValue)
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtq0     &&  m.estadoot VALID
+FUNCTION _5ac0rsdzz     &&  m.estadoot VALID
 #REGION 1
 IF INLIST(LASTKEY(), 5, 19, 27, 127)
    RETURN
@@ -1725,7 +1725,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTQ1           Nivel de lectura v═lido            Ё
+*       Ё _5AC0RSE00           Nivel de lectura v═lido            Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1737,7 +1737,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtq1     && Read Level Valid
+FUNCTION _5ac0rse00     && Read Level Valid
 *
 * C╒digo v═lido de la pantalla: OT
 *
@@ -1832,7 +1832,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJTQ2           Nivel de lectura SHOW              Ё
+*       Ё _5AC0RSE01           Nivel de lectura SHOW              Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -1844,7 +1844,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojtq2     && Read Level Show
+FUNCTION _5ac0rse01     && Read Level Show
 PRIVATE currwind
 STORE WOUTPUT() TO currwind
 *

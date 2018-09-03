@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18            CONSULTA.SPR               11:27:02 Ё
+*       Ё 09/03/18            CONSULTA.SPR               12:57:44 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -52,8 +52,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0ojjax")
-	DEFINE WINDOW _59e0ojjax ;
+IF NOT WEXIST("_5ac0rs6io")
+	DEFINE WINDOW _5ac0rs6io ;
 		FROM INT((SROW()-13)/2),INT((SCOL()-69)/2) ;
 		TO INT((SROW()-13)/2)+12,INT((SCOL()-69)/2)+68 ;
 		TITLE " CONSULTAS " ;
@@ -106,21 +106,21 @@ paConsulta[08, 02] = "l_24.prg"
 *
 
 #REGION 1
-IF WVISIBLE("_59e0ojjax")
-	ACTIVATE WINDOW _59e0ojjax SAME
+IF WVISIBLE("_5ac0rs6io")
+	ACTIVATE WINDOW _5ac0rs6io SAME
 ELSE
-	ACTIVATE WINDOW _59e0ojjax NOSHOW
+	ACTIVATE WINDOW _5ac0rs6io NOSHOW
 ENDIF
 @ 0,0 GET lstConsulta ;
  	PICTURE "@&T" ;
 	FROM paConsulta ;
 	SIZE 11,67 ;
 	DEFAULT 1 ;
-	VALID _59e0ojjb0() ;
+	VALID _5ac0rs6it() ;
 	COLOR SCHEME 14
 
-IF NOT WVISIBLE("_59e0ojjax")
-	ACTIVATE WINDOW _59e0ojjax
+IF NOT WVISIBLE("_5ac0rs6io")
+	ACTIVATE WINDOW _5ac0rs6io
 ENDIF
 
 
@@ -134,7 +134,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0ojjax
+RELEASE WINDOW _5ac0rs6io
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -147,7 +147,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJJB0           lstConsulta VALID                  Ё
+*       Ё _5AC0RS6IT           lstConsulta VALID                  Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -160,7 +160,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0ojjb0     &&  lstConsulta VALID
+FUNCTION _5ac0rs6it     &&  lstConsulta VALID
 #REGION 1
 IF LASTKEY() = 27     && Tecla Esc presionada, cancela selecci╒n.
    &pcSaveTo = " "

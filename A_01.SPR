@@ -1,6 +1,6 @@
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё 07/31/18              A_01.SPR                 11:27:00 Ё
+*       Ё 09/03/18              A_01.SPR                 12:57:43 Ё
 *       Ё                                                         Ё
 *       цддддддддддддддддддддддддддддддддддддддддддддддддддддддддд╢
 *       Ё                                                         Ё
@@ -36,8 +36,8 @@ SET COMPATIBLE FOXPLUS
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
 
-IF NOT WEXIST("_59e0oji2d")
-	DEFINE WINDOW _59e0oji2d ;
+IF NOT WEXIST("_5ac0rs5wp")
+	DEFINE WINDOW _5ac0rs5wp ;
 		FROM INT((SROW()-18)/2),INT((SCOL()-43)/2) ;
 		TO INT((SROW()-18)/2)+17,INT((SCOL()-43)/2)+42 ;
 		NOFLOAT ;
@@ -90,10 +90,10 @@ ENDIF
 *
 
 #REGION 1
-IF WVISIBLE("_59e0oji2d")
-	ACTIVATE WINDOW _59e0oji2d SAME
+IF WVISIBLE("_5ac0rs5wp")
+	ACTIVATE WINDOW _5ac0rs5wp SAME
 ELSE
-	ACTIVATE WINDOW _59e0oji2d NOSHOW
+	ACTIVATE WINDOW _5ac0rs5wp NOSHOW
 ENDIF
 @ 0,2 SAY "ACTUALIZACION DEL LISTADO DE CLIENTES" ;
 	SIZE 1,37, 0 ;
@@ -104,7 +104,7 @@ ENDIF
 	RANGE 2 ;
 	SIZE 9,24 ;
 	DEFAULT 1 ;
-	VALID _59e0oji2h() ;
+	VALID _5ac0rs5wr() ;
 	COLOR SCHEME 14
 @ 3,7 TO 13,32 ;
 	COLOR W/N     
@@ -128,8 +128,8 @@ ENDIF
 	COLOR W+/N    
 @ 1,0 TO 1,40
 
-IF NOT WVISIBLE("_59e0oji2d")
-	ACTIVATE WINDOW _59e0oji2d
+IF NOT WVISIBLE("_5ac0rs5wp")
+	ACTIVATE WINDOW _5ac0rs5wp
 ENDIF
 
 
@@ -143,7 +143,7 @@ ENDIF
 READ CYCLE ;
 	MODAL COLOR , W+/BG
 
-RELEASE WINDOW _59e0oji2d
+RELEASE WINDOW _5ac0rs5wp
 
 #REGION 0
 IF m.talkstat = "ON"
@@ -183,7 +183,7 @@ ENDIF
 
 *       зддддддддддддддддддддддддддддддддддддддддддддддддддддддддд©
 *       Ё                                                         Ё
-*       Ё _59E0OJI2H           lstLocales VALID                   Ё
+*       Ё _5AC0RS5WR           lstLocales VALID                   Ё
 *       Ё                                                         Ё
 *       Ё Function Origin:                                        Ё
 *       Ё                                                         Ё
@@ -196,7 +196,7 @@ ENDIF
 *       Ё                                                         Ё
 *       юддддддддддддддддддддддддддддддддддддддддддддддддддддддддды
 *
-FUNCTION _59e0oji2h     &&  lstLocales VALID
+FUNCTION _5ac0rs5wr     &&  lstLocales VALID
 #REGION 1
 IF LASTKEY() <> 27
    IF .NOT. EMPTY(paLocales(lstLocales, 1))
