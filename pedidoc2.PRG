@@ -23,6 +23,12 @@ ELSE
       POP KEY
       RETURN
    ENDIF
+
+   IF m.nroot > 0 THEN
+      WAIT "ESTE PEDIDO ESTA RELACIONADO A UNA ORDEN DE" + CHR(13) + "TRABAJO, IMPOSIBLE MODIFICARLO !" WINDOW NOWAIT
+      POP KEY
+      RETURN
+   ENDIF
 ENDIF
 
 DO print_format
@@ -623,7 +629,7 @@ ELSE
          _CUROBJ = OBJNUM(m.porcdesc)
          RETURN
       ENDIF
-      DO print_foot
+      DO print_footer
       IF !save_record() THEN
          RETURN 0
       ENDIF
@@ -755,6 +761,19 @@ IF m.credito THEN
       ENDIF
    ENDIF
 ENDIF
+
+
+
+*BOB: Descuento promo servicio tecnico, por mes aniversario.
+IF YEAR(DATE()) = 2018 AND MONTH(DATE()) = 9 AND m.condicion = 1 AND m.nroot > 0 THEN
+   m.porcdesc = 15
+   lnAux = ROUND(cabemot.monto_fact * m.porcdesc / 100, 0)
+   m.importdesc = m.importdesc + lnAux
+   DO print_footer
+ENDIF
+*EOB: Descuento promo servicio tecnico, por mes aniversario.
+
+
 
 IF m.adding THEN
    PRIVATE pcDriveC, pcSys16, pcProgram, pcPriorDir
@@ -890,7 +909,8 @@ IF SEEK(m.serieot + STR(m.nroot, 7)) THEN
          SELECT detamot
          SET ORDER TO 1
          IF SEEK(STR(2,1) + cabemot.serie + STR(cabemot.nrobole, 7)) THEN
-            PRIVATE m.nrolinea, m.nropedido, m.articulo, m.cantidad, m.precio, m.porcdesc, m.porc_iva, m.mecanico, m.comi_mecan, m.descr_trab, m.mec_nombre
+*!*	            PRIVATE m.nrolinea, m.nropedido, m.articulo, m.cantidad, m.precio, m.porcdesc, m.porc_iva, m.mecanico, m.comi_mecan, m.descr_trab, m.mec_nombre
+            PRIVATE m.nrolinea, m.articulo, m.cantidad, m.precio, m.porcdesc, m.porc_iva, m.mecanico, m.comi_mecan, m.descr_trab, m.mec_nombre
 
             SELECT tmp_detape
             ZAP
@@ -898,7 +918,7 @@ IF SEEK(m.serieot + STR(m.nroot, 7)) THEN
 
             SCAN WHILE cabemot.tipobole = tipobole AND cabemot.serie = serie AND cabemot.nrobole = nrobole
                m.nrolinea   = 0
-               m.nropedido  = 0
+*!*	               m.nropedido  = 0
                m.articulo   = articulo
                m.cantidad   = cantidad
                m.precio     = ROUND(precio * (1 + pimpuesto / 100), 0)
@@ -933,21 +953,12 @@ IF SEEK(m.serieot + STR(m.nroot, 7)) THEN
             *BOB: Recupera el descuento que figura en la reparación de la máquina
             IF m.subtotal <> cabemot.monto_fact THEN
                m.importdesc = m.subtotal - cabemot.monto_fact
-               DO print_footer
+            ELSE
+               m.importdesc = 0
             ENDIF
+
+            DO print_footer
             *EOF
-
-
-
-            *BOB: Descuento promo servicio tecnico, por mes aniversario.
-            IF YEAR(DATE()) = 2018 AND MONTH(DATE()) = 9 THEN
-                m.porcdesc = 15
-                m.importdesc = ROUND(cabemot.monto_fact * m.porcdesc / 100, 0)
-                DO print_footer
-            ENDIF
-            *EOB: Descuento promo servicio tecnico, por mes aniversario.
-
-
 
             *BOB: Graba directamente el pedido si es que se trata de una OT
             IF !save_record() THEN
