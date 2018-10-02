@@ -200,7 +200,8 @@ DO CASE
    CASE pcDriveC = "0E60-10F3"   && Repair Shop PC                  [CASA CENTRAL]   computador4
    CASE pcDriveC = "54AC-C238"   && Development PC                  [CASA CENTRAL]   computador2
    CASE pcDriveC = "5C2A-AC24"   && Development PC                  [CASA CENTRAL]   computador2
-   CASE pcDriveC = "26AC-D826"   && Felipe LT                       [CASA CENTRAL]   computador5
+   CASE pcDriveC = "26AC-D826"   && Felipe LT HDD Acer Aspire 5920  [CASA CENTRAL]   computador5
+   CASE pcDriveC = "AC4B-9CB0"   && Felipe LT SSD Acer Aspire 5920  [CASA CENTRAL]   computador5
    CASE pcDriveC = "1659-57DA"   && Jose LT Dell                    [CASA CENTRAL]   dell-pc
    CASE pcDriveC = "C8FE-D52A"   && Ricardo LT Toshiba              [CASA CENTRAL]   computador8
    CASE pcDriveC = "0003-4F34"   && Branch House WinXP Server       [SUCURSAL Nº 1]  servidor
@@ -216,6 +217,8 @@ DO CASE
    CASE pcDriveC = "203D-A118"   && Notebook Acer Aspire            [CASA CENTRAL]
    CASE pcDriveC = "6A8A-449E"   && Notebook Acer Aspire E15        [CASA CENTRAL]
    CASE pcDriveC = "B039-B8E6"   && Notebook Acer Aspire E11        [DON OSCAR]
+
+   CASE pcDriveC = "24B5-1C7F"   && Notebook Acer Aspire E11        [DON OSCAR]   
    OTHERWISE
       llReturn = .F.
 ENDCASE

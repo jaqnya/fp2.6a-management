@@ -1,12 +1,12 @@
 PARAMETER m.storeto
 
 IF PARAMETERS() < 1 THEN
-   m.storeto = ""
+   m.storeto = ''
 ENDIF
 
-PRIVATE m.select, m.codigo, m.nombre, m.aplicacion, m.cod_origen, m.cod_altern, m.ubicacion
+PRIVATE m.select, m.codigo, m.nombre, m.aplicacion, m.cod_origen, m.cod_altern, m.ubicacion, cTempMaesprod
 
-STORE " " TO m.select, m.codigo, m.nombre, m.aplicacion, m.cod_origen, m.cod_altern, m.ubicacion
+STORE '' TO m.select, m.codigo, m.nombre, m.aplicacion, m.cod_origen, m.cod_altern, m.ubicacion, cTempMaesprod
 
 *-*-*-*-*-*-
 PRIVATE pcSys16, pcProgram, pcPriorDir
@@ -28,12 +28,12 @@ DO center WITH 1, "[ BUSCAR ARTICULO ]", "GR+/B"
 @ 03,42 SAY "C¢d. Alternativo:" COLOR BG+/B
 @ 04,42 SAY "Ubicaci¢n.......:" COLOR BG+/B
 
-@ 02,15 GET m.nombre PICTURE "@!T" DEFAULT " " SIZE 1,25 VALID vldnombre()
-@ 03,15 GET m.codigo PICTURE "@!T" DEFAULT " " SIZE 1,25 VALID vldcodigo()
-@ 04,15 GET m.aplicacion PICTURE "@!T" DEFAULT " " SIZE 1,25 VALID vldaplicacion()
-@ 02,60 GET m.cod_origen PICTURE "@!T" DEFAULT " " SIZE 1,18 VALID vldcod_origen()
-@ 03,60 GET m.cod_altern PICTURE "@!T" DEFAULT " " SIZE 1,18 VALID vldcod_altern()
-@ 04,60 GET m.ubicacion  PICTURE "@!T" DEFAULT " " SIZE 1,18 VALID vldubicacion()
+@ 02,15 GET m.nombre PICTURE "@!T" DEFAULT " " SIZE 1,25 VALID FindBy('nombre', m.nombre)
+@ 03,15 GET m.codigo PICTURE "@!T" DEFAULT " " SIZE 1,25 VALID FindBy('codigo', m.codigo)
+@ 04,15 GET m.aplicacion PICTURE "@!T" DEFAULT " " SIZE 1,25 VALID FindBy('aplicacion', m.aplicacion)
+@ 02,60 GET m.cod_origen PICTURE "@!T" DEFAULT " " SIZE 1,18 VALID FindBy('codorig', m.cod_origen)
+@ 03,60 GET m.cod_altern PICTURE "@!T" DEFAULT " " SIZE 1,18 VALID FindBy('codigo2', m.cod_altern)
+@ 04,60 GET m.ubicacion  PICTURE "@!T" DEFAULT " " SIZE 1,18 VALID FindBy('ubicacion', m.ubicacion)
 
 @ 00,00 TO 00,79 " " COLOR N/W
 DO center WITH 0, " A & A IMPORTACIONES S.R.L. ", "N/W"
@@ -72,41 +72,64 @@ SET TALK       OFF
 
 m.select = SELECT()
 
-IF !USED("maesprod") THEN
+IF !USED('maesprod') THEN
    USE maesprod IN 0 AGAIN ORDER 0 SHARED
 ENDIF
 
-IF !USED("maesprod2") THEN
-   USE SYS(5) + "\turtle\aya\integrad.001\maesprod" IN 0 AGAIN ORDER 0 SHARED ALIAS maesprod2
+IF !USED('maesprod2') THEN
+   USE SYS(5) + '\turtle\aya\integrad.001\maesprod' IN 0 AGAIN ORDER 0 SHARED ALIAS maesprod2
 ENDIF
 
-IF !USED("maesprod3") THEN
-   USE SYS(5) + "\turtle\allparts\integrad.000\maesprod" IN 0 AGAIN ORDER 0 SHARED ALIAS maesprod3
+IF !USED('maesprod3') THEN
+   USE SYS(5) + '\turtle\allparts\integrad.000\maesprod' IN 0 AGAIN ORDER 0 SHARED ALIAS maesprod3
 ENDIF
 
 IF pcPriorDir = 'INTEGRAD.006' THEN   && [SUCURSAL AVDA. EUSEBIO AYALA]
-   IF !USED("maesprod4") THEN
-      USE SYS(5) + "\turtle\aya\integrad.000\maesprod" IN 0 AGAIN ORDER 1 SHARED ALIAS maesprod4
+   IF !USED('maesprod4') THEN
+      USE SYS(5) + '\turtle\aya\integrad.000\maesprod' IN 0 AGAIN ORDER 1 SHARED ALIAS maesprod4
    ENDIF
 ENDIF
 
+cTempMaesprod = CreaTemp()
+
+SELECT 0
+CREATE TABLE &cTempMaesprod (;
+   codigo C(15), ;
+   codigo2 C(15), ;
+   codorig C(15), ;
+   nombre C(40), ;
+   ubicacion C(37), ;
+   pventag1 N(9), ;
+   pventag2 N(9), ;
+   pventag3 N(9), ;
+   rubro N(4), ;
+   stock N(11,2), ;
+   allparts L(1) ;
+)
+USE &cTempMaesprod ALIAS tm_maespro EXCLUSIVE
 
 *--------------------------------------------------------------------------*
 PROCEDURE unload
 
-IF USED("maesprod2") THEN
+IF USED('maesprod2') THEN
    SELECT maesprod2
    USE
 ENDIF
 
-IF USED("maesprod3") THEN
+IF USED('maesprod3') THEN
    SELECT maesprod3
    USE
 ENDIF
 
-IF USED("maesprod4") THEN
+IF USED('maesprod4') THEN
    SELECT maesprod4
    USE
+ENDIF
+
+IF USED('tm_maespro') THEN
+   SELECT tm_maespro
+   USE
+   DO borratemp WITH cTempMaesprod
 ENDIF
 
 IF !EMPTY(ALIAS(m.select)) THEN
@@ -185,897 +208,133 @@ IF FILE(m.architm3) THEN
 ENDIF
 
 *--------------------------------------------------------------------------*
-PROCEDURE vldnombre
+PROCEDURE FindBy
+PARAMETERS tcField, tcValue
 
 SHOW GETS
 
-IF !EMPTY(m.nombre) THEN
-   PRIVATE m.string, m.sql_result, m.sql_resul2, m.sql_resul3, m.sql
-   m.string = STRTRAN(m.nombre + "*", "*", "%")
-
-   DO WHILE AT("%%", m.string) > 0
-      m.string = STRTRAN(m.string, "%%", "%")
-   ENDDO
-
-   IF LEN(m.string) > 1 THEN
-      WAIT "BUSCANDO..." WINDOW NOWAIT
-
-      *-- BOB: Casa Central --*
-      m.sql_result = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod a " + ;
-                 "INTO TABLE " + m.sql_result + " " + ;
-                 "WHERE nombre LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-      *-- EOB: Casa Central --*
-
-      *-- BOB: Deposito --*
-      m.sql_resul2 = CreaTemp()   && Deposito
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod2 a " + ;
-                 "INTO TABLE " + m.sql_resul2 + " " + ;
-                 "WHERE nombre LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul2)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito --*
-
-      *-- BOB: Deposito [All Parts SRL] --*
-      m.sql_resul3 = CreaTemp()   && Deposito [All Parts SRL]
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod3 a " + ;
-                 "INTO TABLE " + m.sql_resul3 + " " + ;
-                 "WHERE nombre LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul3)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito [All Parts SRL] --*
-
-
-      *-- BOB: Sucursal [006] --*
-IF pcPriorDir = 'INTEGRAD.006' THEN
-      m.sql_resul4 = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.nombre, ROUND(a.pventag1 * (1 + a.pimpuesto / 100), 0) AS pventag1, a.stock_actu - a.stock_ot AS stock, ROUND(a.pventag2 * (1 + a.pimpuesto / 100), 0) AS pventag2, ROUND(a.pventag3 * (1 + a.pimpuesto / 100), 0) AS pventag3 " + ;
-                 "FROM maesprod4 a " + ;
-                 "INTO TABLE " + m.sql_resul4 + " " + ;
-                 "WHERE nombre LIKE '" + m.string + "' " + ;
-                   "AND a.stock_actu - a.stock_ot > 0 " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul4)
-      SCAN ALL
-         xrubro = rubro
-         xcodigo = codigo
-         xnombre = nombre
-         xpventag1 = pventag1
-         xpventag2 = pventag2
-         xpventag3 = pventag3
-         xstock = stock
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xnombre, xpventag1, xstock, xpventag2, xpventag3)
-         ENDIF
-      ENDSCAN
-      
-      SELECT (m.sql_result)
-      GOTO TOP
+* begin { parameters validation }
+IF !INLIST(tcField, 'codigo', 'codigo2', 'codorig', 'nombre', 'aplicacion', 'ubicacion') THEN
+   WAIT 'ERROR: No se puede realizar busquedas' + CHR(13) + ;
+        '       por el campo ' + tcField WINDOW
+   RETURN 0
 ENDIF
-      *-- EOB: Sucursal [006] --*
 
-      WAIT CLEAR
 
-      IF RECCOUNT() > 0 THEN
-         DO show_result
-      ELSE
-         WAIT "EL DATO BUSCADO NO HA SIDO ENCONTRADO !" WINDOW
-         DO del_result
-         RETURN 0
-      ENDIF
-   ELSE
-      WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
-      RETURN 0
-   ENDIF
+IF EMPTY(tcValue) THEN
+*   WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
+   RETURN
+ENDIF
+* end { parameters validation }
+
+PRIVATE cString cSqlResult, cSql, ;
+        cCodigo, cCodigo2, cCodOrig, cNombre, cUbicacion, nPVentaG1, ;
+        nPVentaG2, nPVentaG3, nRubro, nStock, lAllParts
+
+cString = STRTRAN(ALLTRIM(tcValue) + '*', '*', '%')
+
+DO WHILE AT('%%', cString) > 0
+   cString = STRTRAN(cString, '%%', '%')
+ENDDO
+
+IF LEN(cString) = 1 THEN
+   WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
+   RETURN 0
+ENDIF
+   
+WAIT 'BUSCANDO...' WINDOW NOWAIT
+
+cSqlResult = CreaTemp()
+
+cSql = 'SELECT ' + ;
+          'a.rubro, ' + ;
+          'a.codigo, ' + ;
+          'a.ubicacion, ' + ;
+          'a.nombre, ' + ;
+          'ROUND(a.pventag1 * (1 + a.pimpuesto / 100), 0) AS pventag1, ' + ;
+          'a.stock_actu - a.stock_ot AS stock, ' + ;
+          'ROUND(a.pventag2 * ( 1 + a.pimpuesto / 100), 0) AS pventag2, ' + ;
+          'ROUND(a.pventag3 * (1 + a.pimpuesto / 100), 0) AS pventag3, ' + ;
+          'a.codigo2, ' + ;
+          'a.codorig ' + ;
+       'FROM maesprod a ' + ;
+          'INTO TABLE ' + cSqlResult + ' ' + ;
+       'WHERE ' + ;
+          tcField + ' LIKE [' + cString + '] ' + ;
+       'ORDER BY ' + ;
+          'nombre'
+&cSql
+
+SELECT tm_maespro
+ZAP
+
+SELECT (cSqlResult)
+SCAN ALL
+   cCodigo = codigo
+   cCodigo2 = codigo2
+   cCodOrig = codorig
+   cNombre = nombre
+   cUbicacion = ubicacion
+   nPVentaG1 = pventag1
+   nPVentaG2 = pventag2
+   nPVentaG3 = pventag3
+   nRubro = rubro
+   nStock = stock
+   lAllParts = .F.
+
+   INSERT INTO tm_maespro (codigo, codigo2, codorig, nombre, ubicacion, pventag1, pventag2, pventag3, rubro, stock, allparts) ;
+      VALUES (cCodigo, cCodigo2, cCodOrig, cNombre, cUbicacion, nPVentaG1, nPVentaG2, nPVentaG3, nRubro, nStock, lAllParts)
+ENDSCAN
+
+DO RetrieveStock
+
+SELECT tm_maespro
+GOTO TOP
+
+WAIT CLEAR
+
+IF RECCOUNT() > 0 THEN
+   DO show_result
+ELSE
+   WAIT "EL DATO BUSCADO NO HA SIDO ENCONTRADO !" WINDOW
+   DO del_result
+   RETURN 0
 ENDIF
 
 *--------------------------------------------------------------------------*
-PROCEDURE vldcodigo
+PROCEDURE RetrieveStock
 
-SHOW GETS
+PRIVATE cCodigo, nStock
 
-IF !EMPTY(m.codigo) THEN
-   PRIVATE m.string, m.sql_result, m.sql_resul2, m.sql_resul3, m.sql
-   m.string = STRTRAN(m.codigo + "*", "*", "%")
+* Deposito Tinglado.
+SELECT tm_maespro
+SCAN ALL
+   cCodigo = codigo
 
-   DO WHILE AT("%%", m.string) > 0
-      m.string = STRTRAN(m.string, "%%", "%")
-   ENDDO
+   SELECT maesprod2
+   SET ORDER TO TAG 'indice1'
+   IF SEEK(cCodigo) THEN
+      nStock = stock_actu - stock_ot
 
-   IF LEN(m.string) > 1 THEN
-      WAIT "BUSCANDO..." WINDOW NOWAIT
-
-      *-- BOB: Casa Central --*
-      m.sql_result = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod a " + ;
-                 "INTO TABLE " + m.sql_result + " " + ;
-                 "WHERE codigo LIKE '" + m.string + "' " + ;
-                 "ORDER BY codigo"
-      &sql
-      *-- EOB: Casa Central --*
-
-      *-- BOB: Deposito --*
-      m.sql_resul2 = CreaTemp()   && Deposito
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod2 a " + ;
-                 "INTO TABLE " + m.sql_resul2 + " " + ;
-                 "WHERE codigo LIKE '" + m.string + "' " + ;
-                 "ORDER BY codigo"
-      &sql
-
-      SELECT (m.sql_resul2)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito --*
-
-      *-- BOB: Deposito [All Parts SRL] --*
-      m.sql_resul3 = CreaTemp()   && Deposito [All Parts SRL]
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod3 a " + ;
-                 "INTO TABLE " + m.sql_resul3 + " " + ;
-                 "WHERE codigo LIKE '" + m.string + "' " + ;
-                 "ORDER BY codigo"
-      &sql
-
-      SELECT (m.sql_resul3)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito [All Parts SRL] --*
-
-      *-- BOB: Sucursal [006] --*
-IF pcPriorDir = 'INTEGRAD.006' THEN
-      m.sql_resul4 = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.nombre, ROUND(a.pventag1 * (1 + a.pimpuesto / 100), 0) AS pventag1, a.stock_actu - a.stock_ot AS stock, ROUND(a.pventag2 * (1 + a.pimpuesto / 100), 0) AS pventag2, ROUND(a.pventag3 * (1 + a.pimpuesto / 100), 0) AS pventag3 " + ;
-                 "FROM maesprod4 a " + ;
-                 "INTO TABLE " + m.sql_resul4 + " " + ;
-                 "WHERE codigo LIKE '" + m.string + "' " + ;
-                   "AND a.stock_actu - a.stock_ot > 0 " + ;
-                 "ORDER BY codigo"
-      &sql
-
-      SELECT (m.sql_resul4)
-      SCAN ALL
-         xrubro  = rubro
-         xcodigo = codigo
-         xnombre = nombre
-         xpventag1 = pventag1
-         xpventag2 = pventag2
-         xpventag3 = pventag3
-         xstock = stock
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xnombre, xpventag1, xstock, xpventag2, xpventag3)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-
-ENDIF
-      *-- EOB: Sucursal [006] --*
-
-      WAIT CLEAR
-
-      IF RECCOUNT() > 0 THEN
-         DO show_result
-      ELSE
-         WAIT "EL DATO BUSCADO NO HA SIDO ENCONTRADO !" WINDOW
-         DO del_result
-         RETURN 0
-      ENDIF
-   ELSE
-      WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
-      RETURN 0
+      SELECT tm_maespro
+      REPLACE stock with stock + nStock
    ENDIF
-ENDIF
+ENDSCAN
 
-*--------------------------------------------------------------------------*
-PROCEDURE vldaplicacion
+* All Parts S.R.L.
+SELECT tm_maespro
+SCAN ALL
+   cCodigo = codigo
 
-SHOW GETS
+   SELECT maesprod3
+   SET ORDER TO TAG 'indice1'
+   IF SEEK(cCodigo) THEN
+      nStock = stock_actu - stock_ot
 
-IF !EMPTY(m.aplicacion) THEN
-   PRIVATE m.string, m.sql_result, m.sql_resul2, m.sql_resul3, m.sql
-   m.string = STRTRAN(m.aplicacion + "*", "*", "%")
-
-   DO WHILE AT("%%", m.string) > 0
-      m.string = STRTRAN(m.string, "%%", "%")
-   ENDDO
-
-   IF LEN(m.string) > 1 THEN
-      WAIT "BUSCANDO..." WINDOW NOWAIT
-
-      *-- BOB: Casa Central --*
-      m.sql_result = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod a " + ;
-                 "INTO TABLE " + m.sql_result + " " + ;
-                 "WHERE aplicacion LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-      *-- EOB: Casa Central --*
-
-      *-- BOB: Deposito --*
-      m.sql_resul2 = CreaTemp()   && Deposito
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod2 a " + ;
-                 "INTO TABLE " + m.sql_resul2 + " " + ;
-                 "WHERE aplicacion LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul2)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito --*
-
-      *-- BOB: Deposito [All Parts SRL] --*
-      m.sql_resul3 = CreaTemp()   && Deposito [All Parts SRL]
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod3 a " + ;
-                 "INTO TABLE " + m.sql_resul3 + " " + ;
-                 "WHERE aplicacion LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul3)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito [All Parts SRL] --*
-      
-      *-- BOB: Sucursal [006] --*
-IF pcPriorDir = 'INTEGRAD.006' THEN
-      m.sql_resul4 = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod4 a " + ;
-                 "INTO TABLE " + m.sql_resul4 + " " + ;
-                 "WHERE aplicacion LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul4)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-ENDIF
-      *-- EOB: Sucursal [006] --*
-
-      WAIT CLEAR
-
-      IF RECCOUNT() > 0 THEN
-         DO show_result
-      ELSE
-         WAIT "EL DATO BUSCADO NO HA SIDO ENCONTRADO !" WINDOW
-         DO del_result
-         RETURN 0
-      ENDIF
-   ELSE
-      WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
-      RETURN 0
+      SELECT tm_maespro
+      REPLACE allparts WITH IIF(nStock > 0, .T., .F.)
    ENDIF
-ENDIF
-
-*--------------------------------------------------------------------------*
-PROCEDURE vldcod_origen
-
-SHOW GETS
-
-IF !EMPTY(m.cod_origen) THEN
-   PRIVATE m.string, m.sql_result, m.sql_resul2, m.sql_resul3, m.sql
-   m.string = STRTRAN(m.cod_origen + "*", "*", "%")
-
-   DO WHILE AT("%%", m.string) > 0
-      m.string = STRTRAN(m.string, "%%", "%")
-   ENDDO
-
-   IF LEN(m.string) > 1 THEN
-      WAIT "BUSCANDO..." WINDOW NOWAIT
-
-      *-- BOB: Casa Central --*
-      m.sql_result = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod a " + ;
-                 "INTO TABLE " + m.sql_result + " " + ;
-                 "WHERE codorig LIKE '" + m.string + "' " + ;
-                 "ORDER BY codorig"
-      &sql
-      *-- EOB: Casa Central --*
-
-      *-- BOB: Deposito --*
-      m.sql_resul2 = CreaTemp()   && Deposito
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod2 a " + ;
-                 "INTO TABLE " + m.sql_resul2 + " " + ;
-                 "WHERE codorig LIKE '" + m.string + "' " + ;
-                 "ORDER BY codorig"
-      &sql
-
-      SELECT (m.sql_resul2)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito --*
-
-      *-- BOB: Deposito [All Parts SRL] --*
-      m.sql_resul3 = CreaTemp()   && Deposito [All Parts SRL]
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod3 a " + ;
-                 "INTO TABLE " + m.sql_resul3 + " " + ;
-                 "WHERE codorig LIKE '" + m.string + "' " + ;
-                 "ORDER BY codorig"
-      &sql
-
-      SELECT (m.sql_resul3)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito [All Parts SRL] --*
-
-      *-- BOB: Sucursal [006] --*
-IF pcPriorDir = 'INTEGRAD.006' THEN
-      m.sql_resul4 = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ; 
-                 "a.codigo, a.nombre, ROUND(a.pventag1 * (1 + a.pimpuesto / 100), 0) AS pventag1, a.stock_actu - a.stock_ot AS stock, ROUND(a.pventag2 * (1 + a.pimpuesto / 100), 0) AS pventag2, ROUND(a.pventag3 * (1 + a.pimpuesto / 100), 0) AS pventag3 " + ;
-                 "FROM maesprod4 a " + ;
-                 "INTO TABLE " + m.sql_resul4 + " " + ;
-                 "WHERE codorig LIKE '" + m.string + "' " + ;
-                   "AND a.stock_actu - a.stock_ot > 0 " + ;
-                 "ORDER BY codorig"
-      &sql
-
-      SELECT (m.sql_resul4)
-      SCAN ALL
-         xrubro  = rubro
-         xcodigo = codigo
-         xnombre = nombre
-         xpventag1 = pventag1
-         xpventag2 = pventag2
-         xpventag3 = pventag3
-         xstock = stock
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xnombre, xpventag1, xstock, xpventag2, xpventag3)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-ENDIF
-      *-- EOB: Sucursal [006] --*
-
-
-      WAIT CLEAR
-
-      IF RECCOUNT() > 0 THEN
-         DO show_result
-      ELSE
-         WAIT "EL DATO BUSCADO NO HA SIDO ENCONTRADO !" WINDOW
-         DO del_result
-         RETURN 0
-      ENDIF
-   ELSE
-      WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
-      RETURN 0
-   ENDIF
-ENDIF
-
-*--------------------------------------------------------------------------*
-PROCEDURE vldcod_altern
-
-SHOW GETS
-
-IF !EMPTY(m.cod_altern) THEN
-   PRIVATE m.string, m.sql_result, m.sql_resul2, m.sql_resul3, m.sql
-   m.string = STRTRAN(m.cod_altern + "*", "*", "%")
-
-   DO WHILE AT("%%", m.string) > 0
-      m.string = STRTRAN(m.string, "%%", "%")
-   ENDDO
-
-   IF LEN(m.string) > 1 THEN
-      WAIT "BUSCANDO..." WINDOW NOWAIT
-
-      *-- BOB: Casa Central --*
-      m.sql_result = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ; 
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod a " + ;
-                 "INTO TABLE " + m.sql_result + " " + ;
-                 "WHERE codigo2 LIKE '" + m.string + "' " + ;
-                 "ORDER BY codigo2"
-      &sql
-      *-- EOB: Casa Central --*
-
-      *-- BOB: Deposito --*
-      m.sql_resul2 = CreaTemp()   && Deposito
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod2 a " + ;
-                 "INTO TABLE " + m.sql_resul2 + " " + ;
-                 "WHERE codigo2 LIKE '" + m.string + "' " + ;
-                 "ORDER BY codigo2"
-      &sql
-
-      SELECT (m.sql_resul2)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito --*
-
-      *-- BOB: Deposito [All Parts SRL] --*
-      m.sql_resul3 = CreaTemp()   && Deposito [All Parts SRL]
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod3 a " + ;
-                 "INTO TABLE " + m.sql_resul3 + " " + ;
-                 "WHERE codigo2 LIKE '" + m.string + "' " + ;
-                 "ORDER BY codigo2"
-      &sql
-
-      SELECT (m.sql_resul3)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito [All Parts SRL] --*
-
-      *-- BOB: Sucursal [006] --*
-IF pcPriorDir = 'INTEGRAD.006' THEN
-      m.sql_resul4 = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ; 
-                 "a.codigo, a.nombre, ROUND(a.pventag1 * (1 + a.pimpuesto / 100), 0) AS pventag1, a.stock_actu - a.stock_ot AS stock, ROUND(a.pventag2 * (1 + a.pimpuesto / 100), 0) AS pventag2, ROUND(a.pventag3 * (1 + a.pimpuesto / 100), 0) AS pventag3 " + ;
-                 "FROM maesprod4 a " + ;
-                 "INTO TABLE " + m.sql_resul4 + " " + ;
-                 "WHERE codigo2 LIKE '" + m.string + "' " + ;
-                   "AND a.stock_actu - a.stock_ot > 0 " + ;
-                 "ORDER BY codigo2"
-      &sql
-      
-      SELECT (m.sql_resul4)
-      SCAN ALL
-         xrubro  = rubro
-         xcodigo = codigo
-         xnombre = nombre
-         xpventag1 = pventag1
-         xpventag2 = pventag2
-         xpventag3 = pventag3
-         xstock = stock
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xnombre, xpventag1, xstock, xpventag2, xpventag3)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-ENDIF
-      *-- EOB: Sucursal [006] --*
-
-
-      WAIT CLEAR
-
-      IF RECCOUNT() > 0 THEN
-         DO show_result
-      ELSE
-         WAIT "EL DATO BUSCADO NO HA SIDO ENCONTRADO !" WINDOW
-         DO del_result
-         RETURN 0
-      ENDIF
-   ELSE
-      WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
-      RETURN 0
-   ENDIF
-ENDIF
-
-*--------------------------------------------------------------------------*
-PROCEDURE vldubicacion
-
-SHOW GETS
-
-IF !EMPTY(m.ubicacion) THEN
-   PRIVATE m.string, m.sql_result, m.sql_resul2, m.sql_resul3, m.sql
-   m.string = STRTRAN(m.ubicacion + "*", "*", "%")
-
-   DO WHILE AT("%%", m.string) > 0
-      m.string = STRTRAN(m.string, "%%", "%")
-   ENDDO
-
-   IF LEN(m.string) > 1 THEN
-      WAIT "BUSCANDO..." WINDOW NOWAIT
-
-      *-- BOB: Casa Central --*
-      m.sql_result = CreaTemp()
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod a " + ;
-                 "INTO TABLE " + m.sql_result + " " + ;
-                 "WHERE ubicacion LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-      *-- EOB: Casa Central --*
-
-      *-- BOB: Deposito --*
-      m.sql_resul2 = CreaTemp()   && Deposito
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod2 a " + ;
-                 "INTO TABLE " + m.sql_resul2 + " " + ;
-                 "WHERE ubicacion LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul2)
-      SCAN ALL
-         xrubro      = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito --*
-
-      *-- BOB: Deposito [All Parts SRL] --*
-      m.sql_resul3 = CreaTemp()   && Deposito [All Parts SRL]
-
-      m.sql = "SELECT a.rubro, " + ;
-                 "a.codigo, a.ubicacion, a.nombre, ROUND(a.pventag1*(1+a.pimpuesto/100),0) AS pventag1, a.stock_actu-a.stock_ot AS stock, ROUND(a.pventag2*(1+a.pimpuesto/100),0) AS pventag2, ROUND(a.pventag3*(1+a.pimpuesto/100),0) AS pventag3, a.codigo2, a.codorig " + ;
-                 "FROM maesprod3 a " + ;
-                 "INTO TABLE " + m.sql_resul3 + " " + ;
-                 "WHERE ubicacion LIKE '" + m.string + "' " + ;
-                 "ORDER BY nombre"
-      &sql
-
-      SELECT (m.sql_resul3)
-      SCAN ALL
-         xrubro     = rubro
-         xcodigo    = codigo
-         xubicacion = ubicacion
-         xnombre    = nombre
-         xpventag1  = pventag1
-         xstock     = stock
-         xpventag2  = pventag2
-         xpventag3  = pventag3
-         xcodigo2   = codigo2
-         xcodorig   = codorig
-
-         SELECT (m.sql_result)
-         LOCATE FOR codigo = xcodigo
-         IF FOUND() THEN
-            REPLACE stock WITH stock + xstock
-         ELSE
-            INSERT INTO (m.sql_result) VALUES (xrubro, xcodigo, xubicacion, xnombre, xpventag1, xstock, xpventag2, xpventag3, xcodigo2, xcodorig)
-         ENDIF
-      ENDSCAN
-
-      SELECT (m.sql_result)
-      GOTO TOP
-      *-- EOB: Deposito [All Parts SRL] --*
-
-      WAIT CLEAR
-
-      IF RECCOUNT() > 0 THEN
-         DO show_result
-      ELSE
-         WAIT "EL DATO BUSCADO NO HA SIDO ENCONTRADO !" WINDOW
-         DO del_result
-         RETURN 0
-      ENDIF
-   ELSE
-      WAIT "DEBE PROPORCIONAR ALGUNA FRASE PARA LA BUSQUEDA !" WINDOW
-      RETURN 0
-   ENDIF
-ENDIF
+ENDSCAN
 
 *--------------------------------------------------------------------------*
 PROCEDURE show_result
@@ -1112,9 +371,10 @@ ON KEY LABEL "SPACEBAR"   DO ver_stock2
 BROWSE WINDOW busqueda FIELDS ;
    b0 = codigo :R:6:P = "@!" :H = "C¢digo",;
    b1 = ubicacion :R:9:P = "@!" :H = "Ubicacion",;
-   b2 = LEFT(nombre, 40) :R:40:P = "@!" :H = "Descripci¢n",;
+   b2 = LEFT(nombre, 40) :R:38:P = "@!" :H = "Descripci¢n",;
    b3 = pventag1 :R:10:P = "99,999,999" :H = " P.Vta. 1",;
    b4 = stock :R:7:P = "9999.99" :H = " Stock",;
+   a1 = IIF(allparts, '*', '') :R:01:H = '', ;
    b5 = pventag2 :R:10:P = "99,999,999" :H = " P.Vta. 2",;
    b6 = pventag3 :R:10:P = "99,999,999" :H = " P.Vta. 3",;
    b7 = LEFT(nombre, 40) :R:40:P = "@!" :H = "Descripci¢n",;
@@ -1157,22 +417,10 @@ DO del_result
 *--------------------------------------------------------------------------*
 PROCEDURE del_result
 
-IF USED(m.sql_result) THEN
-   SELECT (m.sql_result)
+IF USED(cSqlResult) THEN
+   SELECT (cSqlResult)
    USE
-   DO borratemp WITH m.sql_result
-ENDIF
-
-IF USED(m.sql_resul2) THEN
-   SELECT (m.sql_resul2)
-   USE
-   DO borratemp WITH m.sql_resul2
-ENDIF
-
-IF USED(m.sql_resul3) THEN
-   SELECT (m.sql_resul3)
-   USE
-   DO borratemp WITH m.sql_resul3
+   DO borratemp WITH cSqlResult
 ENDIF
 
 *--------------------------------------------------------------------------*
@@ -1352,7 +600,7 @@ IF LASTKEY() <> 27 THEN
       REPLACE codigo WITH m.codigo, ubicacion WITH m.ubicacion, nombre WITH m.nombre, pventag1 WITH m.pventag1, pventag2 WITH m.pventag2, pventag3 WITH m.pventag3, codigo2 WITH m.codigo2, codorig WITH m.codorig
    ELSE
       m.codigo = product_id
-      DO vldcodigo
+      DO FindBy WITH 'codigo', m.codigo
    ENDIF
 ENDIF
 
